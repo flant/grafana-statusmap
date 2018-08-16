@@ -1,0 +1,25 @@
+{
+  "type": "panel",
+  "name": "Status Heatmap",
+  "id": "status-heatmap-panel",
+
+  "info": {
+    "description": "Status Heatmap panel plugin for grafana",
+    "author": {
+      "name": "Flant JSC",
+      "url": "http://flant.com"
+    },
+    "keywords": ["status", "heatmap", "panel"],
+    "version": "0.0.1",
+    "updated": "2017-11-01",
+    "logos": {
+      "small": "img/logo.svg",
+      "large": "img/logo.svg"
+    }
+  },
+
+  "dependencies": {
+    "grafanaVersion": "5.1.x",
+    "plugins": [ ]
+  }
+}

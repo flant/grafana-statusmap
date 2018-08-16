@@ -1,0 +1,94 @@
+$font-size-sm: 12px !default;
+
+
+.status-heatmap-canvas-wrapper {
+  // position: relative;
+  cursor: crosshair;
+}
+
+.status-heatmap-panel {
+  position: relative;
+
+  .axis .tick {
+    text {
+      fill: #52545c;
+      color: #52545c;
+      font-size: 11px;
+    }
+
+    line {
+      opacity: 0.4;
+      stroke: #767980;
+    }
+  }
+
+  // This hack prevents mouseenter/mouseleave events get fired too often
+  svg {
+    pointer-events: none;
+
+    rect {
+      pointer-events: visiblePainted;
+    }
+  }
+}
+
+.status-heatmap-tooltip {
+  white-space: nowrap;
+  font-size: $font-size-sm;
+  background-color: #dde4ed;
+  color: #52545c;
+}
+
+.status-heatmap-histogram rect {
+  fill: #767980;
+}
+
+.status-heatmap-crosshair {
+  line {
+    stroke: darken(red,15%);
+    stroke-width: 1;
+  }
+}
+
+.status-heatmap-selection {
+  stroke-width: 1;
+  fill: rgba(102, 102, 102, 0.4);
+  stroke: rgba(102, 102, 102, 0.8);
+}
+
+.status-heatmap-legend-wrapper {
+  // @include clearfix();
+  margin: 0 10px;
+  //padding-top: 10px;
+
+  svg {
+    width: 100%;
+    max-width: 300px;
+    height: 24px;
+    float: left;
+    white-space: nowrap;
+    padding-left: 10px;
+  }
+
+  .status-heatmap-legend-values {
+    display: inline-block;
+  }
+
+  .axis .tick {
+    text {
+      fill: #52545c;
+      color: #52545c;
+      font-size: 11px;
+    }
+
+    line {
+      opacity: 0.4;
+      stroke: #767980;
+    }
+
+    .domain {
+      opacity: 0.4;
+      stroke: #767980;
+    }
+  }
+}
