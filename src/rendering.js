@@ -49,7 +49,6 @@ export default function link(scope, elem, attrs, ctrl) {
 
   ctrl.events.on('render', () => {
     render();
-    // ctrl.renderingCompleted();
   });
 
   function setElementHeight() {
@@ -124,28 +123,44 @@ export default function link(scope, elem, attrs, ctrl) {
     heatmap.select(".axis-x").select(".domain").remove();
   }
 
-  function addYAxis() {
-    let ticks = _.map(data, d => d.target);
-
-    // Set default Y min and max if no data
-    if (_.isEmpty(data)) {
-      ticks = [''];
+  // divide chart height by ticks for cards drawing
+  function getYScale(ticks) {
+    let range = [];
+    let step = chartHeight / ticks.length;
+    range.push(chartHeight);
+    for (let i = 1; i < ticks.length; i++) {
+      range.push(chartHeight - step * i);
     }
+    return d3.scaleOrdinal()
+      .domain(ticks)
+      .range(range);
+  }
 
+  // divide chart height by ticks with offset for ticks drawing
+  function getYAxisScale(ticks) {
     let range = [];
     let step = chartHeight / ticks.length;
     range.push(chartHeight - yOffset);
     for (let i = 1; i < ticks.length; i++) {
       range.push(chartHeight - step * i - yOffset);
     }
-
-    console.log('yRange', range, yOffset);
-
-    scope.yScale = yScale = d3.scaleOrdinal()
+    return d3.scaleOrdinal()
       .domain(ticks)
       .range(range);
+  }
 
-    let yAxis = d3.axisLeft(yScale)
+  function addYAxis() {
+    let ticks = _.uniq(_.map(data, d => d.target));
+
+    // Set default Y min and max if no data
+    if (_.isEmpty(data)) {
+      ticks = [''];
+    }
+
+    let yAxisScale = getYAxisScale(ticks);
+    scope.yScale = yScale = getYScale(ticks);
+
+    let yAxis = d3.axisLeft(yAxisScale)
       .tickValues(ticks)
       .tickSizeInner(0 - width)
       .tickPadding(Y_AXIS_TICK_PADDING);
@@ -164,7 +179,7 @@ export default function link(scope, elem, attrs, ctrl) {
     heatmap.select(".axis-y").selectAll(".tick line").remove();
   }
 
-  // Wide Y values range and anjust to bucket size
+  // Wide Y values range and adjust to bucket size
   function wideYAxisRange(min, max, tickInterval) {
     let y_widing = (max * (dataRangeWidingFactor - 1) - min * (dataRangeWidingFactor - 1)) / 2;
     let y_min, y_max;
@@ -193,19 +208,43 @@ export default function link(scope, elem, attrs, ctrl) {
     };
   }
 
-  function fixYAxisTickSize() {
-    heatmap.select(".axis-y")
-      .selectAll(".tick line")
-      .attr("x2", chartWidth);
-  }
+  // Create svg element, add axes and
+  // calculate sizes for cards drawing
+  function addHeatmapCanvas() {
+    let heatmap_elem = $heatmap[0];
 
-  function addAxes() {
+    width = Math.floor($heatmap.width()) - padding.right;
+    height = Math.floor($heatmap.height()) - padding.bottom;
+
+    if (heatmap) {
+      heatmap.remove();
+    }
+
+    heatmap = d3.select(heatmap_elem)
+      .append("svg")
+      .attr("width", width)
+      .attr("height", height);
+
+    chartHeight = height - margin.top - margin.bottom;
+    chartTop = margin.top;
+    chartBottom = chartTop + chartHeight;
+
+    cardPadding = panel.cards.cardPadding !== null ? panel.cards.cardPadding : CARD_PADDING;
+    cardRound = panel.cards.cardRound !== null ? panel.cards.cardRound : CARD_ROUND;
+
+    // calculate yOffset for YAxis
+    let yGridSize = Math.floor(chartHeight / cardsData.yBucketSize);
+    cardHeight = yGridSize ? yGridSize - cardPadding * 2 : 0;
+    yOffset = cardHeight / 2;
+
     addYAxis();
 
     yAxisWidth = getYAxisWidth(heatmap) + Y_AXIS_TICK_PADDING;
     chartWidth = width - yAxisWidth - margin.right;
-    // fixYAxisTickSize();
-    //
+
+    let xGridSize = Math.floor(chartWidth / cardsData.xBucketSize);
+    cardWidth = xGridSize - cardPadding * 2;
+
     addXAxis();
     xAxisHeight = getXAxisHeight(heatmap);
 
@@ -218,49 +257,25 @@ export default function link(scope, elem, attrs, ctrl) {
     }
   }
 
-  function addHeatmapCanvas() {
-    let heatmap_elem = $heatmap[0];
-
-    width = Math.floor($heatmap.width()) - padding.right;
-    height = Math.floor($heatmap.height()) - padding.bottom;
-
-    chartHeight = height - margin.top - margin.bottom - yOffset;
-    chartTop = margin.top;
-    chartBottom = chartTop + chartHeight;
-
-    cardPadding = panel.cards.cardPadding !== null ? panel.cards.cardPadding : CARD_PADDING;
-    cardRound = panel.cards.cardRound !== null ? panel.cards.cardRound : CARD_ROUND;
-
-    if (heatmap) {
-      heatmap.remove();
-    }
-
-    heatmap = d3.select(heatmap_elem)
-      .append("svg")
-      .attr("width", width)
-      .attr("height", height);
-  }
-
   function addHeatmap() {
     addHeatmapCanvas();
 
     let maxValue = panel.color.max || cardsData.maxValue;
     let minValue = panel.color.min || cardsData.minValue;
 
-    colorScale = getColorScale(maxValue, minValue);
+    if (panel.color.mode === 'discrete') {
+      colorScale = ctrl.discreteHelper.getDiscreteColorScale();
+    } else {
+      colorScale = getColorScale(maxValue, minValue);
+    }
     setOpacityScale(maxValue);
-    setCardSize();
-
-    addAxes();
 
     let cards = heatmap.selectAll(".status-heatmap-card").data(cardsData.cards);
     cards.append("title");
     cards = cards.enter().append("rect")
-    .attr("value", c => c.value)
-    .attr("xVal", c => c.x)
+    .attr("cardId", c => c.id)
     .attr("x", getCardX)
     .attr("width", getCardWidth)
-    .attr("yVal", c => c.y)
     .attr("y", getCardY)
     .attr("height", getCardHeight)
     .attr("rx", cardRound)
@@ -269,14 +284,14 @@ export default function link(scope, elem, attrs, ctrl) {
     .style("fill", getCardColor)
     .style("stroke", getCardColor)
     .style("stroke-width", 0)
+    //.style("stroke-width", getCardStrokeWidth)
+    //.style("stroke-dasharray", "3,3")
     .style("opacity", getCardOpacity);
 
     let $cards = $heatmap.find(".status-heatmap-card");
     $cards.on("mouseenter", (event) => {
       tooltip.mouseOverBucket = true;
       highlightCard(event);
-      let current_card = d3.select(event.target);
-      tooltip.show(event, current_card.attr('xVal'), current_card.attr('yVal'), current_card.attr('value'));
     })
     .on("mouseleave", (event) => {
       tooltip.mouseOverBucket = false;
@@ -296,9 +311,11 @@ export default function link(scope, elem, attrs, ctrl) {
   }
 
   function resetCardHighLight(event) {
-    d3.select(event.target).style("fill", tooltip.originalFillColor)
-    .style("stroke", tooltip.originalFillColor)
-    .style("stroke-width", 0);
+    d3
+      .select(event.target)
+      .style("fill", tooltip.originalFillColor)
+      .style("stroke", tooltip.originalFillColor)
+      .style("stroke-width", 0);
   }
 
   function getColorScale(maxValue, minValue = 0) {
@@ -316,6 +333,36 @@ export default function link(scope, elem, attrs, ctrl) {
     return d3.scaleSequential(colorInterpolator).domain([start, end]);
   }
 
+// scale input range to discrete colors to draw a legend
+  function getDiscreteColorScale() {
+    let thresholds = panel.color.thresholds;
+
+    let thresholdValues = [];
+    let thresholdColors = [];
+    for (let i = 0; i < thresholds.length; i++) {
+      thresholdColors.push(thresholds[i].color);
+      thresholdValues.push(thresholds[i].value);
+    }
+
+    // TODO sort colors by value and index?
+
+    let thresholdScaler = (d) => {
+      for (let i = 0; i < thresholdValues.length; i++ ) {
+        if (d == thresholdValues[i]) {
+          return thresholdColors[i];
+        }
+      }
+      // Error if value not in thresholds
+      return 'rgba(0,0,0,1)';
+    };
+
+    // scale min-max to 0 - max-thrs-value
+    return function(d) {
+      return thresholdScaler(d);
+    }
+  }
+
+
   function setOpacityScale(maxValue) {
     if (panel.color.colorScale === 'linear') {
       opacityScale = d3.scaleLinear()
@@ -326,16 +373,6 @@ export default function link(scope, elem, attrs, ctrl) {
       .domain([0, maxValue])
       .range([0, 1]);
     }
-  }
-
-  function setCardSize() {
-    let xGridSize = Math.floor(chartWidth / cardsData.xBucketSize);
-    let yGridSize = Math.floor(chartHeight / cardsData.yBucketSize);
-
-    cardWidth = xGridSize - cardPadding * 2;
-    cardHeight = yGridSize ? yGridSize - cardPadding * 2 : 0;
-
-    yOffset = cardHeight / 2;
   }
 
   function getCardX(d) {
@@ -369,25 +406,22 @@ export default function link(scope, elem, attrs, ctrl) {
   }
 
   function getCardY(d) {
-    let y = yScale(d.y);
-
-    y = y + chartTop - cardHeight - cardPadding + yOffset;
-
-    return y;
+    return yScale(d.y) + chartTop - cardHeight - cardPadding;
   }
 
   function getCardHeight(d) {
-    let y = yScale(d.y) + chartTop - cardHeight - cardPadding;
+    let ys = yScale(d.y);
+    let y = ys + chartTop - cardHeight - cardPadding;
     let h = cardHeight;
 
     // Cut card height to prevent overlay
-    // if (y < chartTop) {
-    //   h = yScale(d.y) - cardPadding;
-    // } else if (yScale(d.y) > chartBottom) {
-    //   h = chartBottom - y;
-    // } else if (y + cardHeight > chartBottom) {
-    //   h = chartBottom - y;
-    // }
+    if (y < chartTop) {
+      h = ys - cardPadding;
+    } else if (ys > chartBottom) {
+      h = chartBottom - y;
+    } else if (y + cardHeight > chartBottom) {
+      h = chartBottom - y;
+    }
 
     // Height can't be more than chart height
     h = Math.min(h, chartHeight);
@@ -400,13 +434,15 @@ export default function link(scope, elem, attrs, ctrl) {
   function getCardColor(d) {
     if (panel.color.mode === 'opacity') {
       return panel.color.cardColor;
-    } else {
+    } else if (panel.color.mode === 'spectrum') {
+      return colorScale(d.value);
+    } else if (panel.color.mode === 'discrete') {
       return colorScale(d.value);
     }
   }
 
   function getCardOpacity(d) {
-    if (panel.nullPointMode === 'null' && d.value == null ) {
+    if (panel.nullPointMode === 'as empty' && d.value == null ) {
       return 0;
     }
     if (panel.color.mode === 'opacity') {
@@ -414,6 +450,13 @@ export default function link(scope, elem, attrs, ctrl) {
     } else {
       return 1;
     }
+  }
+
+  function getCardStrokeWidth(d) {
+    if (panel.color.mode === 'discrete') {
+      return '1';
+    }
+    return '0';
   }
 
   /////////////////////////////
@@ -477,6 +520,7 @@ export default function link(scope, elem, attrs, ctrl) {
     } else {
       emitGraphHoverEvet(event);
       drawCrosshair(event.offsetX);
+      tooltip.show(event); //, data);
     }
   }
 
@@ -576,7 +620,6 @@ export default function link(scope, elem, attrs, ctrl) {
     // Draw default axes and return if no data
     if (_.isEmpty(cardsData.cards)) {
       addHeatmapCanvas();
-      addAxes();
       return;
     }
 

@@ -5,8 +5,6 @@ import kbn from 'app/core/utils/kbn';
 
 let TOOLTIP_PADDING_X = 30;
 let TOOLTIP_PADDING_Y = 5;
-let HISTOGRAM_WIDTH = 160;
-let HISTOGRAM_HEIGHT = 40;
 
 export class StatusHeatmapTooltip {
   constructor(elem, scope) {
@@ -55,28 +53,83 @@ export class StatusHeatmapTooltip {
     this.tooltip = null;
   }
 
-  show(pos, x, y, value) {
-    if (!this.panel.tooltip.show) { return; }
+  show(pos) {
+    if (!this.panel.tooltip.show || !this.tooltip) { return; }
     // shared tooltip mode
     if (pos.panelRelY) {
       return;
     }
-
-    if (!x || !y || !this.tooltip) {
+    let cardId = d3.select(pos.target).attr('cardId');
+    if (!cardId) {
       this.destroy();
       return;
     }
 
+    let card = this.panelCtrl.cardsData.cards[cardId];
+    if (!card) {
+      this.destroy();
+      return;
+    }
+
+    let x = card.x;
+    let y = card.y;
+    let value = card.value;
+    let values = card.values;
     let tooltipTimeFormat = 'YYYY-MM-DD HH:mm:ss';
     let time = this.dashboard.formatDate(+x, tooltipTimeFormat);
 
     let tooltipHtml = `<div class="graph-tooltip-time">${time}</div>
       <div class="status-heatmap-histogram"></div>`;
 
-    tooltipHtml += `<div>
+    if (this.panel.color.mode === 'discrete') {
+      let statuses = this.panelCtrl.discreteHelper.convertValuesToTooltips(values);
+      let statusesHtml = '';
+      if (statuses.length > 0) {
+        statusesHtml = `
+          statuses:
+          <ul>
+            ${_.join(_.map(statuses, v => `<li>${v}</li>`), "")}
+          </ul>`;
+      }
+      tooltipHtml += `<div>
+      name: <b>${y}</b> <br>
+      ${statusesHtml}
+      </div>`;
+    } else {
+      if (values.length === 1) {
+        tooltipHtml += `<div> 
       name: <b>${y}</b> <br>
       value: <b>${value}</b> <br>
-    </div>`;
+      </div>`;
+      } else {
+        tooltipHtml += `<div>
+      name: <b>${y}</b> <br>
+      values:
+      <ul>
+        ${_.join(_.map(values, v => `<li>${v}</li>`), "")}
+      </ul>
+      </div>`;
+      }
+    }
+
+    //   "Ambiguous bucket state: Multiple values!";
+    if (!this.panel.useMax && card.multipleValues) {
+      tooltipHtml += `<div><b>Error:</b> ${this.panelCtrl.dataWarnings.multipleValues.title}</div>`;
+    }
+
+    // Discrete mode errors
+    if (this.panel.color.mode === 'discrete') {
+      if (card.noColorDefined) {
+        let badValues = this.panelCtrl.discreteHelper.getNotMatchedValues(values);
+        tooltipHtml += `<div><b>Error:</b> ${this.panelCtrl.dataWarnings.noColorDefined.title}
+        <br>bad values:
+        <ul>
+          ${_.join(_.map(badValues, v => `<li>${v}</li>`), "")}
+        </ul>
+        </div>`;
+
+      }
+    }
 
     this.tooltip.html(tooltipHtml);
 

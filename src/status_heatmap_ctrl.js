@@ -7,8 +7,8 @@ import rendering from './rendering';
 // import aggregates, { aggregatesMap } from './aggregates';
 // import fragments, { fragmentsMap } from './fragments';
 // import { labelFormats } from './xAxisLabelFormats';
-// import canvasRendering from './canvas/rendering';
 import {statusHeatmapOptionsEditor} from './options_editor';
+import {ColorModeDiscrete} from "./color_mode_discrete";
 import './css/status-heatmap.css!';
 
 const CANVAS = 'CANVAS';
@@ -24,7 +24,10 @@ const panelDefaults = {
     cardColor: '#b4ff00',
     colorScale: 'sqrt',
     exponent: 0.5,
-    colorScheme: 'interpolateGnYlRd'
+    colorScheme: 'interpolateGnYlRd',
+    // discrete mode settings
+    defaultColor: '#757575',
+    thresholds: [] // manual colors
   },
   cards: {
     cardPadding: null,
@@ -52,8 +55,9 @@ const panelDefaults = {
     decimals: null
   },
   // how null points should be handled
-  nullPointMode: 'null',
-  highlightCards: true
+  nullPointMode: 'as empty',
+  highlightCards: true,
+  useMax: true
 };
 
 const renderer = CANVAS;
@@ -87,7 +91,7 @@ const colorSchemes = [
   { name: 'YlOrRd', value: 'interpolateYlOrRd', invert: 'darm' }
 ];
 
-let colorModes = ['opacity', 'spectrum'];
+let colorModes = ['opacity', 'spectrum', 'discrete'];
 let opacityScales = ['linear', 'sqrt'];
 
 export class StatusHeatmapCtrl extends MetricsPanelCtrl {
@@ -101,16 +105,34 @@ export class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.colorModes = colorModes;
     this.colorSchemes = colorSchemes;
 
+    this.multipleValues = false;
+    this.noColorDefined = false;
+
+    this.discreteHelper = new ColorModeDiscrete($scope);
+
+    this.dataWarnings = {
+      "noColorDefined": {
+        title: 'Data has value with undefined color',
+        tip: 'Check metric values, color values or define a new color',
+      },
+      "multipleValues": {
+        title: 'Data has multiple values for one target',
+        tip: 'Change targets definitions or set "use max value"',
+      }
+    };
+
     this.events.on('data-received', this.onDataReceived);
     this.events.on('data-snapshot-load', this.onDataReceived);
     this.events.on('data-error', this.onDataError);
     this.events.on('init-edit-mode', this.onInitEditMode);
     this.events.on('render', this.onRender);
+    this.events.on('refresh', this.postRefresh);
   }
 
   onDataReceived = (dataList) => {
     this.data      = dataList;
     this.cardsData = this.convertToCards(this.data);
+
     this.render();
   };
 
@@ -121,6 +143,19 @@ export class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
   onRender = () => {
     if (!this.data) { return; }
+
+    this.multipleValues = false;
+    if (!this.panel.useMax) {
+      if (!_.isEmpty(this.cardsData)) {
+        this.multipleValues = this.cardsData.multipleValues;
+      }
+    }
+
+    this.noColorDefined = false;
+    if (this.panel.color.mode === 'discrete') {
+      this.discreteHelper.updateCardsValuesHasColorInfo();
+      this.noColorDefined = this.cardsData.noColorDefined;
+    }
   };
 
   onCardColorChange = (newColor) => {
@@ -133,45 +168,99 @@ export class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.render();
   };
 
-  link = (scope, elem, attrs, ctrl) => {
-    console.log('LINK');
-    rendering(scope, elem, attrs, ctrl);
-    // switch (renderer) {
-    //   case CANVAS: {
-    //     canvasRendering(scope, elem, attrs, ctrl);
-    //     break;
-    //   }
-    //   case SVG: {
-    //     svgRendering(scope, elem, attrs, ctrl);
-    //     break;
-    //   }
-    // }
+  postRefresh = () => {
+    this.noColorDefined = false;
   };
 
+  onEditorAddThreshold = () => {
+    this.panel.color.thresholds.push({ color: this.panel.defaultColor });
+    this.render();
+  };
+
+  onEditorRemoveThreshold = (index) => {
+    this.panel.color.thresholds.splice(index, 1);
+    this.render();
+  };
+
+  onEditorAddThreeLights = () => {
+    this.panel.color.thresholds.push({color: "red", value: 2, tooltip: "error" });
+    this.panel.color.thresholds.push({color: "yellow", value: 1, tooltip: "warning" });
+    this.panel.color.thresholds.push({color: "green", value: 0, tooltip: "ok" });
+    this.render();
+  };
+
+  link = (scope, elem, attrs, ctrl) => {
+    rendering(scope, elem, attrs, ctrl);
+  };
+
+  // group values into buckets by target
   convertToCards = (data) => {
-    let cardsData = { cards: [], xBucketSize: 0, yBucketSize: 0, maxValue: 0, minValue: 0 };
+    let cardsData = {
+      cards: [],
+      xBucketSize: 0,
+      yBucketSize: 0,
+      maxValue: 0,
+      minValue: 0,
+      multipleValues: false,
+      noColorDefined: false,
+    };
 
     if (!data || data.length == 0) { return cardsData;}
 
-    cardsData.yBucketSize = data.length;
+    // collect uniq targets and their indexes in data array
+    cardsData.targetIndex = {};
+    for (let i = 0; i < data.length; i++) {
+      let ts = data[i];
+      let target = ts.target;
+      if (cardsData.targetIndex[target] == undefined) {
+        cardsData.targetIndex[target] = []
+      }
+      cardsData.targetIndex[target].push(i);
+    }
+
+    // TODO add some logic for targets heirarchy
+    cardsData.targets = _.keys(cardsData.targetIndex);
+    cardsData.targets.sort();
+    cardsData.yBucketSize = cardsData.targets.length;
     cardsData.xBucketSize = _.min(_.map(data, d => d.datapoints.length));
 
-    for(let i = 0; i < cardsData.yBucketSize; i++) {
-      let s = data[i];
+    // Collect all values for each bucket from datapoints with similar target.
+    for(let i = 0; i < cardsData.targets.length; i++) {
+      let target = cardsData.targets[i];
 
       for (let j = 0; j < cardsData.xBucketSize; j++) {
-        let card = {};
-        let v = s.datapoints[j];
+        let card = {
+          id: i*cardsData.xBucketSize + j,
+          values: [],
+          multipleValues: false,
+          noColorDefined: false,
+        };
 
-        card.x     = v[TIME_INDEX];
-        card.y     = s.target;
-        card.value = v[VALUE_INDEX];
+        // collect values from all timeseries with target
+        for (let si = 0; si < cardsData.targetIndex[target].length; si++) {
+          let s = data[cardsData.targetIndex[target][si]];
+          let datapoint = s.datapoints[j];
+          if (card.values.length === 0) {
+            card.x = datapoint[TIME_INDEX];
+            card.y = s.target;
+          }
+          card.values.push(datapoint[VALUE_INDEX]);
+        }
+        card.minValue = _.min(card.values);
+        card.maxValue = _.max(card.values);
+        if (card.values.length > 1) {
+          cardsData.multipleValues = true;
+          card.multipleValues = true;
+          card.value = card.maxValue; // max value by default
+        } else {
+          card.value = card.maxValue; // max value by default
+        }
 
-        if (cardsData.maxValue < card.value)
-          cardsData.maxValue = card.value;
+        if (cardsData.maxValue < card.maxValue)
+          cardsData.maxValue = card.maxValue;
 
-        if (cardsData.minValue > card.value)
-          cardsData.minValue = card.value;
+        if (cardsData.minValue > card.minValue)
+          cardsData.minValue = card.minValue;
 
         cardsData.cards.push(card);
       }
@@ -179,4 +268,5 @@ export class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
     return cardsData;
   };
+
 }

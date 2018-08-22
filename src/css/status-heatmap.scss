@@ -4,6 +4,11 @@ $font-size-sm: 12px !default;
 .status-heatmap-canvas-wrapper {
   // position: relative;
   cursor: crosshair;
+
+  .datapoints-warning span {
+  background-color: white;
+  padding: 1px;
+  }
 }
 
 .status-heatmap-panel {

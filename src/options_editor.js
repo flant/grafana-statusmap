@@ -21,7 +21,7 @@ export function statusHeatmapOptionsEditor() {
   return {
     restrict: 'E',
     scope: true,
-    templateUrl: 'public/plugins/status-heatmap-panel/partials/options_editor.html',
+    templateUrl: 'public/plugins/status-heatmap-panel/options_editor.html',
     controller: StatusHeatmapOptionsEditorCtrl,
   };
 }

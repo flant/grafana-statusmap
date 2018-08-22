@@ -38,6 +38,10 @@ mod.directive('optionsColorLegend', function() {
         } else if (panel.color.mode === 'opacity') {
           let colorOptions = panel.color;
           drawSimpleOpacityLegend(elem, colorOptions);
+        } else if (panel.color.mode === 'discrete') {
+          let colorOptions = panel.color;
+          let colorScale = getDiscreteColorScale(colorOptions, legendWidth);
+          drawSimpleDiscreteColorLegend(elem, colorOptions, colorScale);
         }
       }
     }
@@ -74,6 +78,9 @@ mod.directive('statusHeatmapLegend', function() {
           } else if (panel.color.mode === 'opacity') {
             let colorOptions = panel.color;
             drawOpacityLegend(elem, colorOptions, rangeFrom, rangeTo, maxValue, minValue);
+          } else if (panel.color.mode === 'discrete') {
+            let colorOptions = panel.color;
+            drawDiscreteColorLegend(elem, colorOptions, rangeFrom, rangeTo, maxValue, minValue);
           }
         }
       }
@@ -147,6 +154,37 @@ function drawOpacityLegend(elem, options, rangeFrom, rangeTo, maxValue, minValue
   drawLegendValues(elem, opacityScale, rangeFrom, rangeTo, maxValue, minValue, legendWidth);
 }
 
+function drawDiscreteColorLegend(elem, colorOptions, rangeFrom, rangeTo, maxValue, minValue) {
+  let legendElem = $(elem).find('svg');
+  let legend = d3.select(legendElem.get(0));
+  clearLegend(elem);
+
+  let thresholds = colorOptions.thresholds;
+
+  let legendWidth = Math.floor(legendElem.outerWidth()) - 30;
+  let legendHeight = legendElem.attr("height");
+
+  let valuesNumber = thresholds.length;
+  let rangeStep  = Math.floor(legendWidth / valuesNumber);
+  let valuesRange = d3.range(0, legendWidth, rangeStep);
+
+  let widthFactor = 1; // legendWidth / (rangeTo - rangeFrom);
+
+  let colorScale = getDiscreteColorScale(colorOptions, legendWidth);
+  legend.selectAll(".status-heatmap-color-legend-rect")
+    .data(valuesRange)
+    .enter().append("rect")
+    .attr("x", d => d * widthFactor)
+    .attr("y", 0)
+    .attr("width", rangeStep * widthFactor + 1) // Overlap rectangles to prevent gaps
+    .attr("height", legendHeight)
+    .attr("stroke-width", 0)
+    .attr("fill", d => colorScale(d));
+
+  drawDiscreteLegendValues(elem, colorOptions, legendWidth);
+}
+
+
 function drawLegendValues(elem, colorScale, rangeFrom, rangeTo, maxValue, minValue, legendWidth) {
   let legendElem = $(elem).find('svg');
   let legend = d3.select(legendElem.get(0));
@@ -167,6 +205,62 @@ function drawLegendValues(elem, colorScale, rangeFrom, rangeTo, maxValue, minVal
   let colorRect = legendElem.find(":first-child");
   let posY = getSvgElemHeight(legendElem) + 2;
   let posX = getSvgElemX(colorRect);
+
+  d3.select(legendElem.get(0)).append("g")
+    .attr("class", "axis")
+    .attr("transform", "translate(" + posX + "," + posY + ")")
+    .call(xAxis);
+
+  legend.select(".axis").select(".domain").remove();
+}
+
+function drawDiscreteLegendValues(elem, colorOptions, legendWidth) {
+  let thresholds = colorOptions.thresholds;
+
+  let legendElem = $(elem).find('svg');
+  let legend = d3.select(legendElem.get(0));
+
+  if (legendWidth <= 0 || legendElem.get(0).childNodes.length === 0) {
+    return;
+  }
+
+  let valuesNumber = thresholds.length;
+  let rangeStep  = Math.floor(legendWidth / valuesNumber);
+  let valuesRange = d3.range(0, legendWidth, rangeStep);
+
+
+  let legendValueScale = d3.scaleLinear()
+    .domain([0, valuesNumber])
+    .range([0, legendWidth]);
+
+  let thresholdValues = [];
+  let thresholdTooltips = [];
+  for (let i = 0; i < thresholds.length; i++) {
+    thresholdValues.push(thresholds[i].value);
+    thresholdTooltips.push(thresholds[i].tooltip);
+  }
+
+  let xAxis = d3.axisBottom(legendValueScale)
+    .tickValues(d3.range(0, valuesNumber, 1)) //thresholdValues)
+    .tickSize(2)
+    .tickFormat((t) => {
+      let i = Math.floor(t);
+      let v = thresholdTooltips[i];
+      if (v != undefined) {
+        return ""+v;
+      } else {
+        v = thresholdValues[i];
+        if (v != undefined) {
+          return ""+v;
+        } else {
+          return "n/a";
+        }
+      }
+    });
+
+  let colorRect = legendElem.find(":first-child");
+  let posY = getSvgElemHeight(legendElem) + 2;
+  let posX = getSvgElemX(colorRect) + Math.floor(rangeStep/2);
 
   d3.select(legendElem.get(0)).append("g")
     .attr("class", "axis")
@@ -236,6 +330,33 @@ function drawSimpleOpacityLegend(elem, options) {
   }
 }
 
+function drawSimpleDiscreteColorLegend(elem, colorOptions, colorScale) {
+  let thresholds = colorOptions.thresholds;
+
+  let legendElem = $(elem).find('svg');
+  clearLegend(elem);
+
+  let legendWidth = Math.floor(legendElem.outerWidth());
+  let legendHeight = legendElem.attr("height");
+
+  if (legendWidth) {
+    let valuesNumber = thresholds.length;
+    let rangeStep  = Math.floor(legendWidth / valuesNumber);
+    let valuesRange = d3.range(0, legendWidth, rangeStep);
+
+    let legend = d3.select(legendElem.get(0));
+    var legendRects = legend.selectAll(".status-heatmap-discrete-legend-rect").data(valuesRange);
+
+    legendRects.enter().append("rect")
+      .attr("x", d => d)
+      .attr("y", 0)
+      .attr("width", rangeStep + 1) // Overlap rectangles to prevent gaps
+      .attr("height", legendHeight)
+      .attr("stroke-width", 0)
+      .attr("fill", d => colorScale(d));
+  }
+}
+
 function clearLegend(elem) {
   let legendElem = $(elem).find('svg');
   legendElem.empty();
@@ -250,6 +371,42 @@ function getColorScale(colorScheme, maxValue, minValue = 0) {
   let end = colorScaleInverted ? minValue : maxValue;
 
   return d3.scaleSequential(colorInterpolator).domain([start, end]);
+}
+
+// scale input range to discrete colors to draw a legend
+function getDiscreteColorScale(colorOptions, maxValue, minValue = 0) {
+  let start = minValue;
+  let end = maxValue;
+
+  let thresholdValues = [];
+  let thresholdColors = [];
+  for (let i = 0; i < colorOptions.thresholds.length; i++) {
+    thresholdColors.push(colorOptions.thresholds[i].color);
+    thresholdValues.push(colorOptions.thresholds[i].value);
+  }
+
+  // TODO sort colors by value and index?
+
+  let thresholdScaler = (d) => {
+    let color = thresholdColors[Math.floor(d)];
+    if (color != undefined) {
+      return color
+    }
+    return 'rgba(0,0,0,0)';
+    // for (let i = 0; i < thresholdValues.length; i++ ) {
+    //   if (d == thresholdValues[i]) {
+    //     return thresholdColors[i];
+    //   }
+    // }
+    // return thresholdColors[0];
+  };
+
+  let inputRangeScaler = d3.scaleLinear().domain([start, end]).range([0, thresholdColors.length+1]);
+
+  // scale min-max to 0 - max-thrs-value
+  return function(d) {
+    return thresholdScaler(inputRangeScaler(d));
+  }
 }
 
 function getOpacityScale(options, maxValue, minValue = 0) {
