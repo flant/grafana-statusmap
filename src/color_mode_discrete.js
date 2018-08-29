@@ -15,7 +15,7 @@ export class ColorModeDiscrete {
 
     for (let i = 0; i < thresholds.length; i++) {
       for (let j = 0; j < values.length; j++) {
-        if (values[j] === thresholds[i].value) {
+        if (values[j] == thresholds[i].value) {
           tooltips.push(thresholds[i].tooltip);
         }
       }
@@ -64,7 +64,7 @@ export class ColorModeDiscrete {
   getMatchedThreshold(value) {
     let thresholds = this.panel.color.thresholds;
     for (let k = 0; k < thresholds.length; k++) {
-      if (value === thresholds[k].value) {
+      if (value == thresholds[k].value) {
         return thresholds[k];
       }
     }
