@@ -58,7 +58,7 @@ export default function link(scope, elem, attrs, ctrl) {
         height = parseInt(height.replace('px', ''), 10);
       }
 
-      height -= panel.legend.show ? 28 : 11; // bottom padding and space for legend
+      height -= panel.legend.show ? 32 : 10; // bottom padding and space for legend. Change margin in .status-heatmap-color-legend !
 
       $heatmap.css('height', height + 'px');
 

@@ -16,7 +16,10 @@ export class ColorModeDiscrete {
     for (let i = 0; i < thresholds.length; i++) {
       for (let j = 0; j < values.length; j++) {
         if (values[j] == thresholds[i].value) {
-          tooltips.push(thresholds[i].tooltip);
+          tooltips.push({
+            "tooltip": thresholds[i].tooltip,
+            "color": thresholds[i].color
+          });
         }
       }
     }

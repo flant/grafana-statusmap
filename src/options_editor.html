@@ -17,6 +17,9 @@
     </div>
 
     <div ng-show="ctrl.panel.color.mode === 'opacity'">
+      <div class="gf-form" ng-show="ctrl.panel.useMax">
+        <strong>Note:</strong> Bucket color determined by maximum value in bucket<br/>
+      </div>
       <div class="gf-form">
         <label class="gf-form-label width-9">Color</label>
         <span class="gf-form-label">
@@ -36,6 +39,9 @@
     </div>
 
     <div ng-show="ctrl.panel.color.mode === 'spectrum'">
+      <div class="gf-form" ng-show="ctrl.panel.useMax">
+        <strong>Note:</strong> Bucket color determined by maximum value in bucket<br/>
+      </div>
       <div class="gf-form">
         <label class="gf-form-label width-9">Scheme</label>
         <div class="gf-form-select-wrapper width-8">
@@ -45,16 +51,15 @@
     </div>
 
     <div ng-show="ctrl.panel.color.mode === 'discrete'">
-        <!-- <gf-form-switch class="gf-form" label-class="width-9"
-                        label="Invert order"
-                        checked="ctrl.panel.color.invertedThresholds" on-change="ctrl.render()">
-        </gf-form-switch> -->
-        <div class="gf-form">
-          <strong>Note:</strong> Bucket color determined by maximum for multiple values<br/>
+        <div class="gf-form" ng-show="ctrl.panel.useMax">
+          <strong>Note:</strong> Multiple values displayed using color with least index<br/>
         </div>
 
         <div class="gf-form" ng-repeat="threshold in ctrl.panel.color.thresholds">
-          <label class="gf-form-label width-9">If bucket value ==</label><!-- {{ $index + 1 }} -->
+
+          <label class="gf-form-label width-2">{{ $index }}</label>
+          <label class="gf-form-label width-9" ng-if="ctrl.panel.useMax">If bucket has value</label>
+          <label class="gf-form-label width-9" ng-if="!ctrl.panel.useMax">If bucket value ==</label>
           <input type="text" class="input-small gf-form-input width-4" ng-model="threshold.value" ng-change="ctrl.render()"/>
           <label class="gf-form-label">
             fill
@@ -116,12 +121,15 @@
   </div>
 
   <div class="section gf-form-group">
-    <h5 class="section-heading">Graph</h5>
+    <h5 class="section-heading">Bucket</h5>
 
     <gf-form-switch class="gf-form" label-class="width-9"
-                    label="Use max value for color"
+                    label="Multiple values"
                     checked="ctrl.panel.useMax" on-change="ctrl.render()">
     </gf-form-switch>
+    <div class="gf-form" ng-show="ctrl.panel.useMax">
+      Color for bucket with multiple values is determined by color mode<br/>
+    </div>
 
     <div class="gf-form">
       <label class="gf-form-label width-9">Display nulls</label>
@@ -130,11 +138,11 @@
       </div>
     </div>
     <div class="gf-form">
-      <label class="gf-form-label width-9">Buckets spacing</label>
+      <label class="gf-form-label width-9">Spacing</label>
       <input type="number" class="gf-form-input width-5" placeholder="auto" data-placement="right" bs-tooltip="''" ng-model="ctrl.panel.cards.cardPadding" ng-change="ctrl.refresh()" ng-model-onblur>
     </div>
     <div class="gf-form">
-      <label class="gf-form-label width-9">Bucket rounding</label>
+      <label class="gf-form-label width-9">Rounding</label>
       <input type="number" class="gf-form-input width-5" placeholder="auto" data-placement="right" bs-tooltip="''" ng-model="ctrl.panel.cards.cardRound" ng-change="ctrl.refresh()" ng-model-onblur>
     </div>
   </div>

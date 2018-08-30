@@ -84,11 +84,14 @@ export class StatusHeatmapTooltip {
     if (this.panel.color.mode === 'discrete') {
       let statuses = this.panelCtrl.discreteHelper.convertValuesToTooltips(values);
       let statusesHtml = '';
-      if (statuses.length > 0) {
+      if (statuses.length === 1) {
+        statusesHtml = `
+          status: <b style="background-color: ${statuses[0].color}; padding: 1px;">${statuses[0].tooltip}</b>`;
+      } else if (statuses.length > 1) {
         statusesHtml = `
           statuses:
           <ul>
-            ${_.join(_.map(statuses, v => `<li>${v}</li>`), "")}
+            ${_.join(_.map(statuses, v => `<li style="background-color: ${v.color}; padding: 1px;">${v.tooltip}</li>`), "")}
           </ul>`;
       }
       tooltipHtml += `<div>
