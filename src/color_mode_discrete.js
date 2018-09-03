@@ -65,6 +65,20 @@ export class ColorModeDiscrete {
   }
 
   getMatchedThreshold(value) {
+    if (value == null) {
+      if (this.panel.color.nullPointMode == 'as empty') {
+        // FIXME: make this explicit for user
+        // Right now this color never used because null as empty handles in getCardOpacity method.
+        return {
+          "color": "rgba(0,0,0,0)",
+          "value": "null",
+          "tooltip": "null",
+        }
+      } else {
+        value = 0;
+      }
+    }
+
     let thresholds = this.panel.color.thresholds;
     for (let k = 0; k < thresholds.length; k++) {
       if (value == thresholds[k].value) {

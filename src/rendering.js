@@ -333,36 +333,6 @@ export default function link(scope, elem, attrs, ctrl) {
     return d3.scaleSequential(colorInterpolator).domain([start, end]);
   }
 
-// scale input range to discrete colors to draw a legend
-  function getDiscreteColorScale() {
-    let thresholds = panel.color.thresholds;
-
-    let thresholdValues = [];
-    let thresholdColors = [];
-    for (let i = 0; i < thresholds.length; i++) {
-      thresholdColors.push(thresholds[i].color);
-      thresholdValues.push(thresholds[i].value);
-    }
-
-    // TODO sort colors by value and index?
-
-    let thresholdScaler = (d) => {
-      for (let i = 0; i < thresholdValues.length; i++ ) {
-        if (d == thresholdValues[i]) {
-          return thresholdColors[i];
-        }
-      }
-      // Error if value not in thresholds
-      return 'rgba(0,0,0,1)';
-    };
-
-    // scale min-max to 0 - max-thrs-value
-    return function(d) {
-      return thresholdScaler(d);
-    }
-  }
-
-
   function setOpacityScale(maxValue) {
     if (panel.color.colorScale === 'linear') {
       opacityScale = d3.scaleLinear()
