@@ -38,10 +38,6 @@ mod.directive('optionsColorLegend', function() {
         } else if (panel.color.mode === 'opacity') {
           let colorOptions = panel.color;
           drawSimpleOpacityLegend(elem, colorOptions);
-        } else if (panel.color.mode === 'discrete') {
-          let colorOptions = panel.color;
-          let colorScale = getDiscreteColorScale(colorOptions, legendWidth);
-          drawSimpleDiscreteColorLegend(elem, colorOptions, colorScale);
         }
       }
     }
@@ -159,9 +155,17 @@ function drawDiscreteColorLegend(elem, colorOptions, rangeFrom, rangeTo, maxValu
   let legend = d3.select(legendElem.get(0));
   clearLegend(elem);
 
+  // FIXME: hack for long discrete tooltips. Spectrum will use 168px after editing.
+  // FIXME: render all tooltips as svg, get max width. calc min between tooltip width and graphWidth/tooltip count.
+  // (min+2 for padding)*count is a new legend width.
+  // TODO add clippath or mask if text overlapped!
+  let $heatmap = $(elem).parent().parent().parent().find('.status-heatmap-panel');
+  let graphWidth  = $heatmap.find('svg').attr("width");
+  legendElem.attr("width", graphWidth);
+
   let thresholds = colorOptions.thresholds;
 
-  let legendWidth = Math.floor(legendElem.outerWidth()) - 30;
+  let legendWidth = Math.floor(graphWidth) - 30;   // Math.floor(legendElem.outerWidth()) - 30;
   let legendHeight = legendElem.attr("height");
 
   let valuesNumber = thresholds.length;
@@ -297,6 +301,7 @@ function drawSimpleColorLegend(elem, colorScale) {
 
 function drawSimpleOpacityLegend(elem, options) {
   let legendElem = $(elem).find('svg');
+  let graphElem = $(elem);
   clearLegend(elem);
 
   let legend = d3.select(legendElem.get(0));
@@ -330,32 +335,6 @@ function drawSimpleOpacityLegend(elem, options) {
   }
 }
 
-function drawSimpleDiscreteColorLegend(elem, colorOptions, colorScale) {
-  let thresholds = colorOptions.thresholds;
-
-  let legendElem = $(elem).find('svg');
-  clearLegend(elem);
-
-  let legendWidth = Math.floor(legendElem.outerWidth());
-  let legendHeight = legendElem.attr("height");
-
-  if (legendWidth) {
-    let valuesNumber = thresholds.length;
-    let rangeStep  = Math.floor(legendWidth / valuesNumber);
-    let valuesRange = d3.range(0, legendWidth, rangeStep);
-
-    let legend = d3.select(legendElem.get(0));
-    var legendRects = legend.selectAll(".status-heatmap-discrete-legend-rect").data(valuesRange);
-
-    legendRects.enter().append("rect")
-      .attr("x", d => d)
-      .attr("y", 0)
-      .attr("width", rangeStep + 1) // Overlap rectangles to prevent gaps
-      .attr("height", legendHeight)
-      .attr("stroke-width", 0)
-      .attr("fill", d => colorScale(d));
-  }
-}
 
 function clearLegend(elem) {
   let legendElem = $(elem).find('svg');
@@ -393,12 +372,6 @@ function getDiscreteColorScale(colorOptions, maxValue, minValue = 0) {
       return color
     }
     return 'rgba(0,0,0,0)';
-    // for (let i = 0; i < thresholdValues.length; i++ ) {
-    //   if (d == thresholdValues[i]) {
-    //     return thresholdColors[i];
-    //   }
-    // }
-    // return thresholdColors[0];
   };
 
   let inputRangeScaler = d3.scaleLinear().domain([start, end]).range([0, thresholdColors.length+1]);
