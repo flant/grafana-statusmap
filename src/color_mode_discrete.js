@@ -87,4 +87,67 @@ export class ColorModeDiscrete {
     }
     return null;
   }
+
+  roundIntervalCeil(interval) {
+    switch (true) {
+      case interval <= 10:
+        return 10; // 0.01s
+      case interval <= 20:
+        return 20; // 0.02s
+      case interval <= 50:
+        return 50; // 0.05s
+      case interval <= 100:
+        return 100; // 0.1s
+      case interval <= 200:
+        return 200; // 0.2s
+      case interval <= 500:
+        return 500; // 0.5s
+      case interval <= 1000:
+        return 1000; // 1s
+      case interval <= 2000:
+        return 2000; // 2s
+      case interval <= 5000:
+        return 5000; // 5s
+      case interval <= 10000:
+        return 10000; // 10s
+      case interval <= 15000:
+        return 15000; // 15s
+      case interval <= 20000:
+        return 20000; // 20s
+      case interval <= 30000:
+        return 30000; // 30s
+      case interval <= 60000:
+        return 60000; // 1m
+      case interval <= 120000:
+        return 120000; // 2m
+      case interval <= 300000:
+        return 300000; // 5m
+      case interval <= 600000:
+        return 600000; // 10m
+      case interval <= 900000:
+        return 900000; // 15m
+      case interval <= 1200000:
+        return 1200000; // 20m
+      case interval <= 1800000:
+        return 1800000; // 30m
+      case interval <= 3600000:
+        return 3600000; // 1h
+      case interval <= 7200000:
+        return 7200000; // 2h
+      case interval <= 10800000:
+        return 10800000; // 3h
+      case interval <= 21600000:
+        return 21600000; // 6h
+      case interval <= 43200000:
+        return 43200000; // 12h
+      case interval <= 86400000:
+        return 86400000; // 1d
+      case interval <= 604800000:
+        return 604800000; // 1w
+      case interval <= 2592000000:
+        return 2592000000; // 30d
+      default:
+        return 31536000000; // 1y
+    }
+  }
 }

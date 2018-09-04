@@ -297,6 +297,10 @@ export default function link(scope, elem, attrs, ctrl) {
       tooltip.mouseOverBucket = false;
       resetCardHighLight(event);
     });
+
+    ctrl.events.emit('render-complete', {
+      "chartWidth": chartWidth
+    });
   }
 
   function highlightCard(event) {

@@ -105,6 +105,11 @@ export class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.colorModes = colorModes;
     this.colorSchemes = colorSchemes;
 
+    // default graph width for discrete card width calculation
+    this.graph = {
+      "chartWidth" : -1
+    };
+
     this.multipleValues = false;
     this.noColorDefined = false;
 
@@ -127,7 +132,57 @@ export class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.events.on('init-edit-mode', this.onInitEditMode);
     this.events.on('render', this.onRender);
     this.events.on('refresh', this.postRefresh);
+    this.events.on('render-complete', this.onRenderComplete);
   }
+
+  onRenderComplete = (data) => {
+    this.graph.chartWidth = data.chartWidth;
+  };
+
+  // override calculateInterval for discrete color mode
+  calculateInterval = () => {
+    let chartWidth = this.graph.chartWidth;
+
+    if (chartWidth == -1) {
+      // approximate panel width
+      chartWidth = Math.ceil($(window).width() * (this.panel.gridPos.w / 24));
+    }
+
+    let minCardWidth = 5;
+    let minSpacing = 2;
+    let maxCardsCount = Math.ceil(chartWidth / (minCardWidth + minSpacing));
+
+    let intervalMs;
+    let rangeMs = this.range.to.valueOf() - this.range.from.valueOf();
+
+    // this is minimal interval! kbn.round_interval will lower it.
+    intervalMs = this.discreteHelper.roundIntervalCeil(rangeMs / maxCardsCount);
+
+    // Calculate low limit of interval
+    let lowLimitMs = 1; // 1 millisecond default low limit
+    let intervalOverride = this.panel.interval;
+
+    // if no panel interval check datasource
+    if (intervalOverride) {
+      intervalOverride = this.templateSrv.replace(intervalOverride, this.panel.scopedVars);
+    } else if (this.datasource && this.datasource.interval) {
+      intervalOverride = this.datasource.interval;
+    }
+
+    if (intervalOverride) {
+      if (intervalOverride[0] === '>') {
+        intervalOverride = intervalOverride.slice(1);
+      }
+      lowLimitMs = kbn.interval_to_ms(intervalOverride);
+    }
+
+    if (lowLimitMs > intervalMs) {
+      intervalMs = lowLimitMs;
+    }
+
+    this.intervalMs = intervalMs;
+    this.interval = kbn.secondsToHms(intervalMs / 1000);
+  };
 
   onDataReceived = (dataList) => {
     this.data      = dataList;
@@ -268,5 +323,4 @@ export class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
     return cardsData;
   };
-
 }
