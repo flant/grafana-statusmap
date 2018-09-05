@@ -91,7 +91,7 @@ export class StatusHeatmapTooltip {
         statusesHtml = `
           statuses:
           <ul>
-            ${_.join(_.map(statuses, v => `<li style="background-color: ${v.color}; padding: 1px;">${v.tooltip}</li>`), "")}
+            ${_.join(_.map(statuses, v => `<li style="background-color: ${v.color}; padding: 1px; text-shadow: 0 0 0.2em #FFF, 0 0 0.2em #FFF, 0 0 0.2em #FFF">${v.tooltip}</li>`), "")}
           </ul>`;
       }
       tooltipHtml += `<div>
