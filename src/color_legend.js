@@ -155,32 +155,46 @@ function drawDiscreteColorLegend(elem, colorOptions, rangeFrom, rangeTo, maxValu
   let legend = d3.select(legendElem.get(0));
   clearLegend(elem);
 
-  // FIXME: hack for long discrete tooltips. Spectrum will use 168px after editing.
-  // FIXME: render all tooltips as svg, get max width. calc min between tooltip width and graphWidth/tooltip count.
-  // (min+2 for padding)*count is a new legend width.
-  // TODO add clippath or mask if text overlapped!
+  let thresholds = colorOptions.thresholds;
+  let tooltips = _.map(thresholds, tr => tr.tooltip);
+  let valuesNumber = thresholds.length;
+
+  // graph width as a fallback
   let $heatmap = $(elem).parent().parent().parent().find('.status-heatmap-panel');
   let graphWidth  = $heatmap.find('svg').attr("width");
-  legendElem.attr("width", graphWidth);
 
-  let thresholds = colorOptions.thresholds;
+  // calculate max width of tooltip and use it as width for each item
+  let textWidth = [];
+  legend.selectAll(".hidden-texts")
+    .data(tooltips)
+    .enter().append("text")
+    .attr("class", "axis tick")
+    .attr("font-family", "sans-serif")
+    .text(d => d)
+    .each(function(d,i) {
+      let thisWidth = this.getBBox().width;
+      textWidth.push(thisWidth);
+      this.remove(); // remove them just after displaying them
+    });
 
-  let legendWidth = Math.floor(graphWidth) - 30;   // Math.floor(legendElem.outerWidth()) - 30;
+  let legendWidth = Math.floor(_.min([
+    graphWidth - 30,
+    (_.max(textWidth) + 3) * valuesNumber,
+  ]));
+  legendElem.attr("width", legendWidth);
+
   let legendHeight = legendElem.attr("height");
 
-  let valuesNumber = thresholds.length;
   let rangeStep  = Math.floor(legendWidth / valuesNumber);
   let valuesRange = d3.range(0, legendWidth, rangeStep);
-
-  let widthFactor = 1; // legendWidth / (rangeTo - rangeFrom);
 
   let colorScale = getDiscreteColorScale(colorOptions, legendWidth);
   legend.selectAll(".status-heatmap-color-legend-rect")
     .data(valuesRange)
     .enter().append("rect")
-    .attr("x", d => d * widthFactor)
+    .attr("x", d => d)
     .attr("y", 0)
-    .attr("width", rangeStep * widthFactor + 1) // Overlap rectangles to prevent gaps
+    .attr("width", rangeStep + 1) // Overlap rectangles to prevent gaps
     .attr("height", legendHeight)
     .attr("stroke-width", 0)
     .attr("fill", d => colorScale(d));

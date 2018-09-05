@@ -72,7 +72,7 @@ $font-size-sm: 12px !default;
     height: 24px;
     float: left;
     white-space: nowrap;
-    padding-left: 10px;
+    //padding-left: 10px; // DO NOT TOUCH THIS! legend will be clipped!
   }
 
   .status-heatmap-color-legend {
