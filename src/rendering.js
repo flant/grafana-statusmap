@@ -8,8 +8,8 @@ import d3 from 'd3';
 import * as d3ScaleChromatic from './libs/d3-scale-chromatic/index';
 import {StatusHeatmapTooltip} from './tooltip';
 
-let MIN_CARD_SIZE = 1,
-    CARD_PADDING = 1,
+let MIN_CARD_SIZE = 5,
+    CARD_SPACING = 2,
     CARD_ROUND = 0,
     DATA_RANGE_WIDING_FACTOR = 1.2,
     DEFAULT_X_TICK_SIZE_PX = 100,
@@ -30,10 +30,11 @@ export default function link(scope, elem, attrs, ctrl) {
       chartWidth, chartHeight,
       chartTop, chartBottom,
       yAxisWidth, xAxisHeight,
-      cardPadding, cardRound,
+      cardSpacing, cardRound,
       cardWidth, cardHeight,
       colorScale, opacityScale,
-      mouseUpHandler;
+      mouseUpHandler,
+      xGridSize, yGridSize;
 
   let yOffset = 0;
 
@@ -91,9 +92,10 @@ export default function link(scope, elem, attrs, ctrl) {
   }
 
   function addXAxis() {
+    // Scale timestamps to cards centers
     scope.xScale = xScale = d3.scaleTime()
       .domain([timeRange.from, timeRange.to])
-      .range([0, chartWidth]);
+      .range([xGridSize/2, chartWidth-xGridSize/2]);
 
     let ticks = chartWidth / DEFAULT_X_TICK_SIZE_PX;
     let grafanaTimeFormatter = grafanaTimeFormat(ticks, timeRange.from, timeRange.to);
@@ -229,12 +231,12 @@ export default function link(scope, elem, attrs, ctrl) {
     chartTop = margin.top;
     chartBottom = chartTop + chartHeight;
 
-    cardPadding = panel.cards.cardPadding !== null ? panel.cards.cardPadding : CARD_PADDING;
+    cardSpacing = panel.cards.cardSpacing !== null ? panel.cards.cardSpacing : CARD_SPACING;
     cardRound = panel.cards.cardRound !== null ? panel.cards.cardRound : CARD_ROUND;
 
     // calculate yOffset for YAxis
-    let yGridSize = Math.floor(chartHeight / cardsData.yBucketSize);
-    cardHeight = yGridSize ? yGridSize - cardPadding * 2 : 0;
+    yGridSize = Math.floor(chartHeight / cardsData.yBucketSize);
+    cardHeight = yGridSize ? yGridSize - cardSpacing : 0;
     yOffset = cardHeight / 2;
 
     addYAxis();
@@ -242,8 +244,9 @@ export default function link(scope, elem, attrs, ctrl) {
     yAxisWidth = getYAxisWidth(heatmap) + Y_AXIS_TICK_PADDING;
     chartWidth = width - yAxisWidth - margin.right;
 
-    let xGridSize = Math.floor(chartWidth / cardsData.xBucketSize);
-    cardWidth = xGridSize - cardPadding * 2;
+    // we need to fill chartWidth with xBucketSize cards.
+    xGridSize = chartWidth / (cardsData.xBucketSize+1);
+    cardWidth = xGridSize - cardSpacing;
 
     addXAxis();
     xAxisHeight = getXAxisHeight(heatmap);
@@ -351,46 +354,53 @@ export default function link(scope, elem, attrs, ctrl) {
 
   function getCardX(d) {
     let x;
-    if (xScale(d.x) < 0) {
-      // Cut card left to prevent overlay
-      x = yAxisWidth + cardPadding;
+    // cx is the center of the card. Card should be placed to the left.
+    let cx = xScale(d.x);
+
+    if (cx - cardWidth/2 < 0) {
+      x = yAxisWidth + cardSpacing/2;
     } else {
-      x = xScale(d.x) + yAxisWidth + cardPadding;
+      x = yAxisWidth + cx - cardWidth/2;
     }
 
     return x;
   }
 
+  // xScale returns card center. Adjust cardWidth in case of overlaping.
   function getCardWidth(d) {
     let w;
-    if (xScale(d.x) < 0) {
-      // Cut card left to prevent overlay
-      let cutted_width = xScale(d.x) + cardWidth;
+    let cx = xScale(d.x);
+
+    if (cx < cardWidth/2) {
+      // Center should not exceed half of card.
+      // Cut card to the left to prevent overlay of y axis.
+      let cutted_width = (cx - cardSpacing/2) + cardWidth/2;
       w = cutted_width > 0 ? cutted_width : 0;
-    } else if (xScale(d.x) + cardWidth > chartWidth) {
-      // Cut card right to prevent overlay
-      w = chartWidth - xScale(d.x) - cardPadding;
+    } else if (chartWidth - cx < cardWidth/2) {
+      // Cut card to the right to prevent overlay of right graph edge.
+      w = cardWidth/2 + (chartWidth - cx - cardSpacing/2);
     } else {
       w = cardWidth;
     }
 
     // Card width should be MIN_CARD_SIZE at least
     w = Math.max(w, MIN_CARD_SIZE);
+
     return w;
   }
 
   function getCardY(d) {
-    return yScale(d.y) + chartTop - cardHeight - cardPadding;
+    return yScale(d.y) + chartTop - cardHeight - cardSpacing/2;
   }
 
   function getCardHeight(d) {
     let ys = yScale(d.y);
-    let y = ys + chartTop - cardHeight - cardPadding;
+    let y = ys + chartTop - cardHeight - cardSpacing/2;
     let h = cardHeight;
 
     // Cut card height to prevent overlay
     if (y < chartTop) {
-      h = ys - cardPadding;
+      h = ys - cardSpacing/2;
     } else if (ys > chartBottom) {
       h = chartBottom - y;
     } else if (y + cardHeight > chartBottom) {
@@ -464,8 +474,8 @@ export default function link(scope, elem, attrs, ctrl) {
 
     let selectionRange = Math.abs(selection.x2 - selection.x1);
     if (selection.x2 >= 0 && selectionRange > MIN_SELECTION_WIDTH) {
-      let timeFrom = xScale.invert(Math.min(selection.x1, selection.x2) - yAxisWidth);
-      let timeTo = xScale.invert(Math.max(selection.x1, selection.x2) - yAxisWidth);
+      let timeFrom = xScale.invert(Math.min(selection.x1, selection.x2) - yAxisWidth - xGridSize/2);
+      let timeTo = xScale.invert(Math.max(selection.x1, selection.x2) - yAxisWidth - xGridSize/2);
 
       ctrl.timeSrv.setTime({
         from: moment.utc(timeFrom),
@@ -499,7 +509,7 @@ export default function link(scope, elem, attrs, ctrl) {
   }
 
   function emitGraphHoverEvet(event) {
-    let x = xScale.invert(event.offsetX - yAxisWidth).valueOf();
+    let x = xScale.invert(event.offsetX - yAxisWidth - xGridSize/2).valueOf();
     let y = yScale(event.offsetY);
     let pos = {
       pageX: event.pageX,
@@ -568,6 +578,7 @@ export default function link(scope, elem, attrs, ctrl) {
     }
   }
 
+  // map time to X
   function drawSharedCrosshair(pos) {
     if (heatmap && ctrl.dashboard.graphTooltip !== 0) {
       let posX = xScale(pos.x) + yAxisWidth;

@@ -30,7 +30,8 @@ const panelDefaults = {
     thresholds: [] // manual colors
   },
   cards: {
-    cardPadding: null,
+    cardMinWidth: 5,
+    cardSpacing: 2,
     cardRound: null
   },
   xAxis: {
@@ -148,9 +149,9 @@ export class StatusHeatmapCtrl extends MetricsPanelCtrl {
       chartWidth = Math.ceil($(window).width() * (this.panel.gridPos.w / 24));
     }
 
-    let minCardWidth = 5;
-    let minSpacing = 2;
-    let maxCardsCount = Math.ceil(chartWidth / (minCardWidth + minSpacing));
+    let minCardWidth = this.panel.cards.cardMinWidth;
+    let minSpacing = this.panel.cards.cardSpacing;
+    let maxCardsCount = Math.ceil((chartWidth-minCardWidth) / (minCardWidth + minSpacing));
 
     let intervalMs;
     let rangeMs = this.range.to.valueOf() - this.range.from.valueOf();
