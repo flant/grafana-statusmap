@@ -85,18 +85,17 @@ export class StatusHeatmapTooltip {
       let statuses = this.panelCtrl.discreteHelper.convertValuesToTooltips(values);
       let statusesHtml = '';
       if (statuses.length === 1) {
-        statusesHtml = `
-          status: <b style="background-color: ${statuses[0].color}; padding: 1px;">${statuses[0].tooltip}</b>`;
+        statusesHtml = "status:";
       } else if (statuses.length > 1) {
-        statusesHtml = `
-          statuses:
-          <ul>
-            ${_.join(_.map(statuses, v => `<li style="background-color: ${v.color}; padding: 1px; text-shadow: 0 0 0.2em #FFF, 0 0 0.2em #FFF, 0 0 0.2em #FFF">${v.tooltip}</li>`), "")}
-          </ul>`;
+        statusesHtml = "statuses:";
       }
-      tooltipHtml += `<div>
-      name: <b>${y}</b> <br>
-      ${statusesHtml}
+      tooltipHtml += `
+      <div>
+        name: <b>${y}</b> <br>
+        ${statusesHtml}
+        <ul>
+          ${_.join(_.map(statuses, v => `<li style="background-color: ${v.color}; padding: 1px; font-weight: bold; text-shadow: 0 0 0.2em #FFF, 0 0 0.2em #FFF, 0 0 0.2em #FFF">${v.tooltip}</li>`), "")}
+        </ul>
       </div>`;
     } else {
       if (values.length === 1) {
@@ -123,9 +122,9 @@ export class StatusHeatmapTooltip {
     // Discrete mode errors
     if (this.panel.color.mode === 'discrete') {
       if (card.noColorDefined) {
-        let badValues = this.panelCtrl.discreteHelper.getNotMatchedValues(values);
+        let badValues = this.panelCtrl.discreteHelper.getNotColoredValues(values);
         tooltipHtml += `<div><b>Error:</b> ${this.panelCtrl.dataWarnings.noColorDefined.title}
-        <br>bad values:
+        <br>not colored values:
         <ul>
           ${_.join(_.map(badValues, v => `<li>${v}</li>`), "")}
         </ul>

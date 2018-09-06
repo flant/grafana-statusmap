@@ -76,7 +76,7 @@ mod.directive('statusHeatmapLegend', function() {
             drawOpacityLegend(elem, colorOptions, rangeFrom, rangeTo, maxValue, minValue);
           } else if (panel.color.mode === 'discrete') {
             let colorOptions = panel.color;
-            drawDiscreteColorLegend(elem, colorOptions, rangeFrom, rangeTo, maxValue, minValue);
+            drawDiscreteColorLegend(elem, colorOptions, ctrl.discreteHelper);
           }
         }
       }
@@ -150,7 +150,7 @@ function drawOpacityLegend(elem, options, rangeFrom, rangeTo, maxValue, minValue
   drawLegendValues(elem, opacityScale, rangeFrom, rangeTo, maxValue, minValue, legendWidth);
 }
 
-function drawDiscreteColorLegend(elem, colorOptions, rangeFrom, rangeTo, maxValue, minValue) {
+function drawDiscreteColorLegend(elem, colorOptions, discreteHelper) {
   let legendElem = $(elem).find('svg');
   let legend = d3.select(legendElem.get(0));
   clearLegend(elem);
@@ -185,19 +185,18 @@ function drawDiscreteColorLegend(elem, colorOptions, rangeFrom, rangeTo, maxValu
 
   let legendHeight = legendElem.attr("height");
 
-  let rangeStep  = Math.floor(legendWidth / valuesNumber);
-  let valuesRange = d3.range(0, legendWidth, rangeStep);
+  let itemWidth  = Math.floor(legendWidth / valuesNumber);
+  let valuesRange = d3.range(valuesNumber); // from 0 to valuesNumber-1
 
-  let colorScale = getDiscreteColorScale(colorOptions, legendWidth);
   legend.selectAll(".status-heatmap-color-legend-rect")
     .data(valuesRange)
     .enter().append("rect")
-    .attr("x", d => d)
+    .attr("x", d => d*itemWidth)
     .attr("y", 0)
-    .attr("width", rangeStep + 1) // Overlap rectangles to prevent gaps
+    .attr("width", itemWidth + 1) // Overlap rectangles to prevent gaps
     .attr("height", legendHeight)
     .attr("stroke-width", 0)
-    .attr("fill", d => colorScale(d));
+    .attr("fill", d => discreteHelper.getDiscreteColor(d));
 
   drawDiscreteLegendValues(elem, colorOptions, legendWidth);
 }
@@ -288,31 +287,6 @@ function drawDiscreteLegendValues(elem, colorOptions, legendWidth) {
   legend.select(".axis").select(".domain").remove();
 }
 
-function drawSimpleColorLegend(elem, colorScale) {
-  let legendElem = $(elem).find('svg');
-  clearLegend(elem);
-
-  let legendWidth = Math.floor(legendElem.outerWidth());
-  let legendHeight = legendElem.attr("height");
-
-  if (legendWidth) {
-    let valuesNumber = Math.floor(legendWidth / 2);
-    let rangeStep  = Math.floor(legendWidth / valuesNumber);
-    let valuesRange = d3.range(0, legendWidth, rangeStep);
-
-    let legend = d3.select(legendElem.get(0));
-    var legendRects = legend.selectAll(".status-heatmap-color-legend-rect").data(valuesRange);
-
-    legendRects.enter().append("rect")
-      .attr("x", d => d)
-      .attr("y", 0)
-      .attr("width", rangeStep + 1) // Overlap rectangles to prevent gaps
-      .attr("height", legendHeight)
-      .attr("stroke-width", 0)
-      .attr("fill", d => colorScale(d));
-  }
-}
-
 function drawSimpleOpacityLegend(elem, options) {
   let legendElem = $(elem).find('svg');
   let graphElem = $(elem);
@@ -364,36 +338,6 @@ function getColorScale(colorScheme, maxValue, minValue = 0) {
   let end = colorScaleInverted ? minValue : maxValue;
 
   return d3.scaleSequential(colorInterpolator).domain([start, end]);
-}
-
-// scale input range to discrete colors to draw a legend
-function getDiscreteColorScale(colorOptions, maxValue, minValue = 0) {
-  let start = minValue;
-  let end = maxValue;
-
-  let thresholdValues = [];
-  let thresholdColors = [];
-  for (let i = 0; i < colorOptions.thresholds.length; i++) {
-    thresholdColors.push(colorOptions.thresholds[i].color);
-    thresholdValues.push(colorOptions.thresholds[i].value);
-  }
-
-  // TODO sort colors by value and index?
-
-  let thresholdScaler = (d) => {
-    let color = thresholdColors[Math.floor(d)];
-    if (color != undefined) {
-      return color
-    }
-    return 'rgba(0,0,0,0)';
-  };
-
-  let inputRangeScaler = d3.scaleLinear().domain([start, end]).range([0, thresholdColors.length+1]);
-
-  // scale min-max to 0 - max-thrs-value
-  return function(d) {
-    return thresholdScaler(inputRangeScaler(d));
-  }
 }
 
 function getOpacityScale(options, maxValue, minValue = 0) {

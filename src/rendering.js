@@ -266,9 +266,7 @@ export default function link(scope, elem, attrs, ctrl) {
     let maxValue = panel.color.max || cardsData.maxValue;
     let minValue = panel.color.min || cardsData.minValue;
 
-    if (panel.color.mode === 'discrete') {
-      colorScale = ctrl.discreteHelper.getDiscreteColorScale();
-    } else {
+    if (panel.color.mode !== 'discrete') {
       colorScale = getColorScale(maxValue, minValue);
     }
     setOpacityScale(maxValue);
@@ -421,7 +419,7 @@ export default function link(scope, elem, attrs, ctrl) {
     } else if (panel.color.mode === 'spectrum') {
       return colorScale(d.value);
     } else if (panel.color.mode === 'discrete') {
-      return colorScale(d.value);
+      return ctrl.discreteHelper.getBucketColor(d.values);
     }
   }
 

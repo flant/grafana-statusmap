@@ -17,7 +17,7 @@ export class ColorModeDiscrete {
       for (let j = 0; j < values.length; j++) {
         if (values[j] == thresholds[i].value) {
           tooltips.push({
-            "tooltip": thresholds[i].tooltip,
+            "tooltip": thresholds[i].tooltip?thresholds[i].tooltip:values[j],
             "color": thresholds[i].color
           });
         }
@@ -37,25 +37,49 @@ export class ColorModeDiscrete {
     return notMatched;
   }
 
-  getDiscreteColorScale() {
-    return (d) => {
-      let threshold = this.getMatchedThreshold(d);
-      if (!threshold) {
-        // Error if value not in thresholds
-        return 'rgba(0,0,0,1)';
+  getNotColoredValues(values) {
+    let notMatched = [];
+    for (let j = 0; j < values.length; j++) {
+      let threshold = this.getMatchedThreshold(values[j]);
+      if (!threshold || !threshold.color || threshold.color == "") {
+        notMatched.push(values[j]);
       }
-      else {
-        return threshold.color;
+    }
+    return notMatched;
+  }
+
+
+  getDiscreteColor(index) {
+    let color = this.getThreshold(index).color;
+    if (!color || color == "") {
+      return 'rgba(0,0,0,1)';
+    }
+    return color;
+  }
+
+  // returns color from first matched thresold in order from 0 to thresholds.length
+  getBucketColor(values) {
+    let thresholds = this.panel.color.thresholds;
+
+    for (let i = 0; i < thresholds.length; i++) {
+      for (let j = 0; j < values.length; j++) {
+        if (values[j] == thresholds[i].value) {
+          return this.getDiscreteColor(i);
+        }
       }
-    };
+    }
+    return 'rgba(0,0,0,1)';
   }
 
   updateCardsValuesHasColorInfo() {
+    this.panelCtrl.cardsData.noColorDefined = false;
     let cards = this.panelCtrl.cardsData.cards;
     for (let i=0; i<cards.length; i++) {
+      cards[i].noColorDefined = false;
       let values = cards[i].values;
       for (let j=0; j<values.length; j++) {
-        if (!this.getMatchedThreshold(values[j])) {
+        let threshold = this.getMatchedThreshold(values[j]);
+        if (!threshold || !threshold.color || threshold.color == "") {
           cards[i].noColorDefined = true;
           this.panelCtrl.cardsData.noColorDefined = true;
           break;
@@ -86,6 +110,18 @@ export class ColorModeDiscrete {
       }
     }
     return null;
+  }
+
+  getThreshold(index) {
+    let thresholds = this.panel.color.thresholds;
+    if (index < 0 || index >= thresholds.length == null) {
+      return {
+        "color": "rgba(0,0,0,0)",
+        "value": "null",
+        "tooltip": "null",
+      }
+    }
+    return thresholds[index];
   }
 
   roundIntervalCeil(interval) {
