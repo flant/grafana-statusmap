@@ -142,16 +142,22 @@ export class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
   // override calculateInterval for discrete color mode
   calculateInterval = () => {
-    let chartWidth = this.graph.chartWidth;
-
-    if (chartWidth == -1) {
-      // approximate panel width
-      chartWidth = Math.ceil($(window).width() * (this.panel.gridPos.w / 24));
-    }
+    let panelWidth = Math.ceil($(window).width() * (this.panel.gridPos.w / 24));
+    // approximate chartWidth because y axis ticks not rendered yet on first data receive.
+    let chartWidth = _.max([
+        panelWidth - 200,
+        panelWidth/2
+      ]);
 
     let minCardWidth = this.panel.cards.cardMinWidth;
     let minSpacing = this.panel.cards.cardSpacing;
     let maxCardsCount = Math.ceil((chartWidth-minCardWidth) / (minCardWidth + minSpacing));
+
+    console.log("CALC INT", {
+      "chartWidth": chartWidth,
+      "panelWidth": panelWidth,
+      "maxCardsCount": maxCardsCount,
+    });
 
     let intervalMs;
     let rangeMs = this.range.to.valueOf() - this.range.from.valueOf();
