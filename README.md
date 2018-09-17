@@ -2,7 +2,7 @@
 
 
 
-![Statusmap sample panel](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/grafana-statusmap-panel.png)
+![Statusmap sample panel](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/flant-statusmap-panel.png)
 
 
 ## Features
