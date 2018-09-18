@@ -153,12 +153,6 @@ export class StatusHeatmapCtrl extends MetricsPanelCtrl {
     let minSpacing = this.panel.cards.cardSpacing;
     let maxCardsCount = Math.ceil((chartWidth-minCardWidth) / (minCardWidth + minSpacing));
 
-    console.log("CALC INT", {
-      "chartWidth": chartWidth,
-      "panelWidth": panelWidth,
-      "maxCardsCount": maxCardsCount,
-    });
-
     let intervalMs;
     let rangeMs = this.range.to.valueOf() - this.range.from.valueOf();
 
@@ -208,7 +202,7 @@ export class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
     this.multipleValues = false;
     if (!this.panel.useMax) {
-      if (!_.isEmpty(this.cardsData)) {
+      if (this.cardsData) {
         this.multipleValues = this.cardsData.multipleValues;
       }
     }
@@ -216,7 +210,9 @@ export class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.noColorDefined = false;
     if (this.panel.color.mode === 'discrete') {
       this.discreteHelper.updateCardsValuesHasColorInfo();
-      this.noColorDefined = this.cardsData.noColorDefined;
+      if (this.cardsData) {
+        this.noColorDefined = this.cardsData.noColorDefined;
+      }
     }
   };
 
