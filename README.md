@@ -15,6 +15,15 @@
 * Prometheus datasource
 * Tested with Grafana 5.1.3
 
+## Installation
+
+Plugin can be installed with git:
+
+```
+git clone git@github.com:flant/grafana-statusmap.git /var/lib/grafana/plugins/flant-statusmap-panel
+```
+
+Or you can download ZIP archive of this repo and unpack it into /var/lib/grafana/plugins directory.
 
 ## Motivation
 
@@ -25,7 +34,33 @@ of predefined values: something like `ok` = 0, `off` = 1, `fail` = 2.
 
 ## Configuration
 
-Recommended setup is to create query for each possible status value with similar legend:
+### Prometheus
+
+Discrete statuses requires some setup in prometheus to get all available statuses over time.
+If metric has values 0 and 1 and status is stored in label then it's ok. But if there are 5 statuses
+and metric has possible values (0,1,2,3,4) then it should be transformed into previous form with this rule:
+
+```
+- record: coffee_maker_status:discrete
+  expr: |
+    count_values("status", coffee_maker_status)
+
+```
+
+This rule will transform metric `coffee_maker_status` with value `3` into this new metric:
+
+```
+coffee_maker_status:discrete{status="3"} 1
+```
+
+Now prometheus has 0 and 1 for each status. And these metrics can be aggregated
+to get all available statuses over time.
+
+### Panel
+
+Each possible status value corresponds to a separate query. Each query should have similar legend for grouping.
+
+
 
 ![Query setup](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/queries-example.png)
 
@@ -51,7 +86,7 @@ __Null values__ can be treated as empty buckets or displayed as color of 0 value
 
 ![Color mapping](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/null-as-empty.png)
 
-__Min width__ and __spacing__ are determine minimal bucket width and vertical and horizontal spacing between buckets.
+__Min width__ and __spacing__ are determine minimal bucket width and spacing between buckets.
 __Rounding__ is for round edges.
 
 ![Min width, spacing, rounding](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/min-width-spacing-rounding.png)
@@ -77,7 +112,7 @@ grunt watch
 
 ## Acknowledgements
 
-Idea of a plugin comes from Dmitry Stolyarov @distol, initial version written by Sergey Gnuskov @gsmetal and final changes made by Ivan Mikheykin @diafour.
+Idea of a plugin comes from Dmitry Stolyarov [@distol](https://github.com/distol), initial version written by Sergey Gnuskov [@gsmetal](https://github.com/gsmetal) and final changes made by Ivan Mikheykin [@diafour](https://github.com/diafour).
 
 This plugin is based on a "Heatmap" panel by Grafana and inspired by ideas from Carpet plot, Discrete panel, Status Panel, Status Dot, Status By Group.
 

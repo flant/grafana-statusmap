@@ -15,6 +15,15 @@
 * Prometheus datasource
 * Tested with Grafana 5.1.3
 
+## Installation
+
+Plugin can be installed with git:
+
+```
+git clone git@github.com:flant/grafana-statusmap.git /var/lib/grafana/plugins/flant-statusmap-panel
+```
+
+Or you can download ZIP archive of this repo and unpack it into /var/lib/grafana/plugins directory.
 
 ## Motivation
 
@@ -51,7 +60,7 @@ __Null values__ can be treated as empty buckets or displayed as color of 0 value
 
 ![Color mapping](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/null-as-empty.png)
 
-__Min width__ and __spacing__ are determine minimal bucket width and vertical and horizontal spacing between buckets.
+__Min width__ and __spacing__ are determine minimal bucket width and spacing between buckets.
 __Rounding__ is for round edges.
 
 ![Min width, spacing, rounding](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/min-width-spacing-rounding.png)
