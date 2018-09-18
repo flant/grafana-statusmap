@@ -287,6 +287,31 @@ function drawDiscreteLegendValues(elem, colorOptions, legendWidth) {
   legend.select(".axis").select(".domain").remove();
 }
 
+function drawSimpleColorLegend(elem, colorScale) {
+  let legendElem = $(elem).find('svg');
+  clearLegend(elem);
+
+  let legendWidth = Math.floor(legendElem.outerWidth());
+  let legendHeight = legendElem.attr("height");
+
+  if (legendWidth) {
+    let valuesNumber = Math.floor(legendWidth / 2);
+    let rangeStep  = Math.floor(legendWidth / valuesNumber);
+    let valuesRange = d3.range(0, legendWidth, rangeStep);
+
+    let legend = d3.select(legendElem.get(0));
+    var legendRects = legend.selectAll(".status-heatmap-color-legend-rect").data(valuesRange);
+
+    legendRects.enter().append("rect")
+      .attr("x", d => d)
+      .attr("y", 0)
+      .attr("width", rangeStep + 1) // Overlap rectangles to prevent gaps
+      .attr("height", legendHeight)
+      .attr("stroke-width", 0)
+      .attr("fill", d => colorScale(d));
+  }
+}
+
 function drawSimpleOpacityLegend(elem, options) {
   let legendElem = $(elem).find('svg');
   let graphElem = $(elem);

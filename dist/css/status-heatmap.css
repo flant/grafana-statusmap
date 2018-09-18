@@ -1,0 +1,60 @@
+.status-heatmap-canvas-wrapper {
+  cursor: crosshair; }
+  .status-heatmap-canvas-wrapper .datapoints-warning span {
+    background-color: white;
+    padding: 1px; }
+
+.status-heatmap-panel {
+  position: relative; }
+  .status-heatmap-panel .axis .tick text {
+    fill: #52545c;
+    color: #52545c;
+    font-size: 11px; }
+  .status-heatmap-panel .axis .tick line {
+    opacity: 0.4;
+    stroke: #767980; }
+  .status-heatmap-panel svg {
+    pointer-events: none; }
+    .status-heatmap-panel svg rect {
+      pointer-events: visiblePainted; }
+
+.status-heatmap-tooltip {
+  white-space: nowrap;
+  font-size: 12px;
+  background-color: #dde4ed;
+  color: #52545c; }
+
+.status-heatmap-histogram rect {
+  fill: #767980; }
+
+.status-heatmap-crosshair line {
+  stroke: #b30000;
+  stroke-width: 1; }
+
+.status-heatmap-selection {
+  stroke-width: 1;
+  fill: rgba(102, 102, 102, 0.4);
+  stroke: rgba(102, 102, 102, 0.8); }
+
+.status-heatmap-legend-wrapper {
+  margin: 0 10px; }
+  .status-heatmap-legend-wrapper svg {
+    height: 24px;
+    float: left;
+    white-space: nowrap; }
+  .status-heatmap-legend-wrapper .status-heatmap-color-legend {
+    margin-top: 4px; }
+  .status-heatmap-legend-wrapper .status-heatmap-legend-values {
+    display: inline-block; }
+  .status-heatmap-legend-wrapper .axis .tick text {
+    fill: #52545c;
+    color: #52545c;
+    font-size: 11px; }
+  .status-heatmap-legend-wrapper .axis .tick line {
+    opacity: 0.4;
+    stroke: #767980; }
+  .status-heatmap-legend-wrapper .axis .tick .domain {
+    opacity: 0.4;
+    stroke: #767980; }
+
+/*# sourceMappingURL=status-heatmap.css.map */

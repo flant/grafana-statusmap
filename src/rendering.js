@@ -596,7 +596,7 @@ export default function link(scope, elem, attrs, ctrl) {
     timeRange = ctrl.range;
     cardsData = ctrl.cardsData;
 
-    if (!setElementHeight() || !data) {
+    if (!data || !cardsData || !setElementHeight()) {
       return;
     }
 

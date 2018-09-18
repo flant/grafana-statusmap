@@ -72,6 +72,9 @@ export class ColorModeDiscrete {
   }
 
   updateCardsValuesHasColorInfo() {
+    if (!this.panelCtrl.cardsData) {
+      return
+    }
     this.panelCtrl.cardsData.noColorDefined = false;
     let cards = this.panelCtrl.cardsData.cards;
     for (let i=0; i<cards.length; i++) {
