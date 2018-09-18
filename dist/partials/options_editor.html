@@ -1,0 +1,159 @@
+<div ng-show="ctrl.multipleValues">
+  <strong>Error</strong>: data has multiple values for one target. Please change target or check "use max value".
+</div>
+
+<div ng-show="ctrl.noColorDefined">
+  <strong>Error</strong>: data value with undefined color. Check metric values, color values or define new color.
+</div>
+
+<div class="editor-row">
+  <div class="section gf-form-group">
+    <h5 class="section-heading">Colors</h5>
+    <div class="gf-form">
+      <label class="gf-form-label width-9">Mode</label>
+      <div class="gf-form-select-wrapper width-8">
+        <select class="input-small gf-form-input" ng-model="ctrl.panel.color.mode" ng-options="s for s in ctrl.colorModes" ng-change="ctrl.render()"></select>
+      </div>
+    </div>
+
+    <div ng-show="ctrl.panel.color.mode === 'opacity'">
+      <div class="gf-form" ng-show="ctrl.panel.useMax">
+        <strong>Note:</strong> Bucket color determined by maximum value in bucket<br/>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-9">Color</label>
+        <span class="gf-form-label">
+          <color-picker color="ctrl.panel.color.cardColor" onChange="ctrl.onCardColorChange"></color-picker>
+        </span>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-9">Scale</label>
+        <div class="gf-form-select-wrapper width-8">
+          <select class="input-small gf-form-input" ng-model="ctrl.panel.color.colorScale" ng-options="s for s in ctrl.opacityScales" ng-change="ctrl.render()"></select>
+        </div>
+      </div>
+      <div class="gf-form" ng-if="ctrl.panel.color.colorScale === 'sqrt'">
+        <label class="gf-form-label width-9">Exponent</label>
+        <input type="number" class="gf-form-input width-8" placeholder="auto" data-placement="right" bs-tooltip="''" ng-model="ctrl.panel.color.exponent" ng-change="ctrl.refresh()" ng-model-onblur>
+      </div>
+    </div>
+
+    <div ng-show="ctrl.panel.color.mode === 'spectrum'">
+      <div class="gf-form" ng-show="ctrl.panel.useMax">
+        <strong>Note:</strong> Bucket color determined by maximum value in bucket<br/>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-9">Scheme</label>
+        <div class="gf-form-select-wrapper width-8">
+          <select class="input-small gf-form-input" ng-model="ctrl.panel.color.colorScheme" ng-options="s.value as s.name for s in ctrl.colorSchemes" ng-change="ctrl.render()"></select>
+        </div>
+      </div>
+    </div>
+
+    <div ng-show="ctrl.panel.color.mode === 'discrete'">
+        <div class="gf-form" ng-show="ctrl.panel.useMax">
+          <strong>Note:</strong> Multiple values displayed using color with least index<br/>
+        </div>
+
+        <div class="gf-form" ng-repeat="threshold in ctrl.panel.color.thresholds">
+
+          <label class="gf-form-label width-2">{{ $index }}</label>
+          <label class="gf-form-label width-9" ng-if="ctrl.panel.useMax">If bucket has value</label>
+          <label class="gf-form-label width-9" ng-if="!ctrl.panel.useMax">If bucket value ==</label>
+          <input type="text" class="input-small gf-form-input width-4" ng-model="threshold.value" ng-change="ctrl.render()"/>
+          <label class="gf-form-label">
+            fill
+          </label>
+          <label class="gf-form-label">
+            <spectrum-picker ng-model="threshold.color" ng-change="ctrl.render()"/>
+          </label>
+          <label class="gf-form-label">set tooltip</label>
+          <input type="text" class="input-small gf-form-input width-9" ng-model="threshold.tooltip" ng-change="ctrl.render()"/>
+
+          <label class="gf-form-label">
+            <a class="pointer" ng-click="ctrl.onEditorRemoveThreshold($index)">
+              <i class="fa fa-trash"/>
+            </a>
+          </label>
+        </div>
+
+        <div class="gf-form">
+          <label class="gf-form-label"  ng-show="ctrl.panel.color.thresholds.length == 0">
+            <a class="pointer" ng-click="ctrl.onEditorAddThreeLights()">
+              Add trafic lights
+            </a>
+          </label>
+          <label class="gf-form-label">
+            <a class="pointer" ng-click="ctrl.onEditorAddThreshold()">
+              Add new status
+            </a>
+          </label>
+        </div>
+    </div>
+
+    <div class="gf-form" ng-show="ctrl.panel.color.mode !== 'discrete'">
+      <options-color-legend></options-color-legend>
+    </div>
+  </div>
+
+  <div class="section gf-form-group" ng-show="ctrl.panel.color.mode !== 'discrete'">
+    <h5 class="section-heading">Color scale</h5>
+    <div class="gf-form">
+      <label class="gf-form-label width-8">Min value</label>
+      <input type="number" ng-model="ctrl.panel.color.min" class="gf-form-input width-5" placeholder="auto" data-placement="right" bs-tooltip="''" ng-change="ctrl.refresh()" ng-model-onblur>
+    </div>
+    <div class="gf-form">
+      <label class="gf-form-label width-8">Max value</label>
+      <input type="number" ng-model="ctrl.panel.color.max" class="gf-form-input width-5" placeholder="auto" data-placement="right" bs-tooltip="''" ng-change="ctrl.refresh()" ng-model-onblur>
+    </div>
+  </div>
+
+  <div class="section gf-form-group">
+    <h5 class="section-heading">Display</h5>
+    <gf-form-switch class="gf-form" label-class="width-8"
+      label="Show legend"
+      checked="ctrl.panel.legend.show" on-change="ctrl.render()">
+    </gf-form-switch>
+    <gf-form-switch class="gf-form" label-class="width-8"
+      label="Show tooltip"
+      checked="ctrl.panel.tooltip.show" on-change="ctrl.render()">
+    </gf-form-switch>
+  </div>
+
+  <div class="section gf-form-group">
+    <h5 class="section-heading">Bucket</h5>
+
+    <gf-form-switch class="gf-form" label-class="width-9"
+                    label="Multiple values"
+                    checked="ctrl.panel.useMax" on-change="ctrl.render()">
+    </gf-form-switch>
+    <div class="gf-form" ng-show="ctrl.panel.useMax">
+      Color for bucket with multiple values is determined by color mode<br/>
+    </div>
+
+    <div class="gf-form">
+      <label class="gf-form-label width-9">Display nulls</label>
+      <div class="gf-form-select-wrapper">
+        <select class="gf-form-input max-width-9" ng-model="ctrl.panel.nullPointMode" ng-options="f for f in ['as empty', 'as zero']" ng-change="ctrl.render()"></select>
+      </div>
+    </div>
+    <div class="gf-form">
+      <label class="gf-form-label width-9">Min width for 1/1</label>
+      <input type="number" class="gf-form-input width-5" placeholder="5" data-placement="right" bs-tooltip="'Minimal card width for 1/1 resolution in pixels'" ng-model="ctrl.panel.cards.cardMinWidth" ng-change="ctrl.refresh()" ng-model-onblur>
+    </div>
+    <div class="gf-form">
+      <label class="gf-form-label width-9">Spacing</label>
+      <input type="number" class="gf-form-input width-5" placeholder="2" data-placement="right" bs-tooltip="'Card spacing in pixels'" ng-model="ctrl.panel.cards.cardSpacing" ng-change="ctrl.refresh()" ng-model-onblur>
+    </div>
+    <div class="gf-form">
+      <label class="gf-form-label width-9">Rounding</label>
+      <input type="number" class="gf-form-input width-5" placeholder="0" data-placement="right" bs-tooltip="'Angles rounding in percent'" ng-model="ctrl.panel.cards.cardRound" ng-change="ctrl.refresh()" ng-model-onblur>
+    </div>
+  </div>
+
+  <div class="section gf-form-group">
+  </div>
+
+  <div class="section gf-form-group">
+  </div>
+</div>

@@ -1,0 +1,35 @@
+{
+  "type": "panel",
+  "name": "Statusmap",
+  "id": "flant-statusmap-panel",
+
+  "info": {
+    "description": "Statusmap panel for grafana",
+    "author": {
+      "name": "Flant JSC",
+      "url": "http://flant.com"
+    },
+    "keywords": ["status", "heatmap", "panel"],
+    "logos": {
+      "small": "img/logo.svg",
+      "large": "img/logo.svg"
+    },
+    "links": [
+      {"name": "Github", "url": "https://github.com/flant/grafana-statusmap"},
+      {"name": "MIT Licence", "url": "https://github.com/flant/grafana-statusmap/blob/master/LICENSE"}
+
+    ],
+    "screenshots": [
+      {"name": "Panel", "path": "img/flant-statusmap-panel.png"},
+      {"name": "Color mapping", "path": "img/color-mapping.png"},
+      {"name": "Queries example", "path": "img/queries-example.png"}
+    ],
+    "version": "0.0.1",
+    "updated": "2018-09-17"
+  },
+
+  "dependencies": {
+    "grafanaVersion": "5.1.x",
+    "plugins": [ ]
+  }
+}

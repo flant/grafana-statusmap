@@ -1,0 +1,15 @@
+<div class="status-heatmap-wrapper">
+	<div class="status-heatmap-canvas-wrapper">
+
+		<div class="datapoints-warning">
+			<span class="small" ng-if="ctrl.multipleValues" bs-tooltip="'{{ctrl.dataWarnings.multipleValues.tip}}'">{{ctrl.dataWarnings.multipleValues.title}}</span>
+			<span class="small" ng-if="ctrl.noColorDefined" bs-tooltip="'{{ctrl.dataWarnings.noColorDefined.tip}}'">{{ctrl.dataWarnings.noColorDefined.title}}</span>
+		</div>
+
+		<div class="status-heatmap-panel" ng-dblclick="ctrl.zoomOut()"></div>
+	</div>
+	<div class="status-heatmap-legend-wrapper" ng-if="ctrl.panel.legend.show">
+		<status-heatmap-legend></status-heatmap-legend>
+	</div>
+</div>
+<div class="clearfix"></div>
