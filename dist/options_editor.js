@@ -17,7 +17,7 @@ System.register(['app/core/utils/kbn'], function (_export, _context) {
     return {
       restrict: 'E',
       scope: true,
-      templateUrl: 'public/plugins/status-heatmap-panel/partials/options_editor.html',
+      templateUrl: 'public/plugins/flant-statusmap-panel/partials/options_editor.html',
       controller: StatusHeatmapOptionsEditorCtrl
     };
   }
