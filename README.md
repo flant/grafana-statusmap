@@ -6,7 +6,7 @@
 
 * Grouping values into rows and buckets using legend from query
 * User defined color mapping
-* Multiple values in bucket can be displayed via tooltip
+* Multiple values in bucket are displayed via tooltip
 * Increasing rows/buckets' interval for better visual representation
 * Representing null values as empty bucket or zero value
 
@@ -28,12 +28,15 @@ of this repo and unpack it into /var/lib/grafana/plugins directory.
 
 ## Motivation
 
-We had a desperate need to show a set of timeseries statuses over time period, so we can see
-a history of changes for objects' statuses. Since we maintain a lot of Kubernetes clusters
+We had a desperate need to visualize a set of timeseries statuses over time period, so we can
+see a history of changes for objects' status. Since we maintain a lot of Kubernetes clusters
 (and related infrastructure), our main cases for that are visualization of servers & Kubernetes
 pods health states as well as HTTP services health checks. We've tried a variety of Grafana
 plugins available (they are listed in *Acknowledgements* below) but none of them could provide
 the features and visualization really close to what we've been looking for.
+
+_NB: You can find more details about our journey of creating the plugin in
+[this post](https://medium.com/flant-com/statusmap-grafana-plugin-to-visualize-status-over-time-fe6ced391853)._
 
 _Objects_ being visualized with this plugin may be different: not only IT components (e.g. server
 hosts and Kubernetes pods) but just anything you can imagine like coffee makers on the picture
@@ -44,7 +47,7 @@ above. These objects should have _discrete statuses_ which are sets of predefine
 
 ### Prometheus
 
-To work with data from Prometheus you will need to setup discrete statuses of your objects.
+To work with data from Prometheus you will need to setup discrete statuses for your objects.
 Requirements to store these statuses in metrics are as follows:
 * metrics should have two values: `0` and `1`;
 * there should be a label with status' value.
@@ -58,8 +61,8 @@ When it's done, you can collect all the data via query, e.g.:
 If there was no such status (`<STATUS_VALUE>`) during query's interval, Prometheus would
 return nothing. Otherwise, status' value will be returned.
 
-For example, if you have 5 statuses and a metric (`coffee_maker_status`) with 5 allowed
-values (`0`, `1`, `2`, `3`, `4`), you should transform this metric using the following rule:
+For example, if you have 5 types of statuses and a metric (`coffee_maker_status`) with 5
+allowed values (`0`, `1`, `2`, `3`, `4`), you should transform this metric using following rule:
 
 ```
 - record: coffee_maker_status:discrete
