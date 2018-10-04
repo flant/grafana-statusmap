@@ -17,7 +17,7 @@
 
 ## Installation
 
-Plugin can be installed via Git:
+Plugin can be installed with GF_INSTALL_PLUGINS="flant-statusmap-panel" or you can use Git and clone this repo:
 
 ```
 git clone git@github.com:flant/grafana-statusmap.git /var/lib/grafana/plugins/flant-statusmap-panel
@@ -25,6 +25,7 @@ git clone git@github.com:flant/grafana-statusmap.git /var/lib/grafana/plugins/fl
 
 Alternatively, you can download [ZIP archive](https://github.com/flant/grafana-statusmap/archive/master.zip)
 of this repo and unpack it into /var/lib/grafana/plugins directory.
+
 
 ## Motivation
 
@@ -137,7 +138,13 @@ This plugin is based on "Heatmap" panel by Grafana and partly inspired by ideas 
 
 #### Changelog
 
+##### v0.0.2
+
+- Install with GF_INSTALL_PLUGINS
+- Fix legend overlap
+
 ##### v0.0.1
 
 - First public release
+
 

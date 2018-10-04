@@ -89,7 +89,7 @@ function drawColorLegend(elem, colorScheme, rangeFrom, rangeTo, maxValue, minVal
   let legend = d3.select(legendElem.get(0));
   clearLegend(elem);
 
-  let legendWidth = Math.floor(legendElem.outerWidth()) - 30;
+  let legendWidth = Math.floor(legendElem.outerWidth()) - 30;  // narrow legendWidth by 30px to get space for first and last tick values
   let legendHeight = legendElem.attr("height");
 
   let rangeStep = 1;
@@ -108,7 +108,7 @@ function drawColorLegend(elem, colorScheme, rangeFrom, rangeTo, maxValue, minVal
   legend.selectAll(".status-heatmap-color-legend-rect")
     .data(valuesRange)
     .enter().append("rect")
-    .attr("x", d => d * widthFactor)
+    .attr("x", d => d * widthFactor + 10) // shift all color rectangles to the right
     .attr("y", 0)
     .attr("width", rangeStep * widthFactor + 1) // Overlap rectangles to prevent gaps
     .attr("height", legendHeight)
@@ -123,7 +123,7 @@ function drawOpacityLegend(elem, options, rangeFrom, rangeTo, maxValue, minValue
   let legend = d3.select(legendElem.get(0));
   clearLegend(elem);
 
-  let legendWidth = Math.floor(legendElem.outerWidth()) - 30;
+  let legendWidth = Math.floor(legendElem.outerWidth()) - 30;  // narrow legendWidth by 30px to get space for first and last tick values
   let legendHeight = legendElem.attr("height");
 
   let rangeStep = 10;
@@ -139,7 +139,7 @@ function drawOpacityLegend(elem, options, rangeFrom, rangeTo, maxValue, minValue
   legend.selectAll(".status-heatmap-opacity-legend-rect")
     .data(valuesRange)
     .enter().append("rect")
-    .attr("x", d => d * widthFactor)
+    .attr("x", d => d * widthFactor + 10) // shift all opacity rectangles to the right
     .attr("y", 0)
     .attr("width", rangeStep * widthFactor)
     .attr("height", legendHeight)
