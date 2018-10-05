@@ -10,7 +10,7 @@ System.register(['angular', 'lodash', 'jquery', 'd3', './libs/d3-scale-chromatic
     var legend = d3.select(legendElem.get(0));
     clearLegend(elem);
 
-    var legendWidth = Math.floor(legendElem.outerWidth()) - 30;
+    var legendWidth = Math.floor(legendElem.outerWidth()) - 30; // narrow legendWidth by 30px to get space for first and last tick values
     var legendHeight = legendElem.attr("height");
 
     var rangeStep = 1;
@@ -27,8 +27,9 @@ System.register(['angular', 'lodash', 'jquery', 'd3', './libs/d3-scale-chromatic
 
     var colorScale = getColorScale(colorScheme, maxValue, minValue);
     legend.selectAll(".status-heatmap-color-legend-rect").data(valuesRange).enter().append("rect").attr("x", function (d) {
-      return d * widthFactor;
-    }).attr("y", 0).attr("width", rangeStep * widthFactor + 1) // Overlap rectangles to prevent gaps
+      return d * widthFactor + 10;
+    }) // shift all color rectangles to the right
+    .attr("y", 0).attr("width", rangeStep * widthFactor + 1) // Overlap rectangles to prevent gaps
     .attr("height", legendHeight).attr("stroke-width", 0).attr("fill", function (d) {
       return colorScale(d);
     });
@@ -41,7 +42,7 @@ System.register(['angular', 'lodash', 'jquery', 'd3', './libs/d3-scale-chromatic
     var legend = d3.select(legendElem.get(0));
     clearLegend(elem);
 
-    var legendWidth = Math.floor(legendElem.outerWidth()) - 30;
+    var legendWidth = Math.floor(legendElem.outerWidth()) - 30; // narrow legendWidth by 30px to get space for first and last tick values
     var legendHeight = legendElem.attr("height");
 
     var rangeStep = 10;
@@ -55,8 +56,9 @@ System.register(['angular', 'lodash', 'jquery', 'd3', './libs/d3-scale-chromatic
 
     var opacityScale = getOpacityScale(options, maxValue, minValue);
     legend.selectAll(".status-heatmap-opacity-legend-rect").data(valuesRange).enter().append("rect").attr("x", function (d) {
-      return d * widthFactor;
-    }).attr("y", 0).attr("width", rangeStep * widthFactor).attr("height", legendHeight).attr("stroke-width", 0).attr("fill", options.cardColor).style("opacity", function (d) {
+      return d * widthFactor + 10;
+    }) // shift all opacity rectangles to the right
+    .attr("y", 0).attr("width", rangeStep * widthFactor).attr("height", legendHeight).attr("stroke-width", 0).attr("fill", options.cardColor).style("opacity", function (d) {
       return opacityScale(d);
     });
 
