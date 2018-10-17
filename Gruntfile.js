@@ -53,7 +53,8 @@ module.exports = (grunt) => {
     sass: {
       dist: {
         files: {
-          'dist/css/status-heatmap.css': 'src/css/status-heatmap.scss'
+          'dist/css/statusmap.dark.css': 'src/css/statusmap.dark.scss',
+          'dist/css/statusmap.light.css': 'src/css/statusmap.light.scss'
         }
       }
     }

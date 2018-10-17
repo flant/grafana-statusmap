@@ -42,7 +42,7 @@ export class StatusHeatmapTooltip {
   add() {
     this.tooltip = d3.select("body")
       .append("div")
-      .attr("class", "heatmap-tooltip graph-tooltip grafana-tooltip");
+      .attr("class", "statusmap-tooltip graph-tooltip grafana-tooltip");
   }
 
   destroy() {
@@ -79,7 +79,7 @@ export class StatusHeatmapTooltip {
     let time = this.dashboard.formatDate(+x, tooltipTimeFormat);
 
     let tooltipHtml = `<div class="graph-tooltip-time">${time}</div>
-      <div class="status-heatmap-histogram"></div>`;
+      <div class="statusmap-histogram"></div>`;
 
     if (this.panel.color.mode === 'discrete') {
       let statuses = this.panelCtrl.discreteHelper.convertValuesToTooltips(values);
@@ -94,7 +94,7 @@ export class StatusHeatmapTooltip {
         name: <b>${y}</b> <br>
         ${statusesHtml}
         <ul>
-          ${_.join(_.map(statuses, v => `<li style="background-color: ${v.color}; padding: 1px; font-weight: bold; text-shadow: 0 0 0.2em #FFF, 0 0 0.2em #FFF, 0 0 0.2em #FFF">${v.tooltip}</li>`), "")}
+          ${_.join(_.map(statuses, v => `<li style="background-color: ${v.color}" class="discrete-item">${v.tooltip}</li>`), "")}
         </ul>
       </div>`;
     } else {

@@ -1,7 +1,8 @@
 .status-heatmap-canvas-wrapper {
   cursor: crosshair; }
   .status-heatmap-canvas-wrapper .datapoints-warning span {
-    background-color: white;
+    background-color: #e9edf2;
+    color: #52545c;
     padding: 1px; }
 
 .status-heatmap-panel {
@@ -18,17 +19,22 @@
     .status-heatmap-panel svg rect {
       pointer-events: visiblePainted; }
 
-.status-heatmap-tooltip {
+.statusmap-tooltip {
   white-space: nowrap;
   font-size: 12px;
   background-color: #dde4ed;
   color: #52545c; }
+  .statusmap-tooltip .discrete-item {
+    color: #52545c;
+    padding: 1px;
+    font-weight: bold;
+    text-shadow: 0 0 0.2em #FFF, 0 0 0.2em #FFF, 0 0 0.2em #FFF; }
 
-.status-heatmap-histogram rect {
+.statusmap-histogram rect {
   fill: #767980; }
 
 .status-heatmap-crosshair line {
-  stroke: #b30000;
+  stroke: #9e2f22;
   stroke-width: 1; }
 
 .status-heatmap-selection {
@@ -57,4 +63,4 @@
     opacity: 0.4;
     stroke: #767980; }
 
-/*# sourceMappingURL=status-heatmap.css.map */
+/*# sourceMappingURL=statusmap.light.css.map */

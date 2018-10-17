@@ -1,12 +1,10 @@
-$font-size-sm: 12px !default;
-
-
 .status-heatmap-canvas-wrapper {
   // position: relative;
   cursor: crosshair;
 
   .datapoints-warning span {
-  background-color: white;
+  background-color: $warning-bg;
+  color: $text-color;
   padding: 1px;
   }
 }
@@ -16,14 +14,14 @@ $font-size-sm: 12px !default;
 
   .axis .tick {
     text {
-      fill: #52545c;
-      color: #52545c;
-      font-size: 11px;
+      fill: $text-color;
+      color: $text-color;
+      font-size: $font-size-tick;
     }
 
     line {
       opacity: 0.4;
-      stroke: #767980;
+      stroke: $text-color-weak;
     }
   }
 
@@ -37,20 +35,27 @@ $font-size-sm: 12px !default;
   }
 }
 
-.status-heatmap-tooltip {
+.statusmap-tooltip {
   white-space: nowrap;
   font-size: $font-size-sm;
-  background-color: #dde4ed;
-  color: #52545c;
+  background-color: $graph-tooltip-bg;
+  color: $text-color;
+
+  .discrete-item {
+    color: #52545c;
+    padding: 1px;
+    font-weight: bold;
+    text-shadow: 0 0 0.2em #FFF, 0 0 0.2em #FFF, 0 0 0.2em #FFF;
+  }
 }
 
-.status-heatmap-histogram rect {
-  fill: #767980;
+.statusmap-histogram rect {
+  fill: $text-color-weak;
 }
 
 .status-heatmap-crosshair {
   line {
-    stroke: darken(red,15%);
+    stroke: darken($red,15%);
     stroke-width: 1;
   }
 }
@@ -61,14 +66,11 @@ $font-size-sm: 12px !default;
   stroke: rgba(102, 102, 102, 0.8);
 }
 
+
 .status-heatmap-legend-wrapper {
-  // @include clearfix();
   margin: 0 10px;
-  //padding-top: 10px;
 
   svg {
-    //width: 100%;
-    //max-width: 1300px;
     height: 24px;
     float: left;
     white-space: nowrap;
@@ -85,19 +87,19 @@ $font-size-sm: 12px !default;
 
   .axis .tick {
     text {
-      fill: #52545c;
-      color: #52545c;
-      font-size: 11px;
+      fill: $text-color;
+      color: $text-color;
+      font-size: $font-size-tick;
     }
 
     line {
       opacity: 0.4;
-      stroke: #767980;
+      stroke: $text-color-weak;
     }
 
     .domain {
       opacity: 0.4;
-      stroke: #767980;
+      stroke: $text-color-weak;
     }
   }
 }
