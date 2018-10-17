@@ -1,6 +1,6 @@
 'use strict';
 
-System.register(['app/plugins/sdk', 'lodash', 'app/core/core', 'app/core/utils/kbn', './rendering', './options_editor', './color_mode_discrete', './css/status-heatmap.css!'], function (_export, _context) {
+System.register(['app/plugins/sdk', 'lodash', 'app/core/core', 'app/core/utils/kbn', './rendering', './options_editor', './color_mode_discrete'], function (_export, _context) {
   "use strict";
 
   var MetricsPanelCtrl, _, contextSrv, kbn, rendering, statusHeatmapOptionsEditor, ColorModeDiscrete, CANVAS, SVG, VALUE_INDEX, TIME_INDEX, panelDefaults, renderer, colorSchemes, colorModes, opacityScales, StatusHeatmapCtrl;
@@ -50,7 +50,7 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/core', 'app/core/utils/k
       statusHeatmapOptionsEditor = _options_editor.statusHeatmapOptionsEditor;
     }, function (_color_mode_discrete) {
       ColorModeDiscrete = _color_mode_discrete.ColorModeDiscrete;
-    }, function (_cssStatusHeatmapCss) {}],
+    }],
     execute: function () {
       CANVAS = 'CANVAS';
       SVG = 'SVG';

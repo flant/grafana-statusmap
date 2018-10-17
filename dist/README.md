@@ -1,6 +1,8 @@
 # Statusmap panel for Grafana
 
 ![Statusmap sample panel](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/flant-statusmap-panel.png)
+(https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/flant-statusmap-panel-dark.png)
+
 
 ## Features
 

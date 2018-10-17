@@ -9,7 +9,6 @@ import rendering from './rendering';
 // import { labelFormats } from './xAxisLabelFormats';
 import {statusHeatmapOptionsEditor} from './options_editor';
 import {ColorModeDiscrete} from "./color_mode_discrete";
-import './css/status-heatmap.css!';
 
 const CANVAS = 'CANVAS';
 const SVG = 'SVG';

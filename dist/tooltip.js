@@ -88,7 +88,7 @@ System.register(['d3', 'jquery', 'lodash', 'app/core/utils/kbn'], function (_exp
         }, {
           key: 'add',
           value: function add() {
-            this.tooltip = d3.select("body").append("div").attr("class", "heatmap-tooltip graph-tooltip grafana-tooltip");
+            this.tooltip = d3.select("body").append("div").attr("class", "statusmap-tooltip graph-tooltip grafana-tooltip");
           }
         }, {
           key: 'destroy',
@@ -128,7 +128,7 @@ System.register(['d3', 'jquery', 'lodash', 'app/core/utils/kbn'], function (_exp
             var tooltipTimeFormat = 'YYYY-MM-DD HH:mm:ss';
             var time = this.dashboard.formatDate(+x, tooltipTimeFormat);
 
-            var tooltipHtml = '<div class="graph-tooltip-time">' + time + '</div>\n      <div class="status-heatmap-histogram"></div>';
+            var tooltipHtml = '<div class="graph-tooltip-time">' + time + '</div>\n      <div class="statusmap-histogram"></div>';
 
             if (this.panel.color.mode === 'discrete') {
               var statuses = this.panelCtrl.discreteHelper.convertValuesToTooltips(values);
@@ -139,7 +139,7 @@ System.register(['d3', 'jquery', 'lodash', 'app/core/utils/kbn'], function (_exp
                 statusesHtml = "statuses:";
               }
               tooltipHtml += '\n      <div>\n        name: <b>' + y + '</b> <br>\n        ' + statusesHtml + '\n        <ul>\n          ' + _.join(_.map(statuses, function (v) {
-                return '<li style="background-color: ' + v.color + '; padding: 1px; font-weight: bold; text-shadow: 0 0 0.2em #FFF, 0 0 0.2em #FFF, 0 0 0.2em #FFF">' + v.tooltip + '</li>';
+                return '<li style="background-color: ' + v.color + '" class="discrete-item">' + v.tooltip + '</li>';
               }), "") + '\n        </ul>\n      </div>';
             } else {
               if (values.length === 1) {

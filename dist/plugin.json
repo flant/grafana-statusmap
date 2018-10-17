@@ -20,12 +20,13 @@
 
     ],
     "screenshots": [
-      {"name": "Panel", "path": "img/flant-statusmap-panel.png"},
+      {"name": "Panel with light theme", "path": "img/flant-statusmap-panel.png"},
+      {"name": "Panel with dark theme", "path": "img/flant-statusmap-panel-dark.png"},
       {"name": "Color mapping", "path": "img/color-mapping.png"},
       {"name": "Queries example", "path": "img/queries-example.png"}
     ],
     "version": "0.0.2",
-    "updated": "2018-10-05"
+    "updated": "2018-10-17"
   },
 
   "dependencies": {
