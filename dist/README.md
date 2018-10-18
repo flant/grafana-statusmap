@@ -148,9 +148,10 @@ This plugin is based on "Heatmap" panel by Grafana and partly inspired by ideas 
 
 - Install with GF_INSTALL_PLUGINS
 - Fix legend overlap
+- Fix colors for dark theme
+- Fix panel rendering timeout error
+
 
 ##### v0.0.1
 
 - First public release
-
-
