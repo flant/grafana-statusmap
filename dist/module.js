@@ -1,13 +1,13 @@
 'use strict';
 
-System.register(['app/plugins/sdk', './color_legend', './status_heatmap_ctrl'], function (_export, _context) {
+System.register(['app/plugins/sdk', './status_heatmap_ctrl'], function (_export, _context) {
   "use strict";
 
   var loadPluginCss, StatusHeatmapCtrl;
   return {
     setters: [function (_appPluginsSdk) {
       loadPluginCss = _appPluginsSdk.loadPluginCss;
-    }, function (_color_legend) {}, function (_status_heatmap_ctrl) {
+    }, function (_status_heatmap_ctrl) {
       StatusHeatmapCtrl = _status_heatmap_ctrl.StatusHeatmapCtrl;
     }],
     execute: function () {
