@@ -3,6 +3,7 @@ import _ from 'lodash';
 import { contextSrv } from 'app/core/core';
 import kbn from 'app/core/utils/kbn';
 
+import './color_legend';
 import rendering from './rendering';
 // import aggregates, { aggregatesMap } from './aggregates';
 // import fragments, { fragmentsMap } from './fragments';
@@ -88,7 +89,7 @@ const colorSchemes = [
   { name: 'YlGnBu', value: 'interpolateYlGnBu', invert: 'dark' },
   { name: 'YlGn', value: 'interpolateYlGn', invert: 'dark' },
   { name: 'YlOrBr', value: 'interpolateYlOrBr', invert: 'dark' },
-  { name: 'YlOrRd', value: 'interpolateYlOrRd', invert: 'darm' }
+  { name: 'YlOrRd', value: 'interpolateYlOrRd', invert: 'dark' }
 ];
 
 let colorModes = ['opacity', 'spectrum', 'discrete'];
@@ -132,11 +133,13 @@ export class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.events.on('init-edit-mode', this.onInitEditMode);
     this.events.on('render', this.onRender);
     this.events.on('refresh', this.postRefresh);
+    // custom event from rendering.js
     this.events.on('render-complete', this.onRenderComplete);
   }
 
   onRenderComplete = (data) => {
     this.graph.chartWidth = data.chartWidth;
+    this.renderingCompleted();
   };
 
   // override calculateInterval for discrete color mode
