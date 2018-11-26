@@ -9,7 +9,8 @@ import * as d3ScaleChromatic from './libs/d3-scale-chromatic/index';
 import {StatusHeatmapTooltip} from './tooltip';
 
 let MIN_CARD_SIZE = 5,
-    CARD_SPACING = 2,
+    CARD_H_SPACING = 2,
+    CARD_V_SPACING = 2,
     CARD_ROUND = 0,
     DATA_RANGE_WIDING_FACTOR = 1.2,
     DEFAULT_X_TICK_SIZE_PX = 100,
@@ -30,7 +31,7 @@ export default function link(scope, elem, attrs, ctrl) {
       chartWidth, chartHeight,
       chartTop, chartBottom,
       yAxisWidth, xAxisHeight,
-      cardSpacing, cardRound,
+      cardVSpacing, cardHSpacing, cardRound,
       cardWidth, cardHeight,
       colorScale, opacityScale,
       mouseUpHandler,
@@ -239,12 +240,13 @@ export default function link(scope, elem, attrs, ctrl) {
     chartTop = margin.top;
     chartBottom = chartTop + chartHeight;
 
-    cardSpacing = panel.cards.cardSpacing !== null ? panel.cards.cardSpacing : CARD_SPACING;
+    cardHSpacing = panel.cards.cardHSpacing !== null ? panel.cards.cardHSpacing : CARD_H_SPACING;
+    cardVSpacing = panel.cards.cardVSpacing !== null ? panel.cards.cardVSpacing : CARD_V_SPACING;
     cardRound = panel.cards.cardRound !== null ? panel.cards.cardRound : CARD_ROUND;
 
     // calculate yOffset for YAxis
     yGridSize = Math.floor(chartHeight / cardsData.yBucketSize);
-    cardHeight = yGridSize ? yGridSize - cardSpacing : 0;
+    cardHeight = yGridSize ? yGridSize - cardVSpacing : 0;
     yOffset = cardHeight / 2;
 
     addYAxis();
@@ -254,7 +256,7 @@ export default function link(scope, elem, attrs, ctrl) {
 
     // we need to fill chartWidth with xBucketSize cards.
     xGridSize = chartWidth / (cardsData.xBucketSize+1);
-    cardWidth = xGridSize - cardSpacing;
+    cardWidth = xGridSize - cardHSpacing;
 
     addXAxis();
     xAxisHeight = getXAxisHeight(heatmap);
@@ -364,7 +366,7 @@ export default function link(scope, elem, attrs, ctrl) {
     let cx = xScale(d.x);
 
     if (cx - cardWidth/2 < 0) {
-      x = yAxisWidth + cardSpacing/2;
+      x = yAxisWidth + cardHSpacing/2;
     } else {
       x = yAxisWidth + cx - cardWidth/2;
     }
@@ -380,11 +382,11 @@ export default function link(scope, elem, attrs, ctrl) {
     if (cx < cardWidth/2) {
       // Center should not exceed half of card.
       // Cut card to the left to prevent overlay of y axis.
-      let cutted_width = (cx - cardSpacing/2) + cardWidth/2;
+      let cutted_width = (cx - cardHSpacing/2) + cardWidth/2;
       w = cutted_width > 0 ? cutted_width : 0;
     } else if (chartWidth - cx < cardWidth/2) {
       // Cut card to the right to prevent overlay of right graph edge.
-      w = cardWidth/2 + (chartWidth - cx - cardSpacing/2);
+      w = cardWidth/2 + (chartWidth - cx - cardHSpacing/2);
     } else {
       w = cardWidth;
     }
@@ -396,17 +398,17 @@ export default function link(scope, elem, attrs, ctrl) {
   }
 
   function getCardY(d) {
-    return yScale(d.y) + chartTop - cardHeight - cardSpacing/2;
+    return yScale(d.y) + chartTop - cardHeight - cardVSpacing/2;
   }
 
   function getCardHeight(d) {
     let ys = yScale(d.y);
-    let y = ys + chartTop - cardHeight - cardSpacing/2;
+    let y = ys + chartTop - cardHeight - cardVSpacing/2;
     let h = cardHeight;
 
     // Cut card height to prevent overlay
     if (y < chartTop) {
-      h = ys - cardSpacing/2;
+      h = ys - cardVSpacing/2;
     } else if (ys > chartBottom) {
       h = chartBottom - y;
     } else if (y + cardHeight > chartBottom) {

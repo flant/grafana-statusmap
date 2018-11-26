@@ -31,7 +31,8 @@ const panelDefaults = {
   },
   cards: {
     cardMinWidth: 5,
-    cardSpacing: 2,
+    cardVSpacing: 2,
+    cardHSpacing: 2,
     cardRound: null
   },
   xAxis: {
@@ -153,7 +154,7 @@ export class StatusHeatmapCtrl extends MetricsPanelCtrl {
       ]);
 
     let minCardWidth = this.panel.cards.cardMinWidth;
-    let minSpacing = this.panel.cards.cardSpacing;
+    let minSpacing = this.panel.cards.cardHSpacing;
     let maxCardsCount = Math.ceil((chartWidth-minCardWidth) / (minCardWidth + minSpacing));
 
     let intervalMs;
