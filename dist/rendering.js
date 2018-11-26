@@ -3,7 +3,7 @@
 System.register(['lodash', 'jquery', 'moment', 'app/core/utils/kbn', 'app/core/core', 'app/core/utils/ticks', 'd3', './libs/d3-scale-chromatic/index', './tooltip'], function (_export, _context) {
   "use strict";
 
-  var _, $, moment, kbn, appEvents, contextSrv, tickStep, getScaledDecimals, getFlotTickSize, d3, d3ScaleChromatic, StatusHeatmapTooltip, MIN_CARD_SIZE, CARD_SPACING, CARD_ROUND, DATA_RANGE_WIDING_FACTOR, DEFAULT_X_TICK_SIZE_PX, DEFAULT_Y_TICK_SIZE_PX, X_AXIS_TICK_PADDING, Y_AXIS_TICK_PADDING, MIN_SELECTION_WIDTH;
+  var _, $, moment, kbn, appEvents, contextSrv, tickStep, getScaledDecimals, getFlotTickSize, d3, d3ScaleChromatic, StatusHeatmapTooltip, MIN_CARD_SIZE, CARD_H_SPACING, CARD_V_SPACING, CARD_ROUND, DATA_RANGE_WIDING_FACTOR, DEFAULT_X_TICK_SIZE_PX, DEFAULT_Y_TICK_SIZE_PX, X_AXIS_TICK_PADDING, Y_AXIS_TICK_PADDING, MIN_SELECTION_WIDTH;
 
   function link(scope, elem, attrs, ctrl) {
     var data = void 0,
@@ -26,7 +26,8 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/kbn', 'app/core/c
         chartBottom = void 0,
         yAxisWidth = void 0,
         xAxisHeight = void 0,
-        cardSpacing = void 0,
+        cardVSpacing = void 0,
+        cardHSpacing = void 0,
         cardRound = void 0,
         cardWidth = void 0,
         cardHeight = void 0,
@@ -228,12 +229,13 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/kbn', 'app/core/c
       chartTop = margin.top;
       chartBottom = chartTop + chartHeight;
 
-      cardSpacing = panel.cards.cardSpacing !== null ? panel.cards.cardSpacing : CARD_SPACING;
+      cardHSpacing = panel.cards.cardHSpacing !== null ? panel.cards.cardHSpacing : CARD_H_SPACING;
+      cardVSpacing = panel.cards.cardVSpacing !== null ? panel.cards.cardVSpacing : CARD_V_SPACING;
       cardRound = panel.cards.cardRound !== null ? panel.cards.cardRound : CARD_ROUND;
 
       // calculate yOffset for YAxis
       yGridSize = Math.floor(chartHeight / cardsData.yBucketSize);
-      cardHeight = yGridSize ? yGridSize - cardSpacing : 0;
+      cardHeight = yGridSize ? yGridSize - cardVSpacing : 0;
       yOffset = cardHeight / 2;
 
       addYAxis();
@@ -243,7 +245,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/kbn', 'app/core/c
 
       // we need to fill chartWidth with xBucketSize cards.
       xGridSize = chartWidth / (cardsData.xBucketSize + 1);
-      cardWidth = xGridSize - cardSpacing;
+      cardWidth = xGridSize - cardHSpacing;
 
       addXAxis();
       xAxisHeight = getXAxisHeight(heatmap);
@@ -333,7 +335,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/kbn', 'app/core/c
       var cx = xScale(d.x);
 
       if (cx - cardWidth / 2 < 0) {
-        x = yAxisWidth + cardSpacing / 2;
+        x = yAxisWidth + cardHSpacing / 2;
       } else {
         x = yAxisWidth + cx - cardWidth / 2;
       }
@@ -349,11 +351,11 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/kbn', 'app/core/c
       if (cx < cardWidth / 2) {
         // Center should not exceed half of card.
         // Cut card to the left to prevent overlay of y axis.
-        var cutted_width = cx - cardSpacing / 2 + cardWidth / 2;
+        var cutted_width = cx - cardHSpacing / 2 + cardWidth / 2;
         w = cutted_width > 0 ? cutted_width : 0;
       } else if (chartWidth - cx < cardWidth / 2) {
         // Cut card to the right to prevent overlay of right graph edge.
-        w = cardWidth / 2 + (chartWidth - cx - cardSpacing / 2);
+        w = cardWidth / 2 + (chartWidth - cx - cardHSpacing / 2);
       } else {
         w = cardWidth;
       }
@@ -365,17 +367,17 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/kbn', 'app/core/c
     }
 
     function getCardY(d) {
-      return yScale(d.y) + chartTop - cardHeight - cardSpacing / 2;
+      return yScale(d.y) + chartTop - cardHeight - cardVSpacing / 2;
     }
 
     function getCardHeight(d) {
       var ys = yScale(d.y);
-      var y = ys + chartTop - cardHeight - cardSpacing / 2;
+      var y = ys + chartTop - cardHeight - cardVSpacing / 2;
       var h = cardHeight;
 
       // Cut card height to prevent overlay
       if (y < chartTop) {
-        h = ys - cardSpacing / 2;
+        h = ys - cardVSpacing / 2;
       } else if (ys > chartBottom) {
         h = chartBottom - y;
       } else if (y + cardHeight > chartBottom) {
@@ -637,7 +639,8 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/kbn', 'app/core/c
     }],
     execute: function () {
       MIN_CARD_SIZE = 5;
-      CARD_SPACING = 2;
+      CARD_H_SPACING = 2;
+      CARD_V_SPACING = 2;
       CARD_ROUND = 0;
       DATA_RANGE_WIDING_FACTOR = 1.2;
       DEFAULT_X_TICK_SIZE_PX = 100;

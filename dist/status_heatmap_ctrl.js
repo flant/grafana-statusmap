@@ -71,7 +71,8 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/core', 'app/core/utils/k
         },
         cards: {
           cardMinWidth: 5,
-          cardSpacing: 2,
+          cardVSpacing: 2,
+          cardHSpacing: 2,
           cardRound: null
         },
         xAxis: {
@@ -133,7 +134,7 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/core', 'app/core/utils/k
             var chartWidth = _.max([panelWidth - 200, panelWidth / 2]);
 
             var minCardWidth = _this.panel.cards.cardMinWidth;
-            var minSpacing = _this.panel.cards.cardSpacing;
+            var minSpacing = _this.panel.cards.cardHSpacing;
             var maxCardsCount = Math.ceil((chartWidth - minCardWidth) / (minCardWidth + minSpacing));
 
             var intervalMs = void 0;
