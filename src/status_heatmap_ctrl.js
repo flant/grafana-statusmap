@@ -57,6 +57,7 @@ const panelDefaults = {
   },
   // how null points should be handled
   nullPointMode: 'as empty',
+  yAxisSort: 'metrics',
   highlightCards: true,
   useMax: true
 };
@@ -280,7 +281,6 @@ export class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
     // TODO add some logic for targets heirarchy
     cardsData.targets = _.keys(cardsData.targetIndex);
-    cardsData.targets.sort();
     cardsData.yBucketSize = cardsData.targets.length;
     cardsData.xBucketSize = _.min(_.map(data, d => d.datapoints.length));
 

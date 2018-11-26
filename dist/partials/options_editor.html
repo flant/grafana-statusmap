@@ -118,7 +118,16 @@
       label="Show tooltip"
       checked="ctrl.panel.tooltip.show" on-change="ctrl.render()">
     </gf-form-switch>
-  </div>
+    <div class="gf-form">
+      <label class="gf-form-label width-8">Y axis sort</label>
+      <div class="gf-form-select-wrapper">
+        <select class="gf-form-input max-width-8"
+                ng-model="ctrl.panel.yAxisSort"
+                ng-options="f for f in ['metrics', 'a → z', 'z → a']"
+                ng-change="ctrl.render()"></select>
+      </div>
+    </div>
+</div>
 
   <div class="section gf-form-group">
     <h5 class="section-heading">Bucket</h5>

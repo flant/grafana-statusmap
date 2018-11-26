@@ -129,9 +129,10 @@ export default function link(scope, elem, attrs, ctrl) {
   function getYScale(ticks) {
     let range = [];
     let step = chartHeight / ticks.length;
-    range.push(chartHeight);
+    // svg has y=0 on the top, so top card should have a minimal value in range
+    range.push(step);
     for (let i = 1; i < ticks.length; i++) {
-      range.push(chartHeight - step * i);
+      range.push(step * (i+1));
     }
     return d3.scaleOrdinal()
       .domain(ticks)
@@ -142,9 +143,10 @@ export default function link(scope, elem, attrs, ctrl) {
   function getYAxisScale(ticks) {
     let range = [];
     let step = chartHeight / ticks.length;
-    range.push(chartHeight - yOffset);
+    // svg has y=0 on the top, so top tick should have a minimal value in range
+    range.push(yOffset);
     for (let i = 1; i < ticks.length; i++) {
-      range.push(chartHeight - step * i - yOffset);
+      range.push(step * i + yOffset);
     }
     return d3.scaleOrdinal()
       .domain(ticks)
@@ -157,6 +159,12 @@ export default function link(scope, elem, attrs, ctrl) {
     // Set default Y min and max if no data
     if (_.isEmpty(data)) {
       ticks = [''];
+    }
+
+    if (panel.yAxisSort == 'a → z') {
+      ticks.sort((a, b) => a.localeCompare(b, 'en', {ignorePunctuation: false, numeric: true}));
+    } else if (panel.yAxisSort == 'z → a') {
+      ticks.sort((b, a) => a.localeCompare(b, 'en', {ignorePunctuation: false, numeric: true}));
     }
 
     let yAxisScale = getYAxisScale(ticks);
