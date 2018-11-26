@@ -146,6 +146,8 @@ This plugin is based on "Heatmap" panel by Grafana and partly inspired by ideas 
 
 ##### v0.0.3
 
+- Add solarized preset
+- Reorganize statuses editor for discrete mode
 - Separate options for vertical and horizontal spacing for cards
 - Add simple sort options for Y axis
 - Fix display null values as zero

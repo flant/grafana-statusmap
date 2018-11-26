@@ -226,10 +226,27 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/core', 'app/core/utils/k
             _this.render();
           };
 
+          _this.onEditorRemoveThresholds = function () {
+            _this.panel.color.thresholds = [];
+            _this.render();
+          };
+
           _this.onEditorAddThreeLights = function () {
             _this.panel.color.thresholds.push({ color: "red", value: 2, tooltip: "error" });
             _this.panel.color.thresholds.push({ color: "yellow", value: 1, tooltip: "warning" });
             _this.panel.color.thresholds.push({ color: "green", value: 0, tooltip: "ok" });
+            _this.render();
+          };
+
+          _this.onEditorAddSolarized = function () {
+            _this.panel.color.thresholds.push({ color: "#b58900", value: 0, tooltip: "yellow" });
+            _this.panel.color.thresholds.push({ color: "#cb4b16", value: 1, tooltip: "orange" });
+            _this.panel.color.thresholds.push({ color: "#dc322f", value: 2, tooltip: "red" });
+            _this.panel.color.thresholds.push({ color: "#d33682", value: 3, tooltip: "magenta" });
+            _this.panel.color.thresholds.push({ color: "#6c71c4", value: 4, tooltip: "violet" });
+            _this.panel.color.thresholds.push({ color: "#268bd2", value: 5, tooltip: "blue" });
+            _this.panel.color.thresholds.push({ color: "#2aa198", value: 6, tooltip: "cyan" });
+            _this.panel.color.thresholds.push({ color: "#859900", value: 7, tooltip: "green" });
             _this.render();
           };
 
@@ -352,6 +369,9 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/core', 'app/core/utils/k
         }
 
         // override calculateInterval for discrete color mode
+
+
+        /* https://ethanschoonover.com/solarized/ */
 
 
         // group values into buckets by target
