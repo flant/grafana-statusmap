@@ -55,40 +55,70 @@
           <strong>Note:</strong> Multiple values displayed using color with least index<br/>
         </div>
 
-        <div class="gf-form" ng-repeat="threshold in ctrl.panel.color.thresholds">
-
-          <label class="gf-form-label width-2">{{ $index }}</label>
-          <label class="gf-form-label width-9" ng-if="ctrl.panel.useMax">If bucket has value</label>
-          <label class="gf-form-label width-9" ng-if="!ctrl.panel.useMax">If bucket value ==</label>
-          <input type="text" class="input-small gf-form-input width-4" ng-model="threshold.value" ng-change="ctrl.render()"/>
-          <label class="gf-form-label">
-            fill
-          </label>
-          <label class="gf-form-label">
-            <spectrum-picker ng-model="threshold.color" ng-change="ctrl.render()"/>
-          </label>
-          <label class="gf-form-label">set tooltip</label>
-          <input type="text" class="input-small gf-form-input width-9" ng-model="threshold.tooltip" ng-change="ctrl.render()"/>
-
-          <label class="gf-form-label">
-            <a class="pointer" ng-click="ctrl.onEditorRemoveThreshold($index)">
-              <i class="fa fa-trash"/>
-            </a>
-          </label>
+        <div class="gf-form" ng-show="ctrl.panel.color.thresholds.length == 0">
+          <label class="gf-form-label width-2">0</label>
+          <label class="gf-form-input width-30">No statuses defined. Add new status or use presets below.</label>
         </div>
 
-        <div class="gf-form">
-          <label class="gf-form-label"  ng-show="ctrl.panel.color.thresholds.length == 0">
-            <a class="pointer" ng-click="ctrl.onEditorAddThreeLights()">
-              Add trafic lights
-            </a>
-          </label>
-          <label class="gf-form-label">
-            <a class="pointer" ng-click="ctrl.onEditorAddThreshold()">
-              Add new status
-            </a>
-          </label>
+        <div class="gf-form-inline" ng-repeat="threshold in ctrl.panel.color.thresholds">
+          <div class="gf-form">
+            <label class="gf-form-label width-2">{{ $index }}</label>
+          </div>
+          <div class="gf-form">
+            <label class="gf-form-label width-9 query-keyword" ng-if="ctrl.panel.useMax">If bucket has value</label>
+            <label class="gf-form-label width-9 query-keyword" ng-if="!ctrl.panel.useMax">If bucket value ==</label>
+            <input type="text" class="input-small gf-form-input width-4" ng-model="threshold.value" ng-change="ctrl.render()"/>
+            <label class="gf-form-label query-keyword">
+              fill
+            </label>
+            <label class="gf-form-label">
+              <spectrum-picker ng-model="threshold.color" ng-change="ctrl.render()"/>
+            </label>
+          </div>
+          <div class="gf-form">
+            <label class="gf-form-label query-keyword">set tooltip</label>
+            <input type="text" class="input-small gf-form-input width-9" ng-model="threshold.tooltip" ng-change="ctrl.render()"/>
+          </div>
+          <div class="gf-form">
+            <label class="gf-form-label">
+              <a class="pointer" tabindex="1" ng-click="ctrl.onEditorRemoveThreshold($index)">
+                <i class="fa fa-trash"/>
+              </a>
+            </label>
+          </div>
         </div>
+
+        <div class="gf-form-inline">
+            <div class="gf-form"></div>
+          <div class="gf-form">
+            <button class="btn btn-inverse" ng-click="ctrl.onEditorAddThreshold()">
+              <i class="fa fa-plus"></i> Add new status
+            </button>
+          </div>
+          <div class="gf-form">
+            <button class="btn btn-inverse" ng-click="ctrl.onEditorRemoveThresholds()">
+                <i class="fa fa-minus"></i> Remove all
+            </button>
+          </div>
+        </div>
+
+        <div class="gf-form-inline" ng-show="ctrl.panel.color.thresholds.length == 0">
+          <div class="gf-form"></div>
+          <div class="gf-form">
+              <label class="gf-form-label">Presets</label>
+          </div>
+          <div class="gf-form">
+            <button class="btn" ng-click="ctrl.onEditorAddThreeLights()">
+              Red-Yellow-Green
+            </button>
+          </div>
+          <div class="gf-form">            
+            <button class="btn" ng-click="ctrl.onEditorAddSolarized()">
+              Solarized
+            </button>
+          </div>
+        </div>
+
     </div>
 
     <div class="gf-form" ng-show="ctrl.panel.color.mode !== 'discrete'">
