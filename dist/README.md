@@ -144,6 +144,10 @@ This plugin is based on "Heatmap" panel by Grafana and partly inspired by ideas 
 
 #### Changelog
 
+##### v0.0.3
+
+- Fix display null values as zero
+
 ##### v0.0.2
 
 - Install with GF_INSTALL_PLUGINS

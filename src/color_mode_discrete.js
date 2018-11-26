@@ -63,6 +63,13 @@ export class ColorModeDiscrete {
 
     for (let i = 0; i < thresholds.length; i++) {
       for (let j = 0; j < values.length; j++) {
+        if (values[j] == null) {
+          if (this.panel.nullPointMode == 'as zero') {
+            return this.getMatchedThreshold(0).color;
+          } else {
+            return 'rgba(0,0,0,0)';
+          }
+        }
         if (values[j] == thresholds[i].value) {
           return this.getDiscreteColor(i);
         }
@@ -93,7 +100,7 @@ export class ColorModeDiscrete {
 
   getMatchedThreshold(value) {
     if (value == null) {
-      if (this.panel.color.nullPointMode == 'as empty') {
+      if (this.panel.nullPointMode == 'as empty') {
         // FIXME: make this explicit for user
         // Right now this color never used because null as empty handles in getCardOpacity method.
         return {
