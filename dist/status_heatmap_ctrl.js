@@ -97,6 +97,7 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/core', 'app/core/utils/k
         },
         // how null points should be handled
         nullPointMode: 'as empty',
+        yAxisSort: 'metrics',
         highlightCards: true,
         useMax: true
       };
@@ -263,7 +264,6 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/core', 'app/core/utils/k
 
             // TODO add some logic for targets heirarchy
             cardsData.targets = _.keys(cardsData.targetIndex);
-            cardsData.targets.sort();
             cardsData.yBucketSize = cardsData.targets.length;
             cardsData.xBucketSize = _.min(_.map(data, function (d) {
               return d.datapoints.length;

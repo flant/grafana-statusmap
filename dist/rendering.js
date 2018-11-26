@@ -121,9 +121,10 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/kbn', 'app/core/c
     function getYScale(ticks) {
       var range = [];
       var step = chartHeight / ticks.length;
-      range.push(chartHeight);
+      // svg has y=0 on the top, so top card should have a minimal value in range
+      range.push(step);
       for (var i = 1; i < ticks.length; i++) {
-        range.push(chartHeight - step * i);
+        range.push(step * (i + 1));
       }
       return d3.scaleOrdinal().domain(ticks).range(range);
     }
@@ -132,9 +133,10 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/kbn', 'app/core/c
     function getYAxisScale(ticks) {
       var range = [];
       var step = chartHeight / ticks.length;
-      range.push(chartHeight - yOffset);
+      // svg has y=0 on the top, so top tick should have a minimal value in range
+      range.push(yOffset);
       for (var i = 1; i < ticks.length; i++) {
-        range.push(chartHeight - step * i - yOffset);
+        range.push(step * i + yOffset);
       }
       return d3.scaleOrdinal().domain(ticks).range(range);
     }
@@ -147,6 +149,16 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/kbn', 'app/core/c
       // Set default Y min and max if no data
       if (_.isEmpty(data)) {
         ticks = [''];
+      }
+
+      if (panel.yAxisSort == 'a → z') {
+        ticks.sort(function (a, b) {
+          return a.localeCompare(b, 'en', { ignorePunctuation: false, numeric: true });
+        });
+      } else if (panel.yAxisSort == 'z → a') {
+        ticks.sort(function (b, a) {
+          return a.localeCompare(b, 'en', { ignorePunctuation: false, numeric: true });
+        });
       }
 
       var yAxisScale = getYAxisScale(ticks);
