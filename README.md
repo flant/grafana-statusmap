@@ -94,7 +94,7 @@ Then, color mapping for status' values should be defined in __Discrete__ color m
 
 ![Color mapping](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/color-mapping.png)
 
-Use can use presets to define a trafic light colors or 8 colors from solarized palette:
+Use can use presets to define a trafic light colors or 8 colors from [solarized](https://ethanschoonover.com/solarized/) palette:
 
 ![Color mapping empty](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/color-preset-01.png)
 
@@ -105,6 +105,8 @@ _Note: __Spectrum__ and __Opacity__ color modes function the same way they do in
 
 
 ### More options
+
+#### Bucket
 
 ![Bucket options](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/options-bucket.png)
 
@@ -125,6 +127,15 @@ __Rounding__ may be used to round edges.
 
 ![Min width, spacing, rounding 2](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/min-width-spacing-rounding-02.png)
 
+#### Display
+
+![Display options](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/options-display.png)
+
+__Show legend__ checkbox toggles legend at the bottom of the panel.
+
+__Show tooltip__ toggles tooltip display on mouse over buckets.
+
+__Y axis sort__ can be used to sort labels on Y axis. Metrics — sort y labels as they are defined on Metrics tab. a→z and z→a sort labels descending or ascending in a [natural](https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/String/localeCompare) order.
 
 ## Development
 
