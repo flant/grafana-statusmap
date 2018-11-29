@@ -94,6 +94,13 @@ Then, color mapping for status' values should be defined in __Discrete__ color m
 
 ![Color mapping](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/color-mapping.png)
 
+Use can use presets to define a trafic light colors or 8 colors from solarized palette:
+
+![Color mapping empty](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/color-mapping-preset-01.png)
+
+![Color mapping trafic lights](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/color-mapping-02.png)
+
+
 _Note: __Spectrum__ and __Opacity__ color modes function the same way they do in [Heatmap](https://grafana.com/plugins/heatmap) plugin._
 
 
@@ -114,7 +121,9 @@ __Null values__ can be treated as empty buckets or displayed with the color of `
 __Min width__ and __spacing__ are used to specify minimal bucket width and spacing between buckets.
 __Rounding__ may be used to round edges.
 
-![Min width, spacing, rounding](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/min-width-spacing-rounding.png)
+![Min width, spacing, rounding 1](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/min-width-spacing-rounding-01.png)
+
+![Min width, spacing, rounding 2](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/min-width-spacing-rounding-02.png)
 
 
 ## Development
