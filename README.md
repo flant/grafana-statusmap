@@ -96,9 +96,9 @@ Then, color mapping for status' values should be defined in __Discrete__ color m
 
 Use can use presets to define a trafic light colors or 8 colors from solarized palette:
 
-![Color mapping empty](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/color-mapping-preset-01.png)
+![Color mapping empty](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/color-preset-01.png)
 
-![Color mapping trafic lights](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/color-mapping-02.png)
+![Color mapping trafic lights](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/color-preset-02.png)
 
 
 _Note: __Spectrum__ and __Opacity__ color modes function the same way they do in [Heatmap](https://grafana.com/plugins/heatmap) plugin._
