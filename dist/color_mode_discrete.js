@@ -101,16 +101,28 @@ System.register(["lodash"], function (_export, _context) {
           value: function getBucketColor(values) {
             var thresholds = this.panel.color.thresholds;
 
+            if (!values || values.length == 0) {
+              // treat as null value
+              return this.getMatchedThreshold(null).color;
+            }
+
+            if (values.length == 1) {
+              return this.getMatchedThreshold(values[0]).color;
+            }
+
+            var isAllValuesNulls = true;
+            for (var j = 0; j < values.length; j++) {
+              if (values[j] != null) {
+                isAllValuesNulls = false;
+              }
+            }
+            if (isAllValuesNulls) {
+              return this.getMatchedThreshold(null).color;
+            }
+
             for (var i = 0; i < thresholds.length; i++) {
-              for (var j = 0; j < values.length; j++) {
-                if (values[j] == null) {
-                  if (this.panel.nullPointMode == 'as zero') {
-                    return this.getMatchedThreshold(0).color;
-                  } else {
-                    return 'rgba(0,0,0,0)';
-                  }
-                }
-                if (values[j] == thresholds[i].value) {
+              for (var _j = 0; _j < values.length; _j++) {
+                if (values[_j] == thresholds[i].value) {
                   return this.getDiscreteColor(i);
                 }
               }
