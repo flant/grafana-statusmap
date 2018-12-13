@@ -164,6 +164,10 @@ This plugin is based on "Heatmap" panel by Grafana and partly inspired by ideas 
 
 #### Changelog
 
+##### v0.0.4
+
+- Fix display of multivalues buckets as an empty cell
+
 ##### v0.0.3
 
 - Add solarized preset
