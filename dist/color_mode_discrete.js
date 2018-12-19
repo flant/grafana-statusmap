@@ -107,7 +107,12 @@ System.register(["lodash"], function (_export, _context) {
             }
 
             if (values.length == 1) {
-              return this.getMatchedThreshold(values[0]).color;
+              var threshold = this.getMatchedThreshold(values[0]);
+              if (!threshold || !threshold.color || threshold.color == "") {
+                return 'rgba(0,0,0,1)';
+              } else {
+                return threshold.color;
+              }
             }
 
             var isAllValuesNulls = true;

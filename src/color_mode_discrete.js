@@ -67,7 +67,12 @@ export class ColorModeDiscrete {
     }
 
     if (values.length == 1) {
-      return this.getMatchedThreshold(values[0]).color;
+      let threshold = this.getMatchedThreshold(values[0]);
+      if (!threshold || !threshold.color || threshold.color == "") {
+        return 'rgba(0,0,0,1)';
+      } else {
+        return threshold.color;
+      }
     }
 
     let isAllValuesNulls = true;
