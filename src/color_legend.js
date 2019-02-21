@@ -174,7 +174,7 @@ function drawDiscreteColorLegend(elem, colorOptions, discreteHelper) {
     .each(function(d,i) {
       let thisWidth = this.getBBox().width;
       textWidth.push(thisWidth);
-      this.remove(); // remove them just after displaying them
+      this.parentElement.removeChild(this); // remove them just after displaying them in IE friendly way
     });
 
   let legendWidth = Math.floor(_.min([

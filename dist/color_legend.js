@@ -87,7 +87,7 @@ System.register(['angular', 'lodash', 'jquery', 'd3', './libs/d3-scale-chromatic
     }).each(function (d, i) {
       var thisWidth = this.getBBox().width;
       textWidth.push(thisWidth);
-      this.remove(); // remove them just after displaying them
+      this.parentElement.removeChild(this); // remove them just after displaying them in IE friendly way
     });
 
     var legendWidth = Math.floor(_.min([graphWidth - 30, (_.max(textWidth) + 3) * valuesNumber]));
