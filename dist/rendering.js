@@ -363,6 +363,10 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/kbn', 'app/core/c
       // Card width should be MIN_CARD_SIZE at least
       w = Math.max(w, MIN_CARD_SIZE);
 
+      if (cardHSpacing == 0) {
+        w = w + 1;
+      }
+
       return w;
     }
 
@@ -388,6 +392,10 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/kbn', 'app/core/c
       h = Math.min(h, chartHeight);
       // Card height should be MIN_CARD_SIZE at least
       h = Math.max(h, MIN_CARD_SIZE);
+
+      if (cardVSpacing == 0) {
+        h = h + 1;
+      }
 
       return h;
     }
