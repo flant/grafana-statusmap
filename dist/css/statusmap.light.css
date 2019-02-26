@@ -1,5 +1,7 @@
 .status-heatmap-canvas-wrapper {
   cursor: crosshair; }
+  .status-heatmap-canvas-wrapper .datapoints-warning {
+    pointer-events: none; }
   .status-heatmap-canvas-wrapper .datapoints-warning span {
     background-color: #e9edf2;
     color: #52545c;

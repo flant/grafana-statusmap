@@ -3,7 +3,7 @@
 System.register(['angular', 'lodash', 'jquery', 'd3', './libs/d3-scale-chromatic/index', 'app/core/core', 'app/core/utils/ticks'], function (_export, _context) {
   "use strict";
 
-  var angular, _, $, d3, d3ScaleChromatic, contextSrv, tickStep, mod, MIN_LEGEND_STEPS;
+  var angular, _, $, d3, d3ScaleChromatic, contextSrv, tickStep, mod, LEGEND_STEP_WIDTH;
 
   function drawColorLegend(elem, colorScheme, rangeFrom, rangeTo, maxValue, minValue) {
     var legendElem = $(elem).find('svg');
@@ -13,24 +13,29 @@ System.register(['angular', 'lodash', 'jquery', 'd3', './libs/d3-scale-chromatic
     var legendWidth = Math.floor(legendElem.outerWidth()) - 30; // narrow legendWidth by 30px to get space for first and last tick values
     var legendHeight = legendElem.attr("height");
 
-    var rangeStep = 1;
-    if (rangeTo - rangeFrom > legendWidth) {
-      rangeStep = Math.floor((rangeTo - rangeFrom) / legendWidth);
-    }
-
-    if (rangeStep * MIN_LEGEND_STEPS > rangeTo) {
-      rangeStep = rangeTo / MIN_LEGEND_STEPS;
-    }
-
+    var rangeStep = (rangeTo - rangeFrom) / (legendWidth / LEGEND_STEP_WIDTH);
+    // width in pixels in legend space of unit segment in range space
+    // rangeStep * witdhFactor == width in pixels of one rangeStep
     var widthFactor = legendWidth / (rangeTo - rangeFrom);
     var valuesRange = d3.range(rangeFrom, rangeTo, rangeStep);
 
+    // console.debug({
+    //   "rangeStep": rangeStep,
+    //   "widthFactor": widthFactor,
+    //   "legendWidth": legendWidth,
+    //   "steps": (rangeTo - rangeFrom)/rangeStep,
+    // });
+    // console.debug(valuesRange);
+
     var colorScale = getColorScale(colorScheme, maxValue, minValue);
-    legend.selectAll(".status-heatmap-color-legend-rect").data(valuesRange).enter().append("rect").attr("x", function (d) {
+    legend.selectAll(".status-heatmap-color-legend-rect").data(valuesRange).enter().append("rect")
+    // translate from range space into pixels
+    // and shift all rectangles to the right by 10
+    .attr("x", function (d) {
       return d * widthFactor + 10;
-    }) // shift all color rectangles to the right
-    .attr("y", 0).attr("width", rangeStep * widthFactor + 1) // Overlap rectangles to prevent gaps
-    .attr("height", legendHeight).attr("stroke-width", 0).attr("fill", function (d) {
+    }).attr("y", 0)
+    // rectangles are slightly overlaped to prevent gaps
+    .attr("width", LEGEND_STEP_WIDTH + 1).attr("height", legendHeight).attr("stroke-width", 0).attr("fill", function (d) {
       return colorScale(d);
     });
 
@@ -45,20 +50,21 @@ System.register(['angular', 'lodash', 'jquery', 'd3', './libs/d3-scale-chromatic
     var legendWidth = Math.floor(legendElem.outerWidth()) - 30; // narrow legendWidth by 30px to get space for first and last tick values
     var legendHeight = legendElem.attr("height");
 
-    var rangeStep = 10;
+    var rangeStep = (rangeTo - rangeFrom) / (legendWidth / LEGEND_STEP_WIDTH);
+    // width in pixels in legend space of unit segment in range space
+    // rangeStep * witdhFactor == width in pixels of one rangeStep
     var widthFactor = legendWidth / (rangeTo - rangeFrom);
-
-    if (rangeStep * MIN_LEGEND_STEPS > rangeTo) {
-      rangeStep = rangeTo / MIN_LEGEND_STEPS;
-    }
-
     var valuesRange = d3.range(rangeFrom, rangeTo, rangeStep);
 
     var opacityScale = getOpacityScale(options, maxValue, minValue);
-    legend.selectAll(".status-heatmap-opacity-legend-rect").data(valuesRange).enter().append("rect").attr("x", function (d) {
+    legend.selectAll(".status-heatmap-opacity-legend-rect").data(valuesRange).enter().append("rect")
+    // translate from range space into pixels
+    // and shift all rectangles to the right by 10
+    .attr("x", function (d) {
       return d * widthFactor + 10;
-    }) // shift all opacity rectangles to the right
-    .attr("y", 0).attr("width", rangeStep * widthFactor).attr("height", legendHeight).attr("stroke-width", 0).attr("fill", options.cardColor).style("opacity", function (d) {
+    }).attr("y", 0)
+    // rectangles are slightly overlaped to prevent gaps
+    .attr("width", LEGEND_STEP_WIDTH + 1).attr("height", legendHeight).attr("stroke-width", 0).attr("fill", options.cardColor).style("opacity", function (d) {
       return opacityScale(d);
     });
 
@@ -180,22 +186,18 @@ System.register(['angular', 'lodash', 'jquery', 'd3', './libs/d3-scale-chromatic
 
   function drawSimpleColorLegend(elem, colorScale) {
     var legendElem = $(elem).find('svg');
+    var legend = d3.select(legendElem.get(0));
     clearLegend(elem);
 
     var legendWidth = Math.floor(legendElem.outerWidth());
     var legendHeight = legendElem.attr("height");
 
     if (legendWidth) {
-      var valuesNumber = Math.floor(legendWidth / 2);
-      var rangeStep = Math.floor(legendWidth / valuesNumber);
-      var valuesRange = d3.range(0, legendWidth, rangeStep);
+      var valuesRange = d3.range(0, legendWidth, LEGEND_STEP_WIDTH);
 
-      var legend = d3.select(legendElem.get(0));
-      var legendRects = legend.selectAll(".status-heatmap-color-legend-rect").data(valuesRange);
-
-      legendRects.enter().append("rect").attr("x", function (d) {
+      legend.selectAll(".status-heatmap-color-legend-rect").data(valuesRange).enter().append("rect").attr("x", function (d) {
         return d;
-      }).attr("y", 0).attr("width", rangeStep + 1) // Overlap rectangles to prevent gaps
+      }).attr("y", 0).attr("width", LEGEND_STEP_WIDTH + 1) // Overlap rectangles to prevent gaps
       .attr("height", legendHeight).attr("stroke-width", 0).attr("fill", function (d) {
         return colorScale(d);
       });
@@ -204,10 +206,9 @@ System.register(['angular', 'lodash', 'jquery', 'd3', './libs/d3-scale-chromatic
 
   function drawSimpleOpacityLegend(elem, options) {
     var legendElem = $(elem).find('svg');
-    var graphElem = $(elem);
+    var legend = d3.select(legendElem.get(0));
     clearLegend(elem);
 
-    var legend = d3.select(legendElem.get(0));
     var legendWidth = Math.floor(legendElem.outerWidth());
     var legendHeight = legendElem.attr("height");
 
@@ -219,13 +220,11 @@ System.register(['angular', 'lodash', 'jquery', 'd3', './libs/d3-scale-chromatic
         legendOpacityScale = d3.scalePow().exponent(options.exponent).domain([0, legendWidth]).range([0, 1]);
       }
 
-      var rangeStep = 10;
-      var valuesRange = d3.range(0, legendWidth, rangeStep);
-      var legendRects = legend.selectAll(".status-heatmap-opacity-legend-rect").data(valuesRange);
+      var valuesRange = d3.range(0, legendWidth, LEGEND_STEP_WIDTH);
 
-      legendRects.enter().append("rect").attr("x", function (d) {
+      legend.selectAll(".status-heatmap-opacity-legend-rect").data(valuesRange).enter().append("rect").attr("x", function (d) {
         return d;
-      }).attr("y", 0).attr("width", rangeStep).attr("height", legendHeight).attr("stroke-width", 0).attr("fill", options.cardColor).style("opacity", function (d) {
+      }).attr("y", 0).attr("width", LEGEND_STEP_WIDTH + 1).attr("height", legendHeight).attr("stroke-width", 0).attr("fill", options.cardColor).style("opacity", function (d) {
         return legendOpacityScale(d);
       });
     }
@@ -331,7 +330,7 @@ System.register(['angular', 'lodash', 'jquery', 'd3', './libs/d3-scale-chromatic
     }],
     execute: function () {
       mod = angular.module('grafana.directives');
-      MIN_LEGEND_STEPS = 10;
+      LEGEND_STEP_WIDTH = 2;
 
 
       /**
@@ -386,6 +385,9 @@ System.register(['angular', 'lodash', 'jquery', 'd3', './libs/d3-scale-chromatic
 
             function render() {
               clearLegend(elem);
+              if (!ctrl.panel.legend.show) {
+                return;
+              }
               if (!_.isEmpty(ctrl.cardsData) && !_.isEmpty(ctrl.cardsData.cards)) {
                 var rangeFrom = ctrl.cardsData.minValue;
                 var rangeTo = ctrl.cardsData.maxValue;

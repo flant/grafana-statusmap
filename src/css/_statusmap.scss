@@ -2,6 +2,11 @@
   // position: relative;
   cursor: crosshair;
 
+  // allow tooltips on hover of warning text
+  .datapoints-warning {
+    pointer-events: none;
+  }
+
   .datapoints-warning span {
   background-color: $warning-bg;
   color: $text-color;
