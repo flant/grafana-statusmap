@@ -8,7 +8,7 @@ import {tickStep} from 'app/core/utils/ticks';
 
 let mod = angular.module('grafana.directives');
 
-const MIN_LEGEND_STEPS = 10;
+const LEGEND_STEP_WIDTH = 2;
 
 /**
  * Color legend for heatmap editor.
@@ -62,6 +62,9 @@ mod.directive('statusHeatmapLegend', function() {
 
       function render() {
         clearLegend(elem);
+        if (!ctrl.panel.legend.show) {
+          return 
+        }
         if (!_.isEmpty(ctrl.cardsData) && !_.isEmpty(ctrl.cardsData.cards)) {
           let rangeFrom = ctrl.cardsData.minValue;
           let rangeTo = ctrl.cardsData.maxValue;
@@ -92,25 +95,30 @@ function drawColorLegend(elem, colorScheme, rangeFrom, rangeTo, maxValue, minVal
   let legendWidth = Math.floor(legendElem.outerWidth()) - 30;  // narrow legendWidth by 30px to get space for first and last tick values
   let legendHeight = legendElem.attr("height");
 
-  let rangeStep = 1;
-  if (rangeTo - rangeFrom > legendWidth) {
-    rangeStep = Math.floor((rangeTo - rangeFrom) / legendWidth);
-  }
-
-  if (rangeStep * MIN_LEGEND_STEPS > rangeTo) {
-    rangeStep = rangeTo / MIN_LEGEND_STEPS;
-  }
-
+  let rangeStep = (rangeTo - rangeFrom) / (legendWidth/LEGEND_STEP_WIDTH);
+  // width in pixels in legend space of unit segment in range space
+  // rangeStep * witdhFactor == width in pixels of one rangeStep
   let widthFactor = legendWidth / (rangeTo - rangeFrom);
   let valuesRange = d3.range(rangeFrom, rangeTo, rangeStep);
+
+  // console.debug({
+  //   "rangeStep": rangeStep,
+  //   "widthFactor": widthFactor,
+  //   "legendWidth": legendWidth,
+  //   "steps": (rangeTo - rangeFrom)/rangeStep,
+  // });
+  // console.debug(valuesRange);
 
   let colorScale = getColorScale(colorScheme, maxValue, minValue);
   legend.selectAll(".status-heatmap-color-legend-rect")
     .data(valuesRange)
     .enter().append("rect")
-    .attr("x", d => d * widthFactor + 10) // shift all color rectangles to the right
+    // translate from range space into pixels
+    // and shift all rectangles to the right by 10
+    .attr("x", d => d * widthFactor+10)
     .attr("y", 0)
-    .attr("width", rangeStep * widthFactor + 1) // Overlap rectangles to prevent gaps
+    // rectangles are slightly overlaped to prevent gaps
+    .attr("width", LEGEND_STEP_WIDTH+1)
     .attr("height", legendHeight)
     .attr("stroke-width", 0)
     .attr("fill", d => colorScale(d));
@@ -126,22 +134,22 @@ function drawOpacityLegend(elem, options, rangeFrom, rangeTo, maxValue, minValue
   let legendWidth = Math.floor(legendElem.outerWidth()) - 30;  // narrow legendWidth by 30px to get space for first and last tick values
   let legendHeight = legendElem.attr("height");
 
-  let rangeStep = 10;
+  let rangeStep = (rangeTo - rangeFrom) / (legendWidth/LEGEND_STEP_WIDTH);
+  // width in pixels in legend space of unit segment in range space
+  // rangeStep * witdhFactor == width in pixels of one rangeStep
   let widthFactor = legendWidth / (rangeTo - rangeFrom);
-
-  if (rangeStep * MIN_LEGEND_STEPS > rangeTo) {
-    rangeStep = rangeTo / MIN_LEGEND_STEPS;
-  }
-
   let valuesRange = d3.range(rangeFrom, rangeTo, rangeStep);
 
   let opacityScale = getOpacityScale(options, maxValue, minValue);
   legend.selectAll(".status-heatmap-opacity-legend-rect")
     .data(valuesRange)
     .enter().append("rect")
-    .attr("x", d => d * widthFactor + 10) // shift all opacity rectangles to the right
+    // translate from range space into pixels
+    // and shift all rectangles to the right by 10
+    .attr("x", d => d * widthFactor+10)
     .attr("y", 0)
-    .attr("width", rangeStep * widthFactor)
+    // rectangles are slightly overlaped to prevent gaps
+    .attr("width", LEGEND_STEP_WIDTH+1)
     .attr("height", legendHeight)
     .attr("stroke-width", 0)
     .attr("fill", options.cardColor)
@@ -289,23 +297,21 @@ function drawDiscreteLegendValues(elem, colorOptions, legendWidth) {
 
 function drawSimpleColorLegend(elem, colorScale) {
   let legendElem = $(elem).find('svg');
+  let legend = d3.select(legendElem.get(0));
   clearLegend(elem);
 
   let legendWidth = Math.floor(legendElem.outerWidth());
   let legendHeight = legendElem.attr("height");
 
   if (legendWidth) {
-    let valuesNumber = Math.floor(legendWidth / 2);
-    let rangeStep  = Math.floor(legendWidth / valuesNumber);
-    let valuesRange = d3.range(0, legendWidth, rangeStep);
+    let valuesRange = d3.range(0, legendWidth, LEGEND_STEP_WIDTH);
 
-    let legend = d3.select(legendElem.get(0));
-    var legendRects = legend.selectAll(".status-heatmap-color-legend-rect").data(valuesRange);
-
-    legendRects.enter().append("rect")
+    legend.selectAll(".status-heatmap-color-legend-rect")
+      .data(valuesRange)
+      .enter().append("rect")
       .attr("x", d => d)
       .attr("y", 0)
-      .attr("width", rangeStep + 1) // Overlap rectangles to prevent gaps
+      .attr("width", LEGEND_STEP_WIDTH + 1) // Overlap rectangles to prevent gaps
       .attr("height", legendHeight)
       .attr("stroke-width", 0)
       .attr("fill", d => colorScale(d));
@@ -314,10 +320,9 @@ function drawSimpleColorLegend(elem, colorScale) {
 
 function drawSimpleOpacityLegend(elem, options) {
   let legendElem = $(elem).find('svg');
-  let graphElem = $(elem);
+  let legend = d3.select(legendElem.get(0));
   clearLegend(elem);
 
-  let legend = d3.select(legendElem.get(0));
   let legendWidth = Math.floor(legendElem.outerWidth());
   let legendHeight = legendElem.attr("height");
 
@@ -333,14 +338,14 @@ function drawSimpleOpacityLegend(elem, options) {
       .range([0, 1]);
     }
 
-    let rangeStep = 10;
-    let valuesRange = d3.range(0, legendWidth, rangeStep);
-    var legendRects = legend.selectAll(".status-heatmap-opacity-legend-rect").data(valuesRange);
+    let valuesRange = d3.range(0, legendWidth, LEGEND_STEP_WIDTH);
 
-    legendRects.enter().append("rect")
+    legend.selectAll(".status-heatmap-opacity-legend-rect")
+      .data(valuesRange)
+      .enter().append("rect")
       .attr("x", d => d)
       .attr("y", 0)
-      .attr("width", rangeStep)
+      .attr("width", LEGEND_STEP_WIDTH+1)
       .attr("height", legendHeight)
       .attr("stroke-width", 0)
       .attr("fill", options.cardColor)
