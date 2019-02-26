@@ -101,14 +101,6 @@ function drawColorLegend(elem, colorScheme, rangeFrom, rangeTo, maxValue, minVal
   let widthFactor = legendWidth / (rangeTo - rangeFrom);
   let valuesRange = d3.range(rangeFrom, rangeTo, rangeStep);
 
-  // console.debug({
-  //   "rangeStep": rangeStep,
-  //   "widthFactor": widthFactor,
-  //   "legendWidth": legendWidth,
-  //   "steps": (rangeTo - rangeFrom)/rangeStep,
-  // });
-  // console.debug(valuesRange);
-
   let colorScale = getColorScale(colorScheme, maxValue, minValue);
   legend.selectAll(".status-heatmap-color-legend-rect")
     .data(valuesRange)
@@ -176,14 +168,14 @@ function drawDiscreteColorLegend(elem, colorOptions, discreteHelper) {
   legend.selectAll(".hidden-texts")
     .data(tooltips)
     .enter().append("text")
-    .attr("class", "axis tick")
+    .attr("class", "axis tick hidden-texts")
     .attr("font-family", "sans-serif")
     .text(d => d)
     .each(function(d,i) {
       let thisWidth = this.getBBox().width;
       textWidth.push(thisWidth);
-      this.parentElement.removeChild(this); // remove them just after displaying them in IE friendly way
     });
+  legend.selectAll(".hidden-texts").remove();
 
   let legendWidth = Math.floor(_.min([
     graphWidth - 30,
