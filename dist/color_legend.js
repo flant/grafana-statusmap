@@ -19,14 +19,6 @@ System.register(['angular', 'lodash', 'jquery', 'd3', './libs/d3-scale-chromatic
     var widthFactor = legendWidth / (rangeTo - rangeFrom);
     var valuesRange = d3.range(rangeFrom, rangeTo, rangeStep);
 
-    // console.debug({
-    //   "rangeStep": rangeStep,
-    //   "widthFactor": widthFactor,
-    //   "legendWidth": legendWidth,
-    //   "steps": (rangeTo - rangeFrom)/rangeStep,
-    // });
-    // console.debug(valuesRange);
-
     var colorScale = getColorScale(colorScheme, maxValue, minValue);
     legend.selectAll(".status-heatmap-color-legend-rect").data(valuesRange).enter().append("rect")
     // translate from range space into pixels
@@ -88,13 +80,13 @@ System.register(['angular', 'lodash', 'jquery', 'd3', './libs/d3-scale-chromatic
 
     // calculate max width of tooltip and use it as width for each item
     var textWidth = [];
-    legend.selectAll(".hidden-texts").data(tooltips).enter().append("text").attr("class", "axis tick").attr("font-family", "sans-serif").text(function (d) {
+    legend.selectAll(".hidden-texts").data(tooltips).enter().append("text").attr("class", "axis tick hidden-texts").attr("font-family", "sans-serif").text(function (d) {
       return d;
     }).each(function (d, i) {
       var thisWidth = this.getBBox().width;
       textWidth.push(thisWidth);
-      this.parentElement.removeChild(this); // remove them just after displaying them in IE friendly way
     });
+    legend.selectAll(".hidden-texts").remove();
 
     var legendWidth = Math.floor(_.min([graphWidth - 30, (_.max(textWidth) + 3) * valuesNumber]));
     legendElem.attr("width", legendWidth);
