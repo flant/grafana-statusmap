@@ -11,7 +11,7 @@ let mod = angular.module('grafana.directives');
 const LEGEND_STEP_WIDTH = 2;
 
 /**
- * Color legend for heatmap editor.
+ * Bigger color legend for opacity and spectrum modes editor.
  */
 mod.directive('optionsColorLegend', function() {
   return {
@@ -45,7 +45,7 @@ mod.directive('optionsColorLegend', function() {
 });
 
 /**
- * Heatmap legend with scale values.
+ * Graph legend with values.
  */
 mod.directive('statusHeatmapLegend', function() {
   return {

@@ -326,7 +326,7 @@ System.register(['angular', 'lodash', 'jquery', 'd3', './libs/d3-scale-chromatic
 
 
       /**
-       * Color legend for heatmap editor.
+       * Bigger color legend for opacity and spectrum modes editor.
        */
       mod.directive('optionsColorLegend', function () {
         return {
@@ -360,7 +360,7 @@ System.register(['angular', 'lodash', 'jquery', 'd3', './libs/d3-scale-chromatic
       });
 
       /**
-       * Heatmap legend with scale values.
+       * Graph legend with values.
        */
       mod.directive('statusHeatmapLegend', function () {
         return {

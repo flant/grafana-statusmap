@@ -243,6 +243,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/kbn', 'app/core/c
       yAxisWidth = getYAxisWidth(heatmap) + Y_AXIS_TICK_PADDING;
       chartWidth = width - yAxisWidth - margin.right;
 
+      // TODO allow per-y cardWidth!
       // we need to fill chartWidth with xBucketSize cards.
       xGridSize = chartWidth / (cardsData.xBucketSize + 1);
       cardWidth = xGridSize - cardHSpacing;

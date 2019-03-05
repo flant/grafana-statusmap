@@ -283,27 +283,27 @@ export class StatusHeatmapCtrl extends MetricsPanelCtrl {
       minValue: 0,
       multipleValues: false,
       noColorDefined: false,
+      targets: [], // array of available unique targets
+      targetIndex: {} // indices in data array for each of available unique targets
     };
 
     if (!data || data.length == 0) { return cardsData;}
 
-    // collect uniq targets and their indexes in data array
-    cardsData.targetIndex = {};
-    for (let i = 0; i < data.length; i++) {
-      let ts = data[i];
-      let target = ts.target;
-      if (cardsData.targetIndex[target] == undefined) {
-        cardsData.targetIndex[target] = []
-      }
-      cardsData.targetIndex[target].push(i);
-    }
+    // Collect uniq timestamps from data and spread over targets and timestamps
+
+    // collect uniq targets and their indices
+    _.map(data, (d, i) => {
+      cardsData.targetIndex[d.target] = _.concat(_.toArray(cardsData.targetIndex[d.target]), i)
+    });
 
     // TODO add some logic for targets heirarchy
     cardsData.targets = _.keys(cardsData.targetIndex);
     cardsData.yBucketSize = cardsData.targets.length;
-    cardsData.xBucketSize = _.min(_.map(data, d => d.datapoints.length));
+    // Maximum number of buckets over x axis
+    cardsData.xBucketSize = _.max(_.map(data, d => d.datapoints.length));
 
     // Collect all values for each bucket from datapoints with similar target.
+    // TODO aggregate values into buckets over datapoint[TIME_INDEX] not over datapoint index (j).
     for(let i = 0; i < cardsData.targets.length; i++) {
       let target = cardsData.targets[i];
 
@@ -318,6 +318,9 @@ export class StatusHeatmapCtrl extends MetricsPanelCtrl {
         // collect values from all timeseries with target
         for (let si = 0; si < cardsData.targetIndex[target].length; si++) {
           let s = data[cardsData.targetIndex[target][si]];
+          if (s.datapoints.length <= j) {
+            continue;
+          }
           let datapoint = s.datapoints[j];
           if (card.values.length === 0) {
             card.x = datapoint[TIME_INDEX];

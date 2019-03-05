@@ -262,46 +262,49 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/core', 'app/core/utils/k
               maxValue: 0,
               minValue: 0,
               multipleValues: false,
-              noColorDefined: false
+              noColorDefined: false,
+              targets: [], // array of available unique targets
+              targetIndex: {} // indices in data array for each of available unique targets
             };
 
             if (!data || data.length == 0) {
               return cardsData;
             }
 
-            // collect uniq targets and their indexes in data array
-            cardsData.targetIndex = {};
-            for (var i = 0; i < data.length; i++) {
-              var ts = data[i];
-              var target = ts.target;
-              if (cardsData.targetIndex[target] == undefined) {
-                cardsData.targetIndex[target] = [];
-              }
-              cardsData.targetIndex[target].push(i);
-            }
+            // Collect uniq timestamps from data and spread over targets and timestamps
+
+            // collect uniq targets and their indices
+            _.map(data, function (d, i) {
+              cardsData.targetIndex[d.target] = _.concat(_.toArray(cardsData.targetIndex[d.target]), i);
+            });
 
             // TODO add some logic for targets heirarchy
             cardsData.targets = _.keys(cardsData.targetIndex);
             cardsData.yBucketSize = cardsData.targets.length;
-            cardsData.xBucketSize = _.min(_.map(data, function (d) {
+            // Maximum number of buckets over x axis
+            cardsData.xBucketSize = _.max(_.map(data, function (d) {
               return d.datapoints.length;
             }));
 
             // Collect all values for each bucket from datapoints with similar target.
-            for (var _i = 0; _i < cardsData.targets.length; _i++) {
-              var _target = cardsData.targets[_i];
+            // TODO aggregate values into buckets over datapoint[TIME_INDEX] not over datapoint index (j).
+            for (var i = 0; i < cardsData.targets.length; i++) {
+              var target = cardsData.targets[i];
 
               for (var j = 0; j < cardsData.xBucketSize; j++) {
                 var card = {
-                  id: _i * cardsData.xBucketSize + j,
+                  id: i * cardsData.xBucketSize + j,
                   values: [],
                   multipleValues: false,
                   noColorDefined: false
                 };
 
                 // collect values from all timeseries with target
-                for (var si = 0; si < cardsData.targetIndex[_target].length; si++) {
-                  var s = data[cardsData.targetIndex[_target][si]];
+                for (var si = 0; si < cardsData.targetIndex[target].length; si++) {
+                  var s = data[cardsData.targetIndex[target][si]];
+                  if (s.datapoints.length <= j) {
+                    continue;
+                  }
                   var datapoint = s.datapoints[j];
                   if (card.values.length === 0) {
                     card.x = datapoint[TIME_INDEX];
