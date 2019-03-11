@@ -3,7 +3,7 @@
 System.register(['app/plugins/sdk', 'lodash', 'app/core/core', 'app/core/utils/kbn', './color_legend', './rendering', './options_editor', './color_mode_discrete'], function (_export, _context) {
   "use strict";
 
-  var MetricsPanelCtrl, _, contextSrv, kbn, rendering, statusHeatmapOptionsEditor, ColorModeDiscrete, CANVAS, SVG, VALUE_INDEX, TIME_INDEX, panelDefaults, renderer, colorSchemes, colorModes, opacityScales, StatusHeatmapCtrl;
+  var MetricsPanelCtrl, _, contextSrv, kbn, rendering, statusHeatmapOptionsEditor, ColorModeDiscrete, _get, CANVAS, SVG, VALUE_INDEX, TIME_INDEX, panelDefaults, renderer, colorSchemes, colorModes, opacityScales, StatusHeatmapCtrl;
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -52,6 +52,31 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/core', 'app/core/utils/k
       ColorModeDiscrete = _color_mode_discrete.ColorModeDiscrete;
     }],
     execute: function () {
+      _get = function get(object, property, receiver) {
+        if (object === null) object = Function.prototype;
+        var desc = Object.getOwnPropertyDescriptor(object, property);
+
+        if (desc === undefined) {
+          var parent = Object.getPrototypeOf(object);
+
+          if (parent === null) {
+            return undefined;
+          } else {
+            return get(parent, property, receiver);
+          }
+        } else if ("value" in desc) {
+          return desc.value;
+        } else {
+          var getter = desc.get;
+
+          if (getter === undefined) {
+            return undefined;
+          }
+
+          return getter.call(receiver);
+        }
+      };
+
       CANVAS = 'CANVAS';
       SVG = 'SVG';
       VALUE_INDEX = 0;
@@ -118,7 +143,8 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/core', 'app/core/utils/k
       _export('StatusHeatmapCtrl', StatusHeatmapCtrl = function (_MetricsPanelCtrl) {
         _inherits(StatusHeatmapCtrl, _MetricsPanelCtrl);
 
-        function StatusHeatmapCtrl($scope, $injector, $rootScope, timeSrv) {
+        /** @ngInject */
+        function StatusHeatmapCtrl($scope, $injector, $rootScope, timeSrv, annotationsSrv) {
           _classCallCheck(this, StatusHeatmapCtrl);
 
           var _this = _possibleConstructorReturn(this, (StatusHeatmapCtrl.__proto__ || Object.getPrototypeOf(StatusHeatmapCtrl)).call(this, $scope, $injector));
@@ -169,11 +195,44 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/core', 'app/core/utils/k
             _this.interval = kbn.secondsToHms(intervalMs / 1000);
           };
 
+          _this.issueQueries = function (datasource) {
+            _this.annotationsPromise = _this.annotationsSrv.getAnnotations({
+              dashboard: _this.dashboard,
+              panel: _this.panel,
+              range: _this.range
+            });
+
+            /* Wait for annotationSrv requests to get datasources to
+             * resolve before issuing queries. This allows the annotations
+             * service to fire annotations queries before graph queries
+             * (but not wait for completion). This resolves
+             * issue 11806.
+             */
+            return _this.annotationsSrv.datasourcePromises.then(function (r) {
+              return _get(StatusHeatmapCtrl.prototype.__proto__ || Object.getPrototypeOf(StatusHeatmapCtrl.prototype), 'issueQueries', _this).call(_this, datasource);
+            });
+          };
+
           _this.onDataReceived = function (dataList) {
             _this.data = dataList;
             _this.cardsData = _this.convertToCards(_this.data);
 
-            _this.render();
+            _this.annotationsPromise.then(function (result) {
+              _this.loading = false;
+              //this.alertState = result.alertState;
+              if (result.annotations && result.annotations.length > 0) {
+                _this.annotations = result.annotations;
+              } else {
+                _this.annotations = null;
+              }
+              _this.render();
+            }, function () {
+              _this.loading = false;
+              _this.annotations = null;
+              _this.render();
+            });
+
+            //this.render();
           };
 
           _this.onInitEditMode = function () {
@@ -209,6 +268,7 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/core', 'app/core/utils/k
 
           _this.onDataError = function () {
             _this.data = [];
+            _this.annotations = [];
             _this.render();
           };
 
@@ -296,7 +356,9 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/core', 'app/core/utils/k
                   id: i * cardsData.xBucketSize + j,
                   values: [],
                   multipleValues: false,
-                  noColorDefined: false
+                  noColorDefined: false,
+                  y: target,
+                  x: -1
                 };
 
                 // collect values from all timeseries with target
@@ -308,7 +370,6 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/core', 'app/core/utils/k
                   var datapoint = s.datapoints[j];
                   if (card.values.length === 0) {
                     card.x = datapoint[TIME_INDEX];
-                    card.y = s.target;
                   }
                   card.values.push(datapoint[VALUE_INDEX]);
                 }
@@ -326,7 +387,9 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/core', 'app/core/utils/k
 
                 if (cardsData.minValue > card.minValue) cardsData.minValue = card.minValue;
 
-                cardsData.cards.push(card);
+                if (card.x != -1) {
+                  cardsData.cards.push(card);
+                }
               }
             }
 
@@ -359,6 +422,9 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/core', 'app/core/utils/k
               tip: 'Change targets definitions or set "use max value"'
             }
           };
+
+          _this.annotations = [];
+          _this.annotationsSrv = annotationsSrv;
 
           _this.events.on('data-received', _this.onDataReceived);
           _this.events.on('data-snapshot-load', _this.onDataReceived);
