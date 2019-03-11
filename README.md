@@ -203,6 +203,17 @@ This plugin is based on "Heatmap" panel by Grafana and partly inspired by ideas 
 
 #### Changelog
 
+##### v0.1.0
+
+- Tested with Grafana 6.0.0
+- Tested with InfluxDB and Mysql datasources
+- Add initial support for display annotations
+- Add example for k8s statuses (thanks, @vrutkovs)
+- Fix hanging on big values
+- Fix horizontal spacing = 0
+- Fix for "Object doesn't support property or method 'remove'"
+- Fix card width for targets with different datapoints count
+
 ##### v0.0.4
 
 - Fix display of multivalues buckets as an empty cell
