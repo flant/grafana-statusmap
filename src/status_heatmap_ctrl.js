@@ -100,7 +100,8 @@ let opacityScales = ['linear', 'sqrt'];
 export class StatusHeatmapCtrl extends MetricsPanelCtrl {
   static templateUrl = 'module.html';
 
-  constructor($scope, $injector, $rootScope, timeSrv) {
+  /** @ngInject */
+  constructor($scope, $injector, $rootScope, timeSrv, annotationsSrv) {
     super($scope, $injector);
     _.defaultsDeep(this.panel, panelDefaults);
 
@@ -128,6 +129,9 @@ export class StatusHeatmapCtrl extends MetricsPanelCtrl {
         tip: 'Change targets definitions or set "use max value"',
       }
     };
+
+    this.annotations = [];
+    this.annotationsSrv = annotationsSrv;
 
     this.events.on('data-received', this.onDataReceived);
     this.events.on('data-snapshot-load', this.onDataReceived);
@@ -189,11 +193,48 @@ export class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.interval = kbn.secondsToHms(intervalMs / 1000);
   };
 
+  issueQueries = (datasource) => {
+    this.annotationsPromise = this.annotationsSrv.getAnnotations({
+      dashboard: this.dashboard,
+      panel: this.panel,
+      range: this.range,
+    });
+
+    /* Wait for annotationSrv requests to get datasources to
+     * resolve before issuing queries. This allows the annotations
+     * service to fire annotations queries before graph queries
+     * (but not wait for completion). This resolves
+     * issue 11806.
+     */
+    return this.annotationsSrv.datasourcePromises.then(r => {
+      return super.issueQueries(datasource);
+    });
+  }
+
+
   onDataReceived = (dataList) => {
     this.data      = dataList;
     this.cardsData = this.convertToCards(this.data);
 
-    this.render();
+    this.annotationsPromise.then(
+      result => {
+        this.loading = false;
+        //this.alertState = result.alertState;
+        if (result.annotations && result.annotations.length > 0) {
+          this.annotations = result.annotations;
+        } else {
+          this.annotations = null;
+        }
+        this.render();
+      },
+      () => {
+        this.loading = false;
+        this.annotations = null;
+        this.render();
+      }
+    );
+
+    //this.render();
   };
 
   onInitEditMode = () => {
@@ -227,6 +268,7 @@ export class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
   onDataError = () => {
     this.data = [];
+    this.annotations = [];
     this.render();
   };
 
@@ -313,6 +355,8 @@ export class StatusHeatmapCtrl extends MetricsPanelCtrl {
           values: [],
           multipleValues: false,
           noColorDefined: false,
+          y: target,
+          x: -1,
         };
 
         // collect values from all timeseries with target
@@ -324,7 +368,6 @@ export class StatusHeatmapCtrl extends MetricsPanelCtrl {
           let datapoint = s.datapoints[j];
           if (card.values.length === 0) {
             card.x = datapoint[TIME_INDEX];
-            card.y = s.target;
           }
           card.values.push(datapoint[VALUE_INDEX]);
         }
@@ -344,7 +387,9 @@ export class StatusHeatmapCtrl extends MetricsPanelCtrl {
         if (cardsData.minValue > card.minValue)
           cardsData.minValue = card.minValue;
 
+        if (card.x != -1) {
         cardsData.cards.push(card);
+        }
       }
     }
 

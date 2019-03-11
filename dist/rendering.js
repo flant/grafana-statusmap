@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['lodash', 'jquery', 'moment', 'app/core/utils/kbn', 'app/core/core', 'app/core/utils/ticks', 'd3', './libs/d3-scale-chromatic/index', './tooltip'], function (_export, _context) {
+System.register(['lodash', 'jquery', 'moment', 'app/core/utils/kbn', 'app/core/core', 'app/core/utils/ticks', 'd3', './libs/d3-scale-chromatic/index', './tooltip', './annotations'], function (_export, _context) {
   "use strict";
 
-  var _, $, moment, kbn, appEvents, contextSrv, tickStep, getScaledDecimals, getFlotTickSize, d3, d3ScaleChromatic, StatusHeatmapTooltip, MIN_CARD_SIZE, CARD_H_SPACING, CARD_V_SPACING, CARD_ROUND, DATA_RANGE_WIDING_FACTOR, DEFAULT_X_TICK_SIZE_PX, DEFAULT_Y_TICK_SIZE_PX, X_AXIS_TICK_PADDING, Y_AXIS_TICK_PADDING, MIN_SELECTION_WIDTH;
+  var _, $, moment, kbn, appEvents, contextSrv, tickStep, getScaledDecimals, getFlotTickSize, d3, d3ScaleChromatic, StatusHeatmapTooltip, AnnotationTooltip, MIN_CARD_SIZE, CARD_H_SPACING, CARD_V_SPACING, CARD_ROUND, DATA_RANGE_WIDING_FACTOR, DEFAULT_X_TICK_SIZE_PX, DEFAULT_Y_TICK_SIZE_PX, X_AXIS_TICK_PADDING, Y_AXIS_TICK_PADDING, MIN_SELECTION_WIDTH;
 
   function link(scope, elem, attrs, ctrl) {
     var data = void 0,
@@ -15,6 +15,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/kbn', 'app/core/c
     // $heatmap is JQuery object, but heatmap is D3
     var $heatmap = elem.find('.status-heatmap-panel');
     var tooltip = new StatusHeatmapTooltip($heatmap, scope);
+    var annotationTooltip = new AnnotationTooltip($heatmap, scope);
 
     var width = void 0,
         height = void 0,
@@ -78,7 +79,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/kbn', 'app/core/c
         return text.getBBox().width;
       }));
 
-      return max_text_width;
+      return Math.ceil(max_text_width);
     }
 
     function getXAxisHeight(elem) {
@@ -289,6 +290,8 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/kbn', 'app/core/c
         resetCardHighLight(event);
       });
 
+      _renderAnnotations();
+
       ctrl.events.emit('render-complete', {
         "chartWidth": chartWidth
       });
@@ -475,6 +478,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/kbn', 'app/core/c
     function onMouseLeave() {
       appEvents.emit('graph-hover-clear');
       clearCrosshair();
+      //annotationTooltip.destroy();
     }
 
     function onMouseMove(event) {
@@ -486,6 +490,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/kbn', 'app/core/c
         // Clear crosshair and tooltip
         clearCrosshair();
         tooltip.destroy();
+        annotationTooltip.destroy();
 
         selection.x2 = limitSelection(event.offsetX);
         drawSelection(selection.x1, selection.x2);
@@ -493,6 +498,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/kbn', 'app/core/c
         emitGraphHoverEvet(event);
         drawCrosshair(event.offsetX);
         tooltip.show(event); //, data);
+        annotationTooltip.show(event);
       }
     }
 
@@ -595,6 +601,49 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/kbn', 'app/core/c
     $heatmap.on("mousedown", onMouseDown);
     $heatmap.on("mousemove", onMouseMove);
     $heatmap.on("mouseleave", onMouseLeave);
+
+    function _renderAnnotations() {
+      if (!ctrl.annotations || ctrl.annotations.length == 0) {
+        return;
+      }
+
+      if (!heatmap) {
+        return;
+      }
+
+      var annoData = _.map(ctrl.annotations, function (d, i) {
+        return { "x": Math.floor(yAxisWidth + xScale(d.time)), "id": i, "anno": d.source };
+      });
+
+      var anno = heatmap.append("g").attr("class", "statusmap-annotations").attr("transform", "translate(0.5,0)").selectAll(".statusmap-annotations").data(annoData).enter().append("g");
+      anno.append("line")
+      //.attr("class", "statusmap-annotation-tick")
+      .attr("x1", function (d) {
+        return d.x;
+      }).attr("y1", chartTop).attr("x2", function (d) {
+        return d.x;
+      }).attr("y2", chartBottom).style("stroke", function (d) {
+        return d.anno.iconColor;
+      }).style("stroke-width", 1).style("stroke-dasharray", "3,3");
+      anno.append("polygon").attr("points", function (d) {
+        return [[d.x, chartBottom + 1], [d.x - 5, chartBottom + 6], [d.x + 5, chartBottom + 6]].join(" ");
+      }).style("stroke-width", 0).style("fill", function (d) {
+        return d.anno.iconColor;
+      });
+      // Polygons didn't fire mouseevents
+      anno.append("rect").attr("x", function (d) {
+        return d.x - 5;
+      }).attr("width", 10).attr("y", chartBottom + 1).attr("height", 5).attr("class", "statusmap-annotation-tick").attr("annoId", function (d) {
+        return d.id;
+      }).style("opacity", 0);
+
+      var $ticks = $heatmap.find(".statusmap-annotation-tick");
+      $ticks.on("mouseenter", function (event) {
+        annotationTooltip.mouseOverAnnotationTick = true;
+      }).on("mouseleave", function (event) {
+        annotationTooltip.mouseOverAnnotationTick = false;
+      });
+    }
   }
 
   _export('default', link);
@@ -645,6 +694,8 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/kbn', 'app/core/c
       d3ScaleChromatic = _libsD3ScaleChromaticIndex;
     }, function (_tooltip) {
       StatusHeatmapTooltip = _tooltip.StatusHeatmapTooltip;
+    }, function (_annotations) {
+      AnnotationTooltip = _annotations.AnnotationTooltip;
     }],
     execute: function () {
       MIN_CARD_SIZE = 5;

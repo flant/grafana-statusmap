@@ -7,6 +7,7 @@ import {tickStep, getScaledDecimals, getFlotTickSize} from 'app/core/utils/ticks
 import d3 from 'd3';
 import * as d3ScaleChromatic from './libs/d3-scale-chromatic/index';
 import {StatusHeatmapTooltip} from './tooltip';
+import {AnnotationTooltip} from './annotations';
 
 let MIN_CARD_SIZE = 5,
     CARD_H_SPACING = 2,
@@ -25,6 +26,7 @@ export default function link(scope, elem, attrs, ctrl) {
   // $heatmap is JQuery object, but heatmap is D3
   let $heatmap = elem.find('.status-heatmap-panel');
   let tooltip = new StatusHeatmapTooltip($heatmap, scope);
+  let annotationTooltip = new AnnotationTooltip($heatmap, scope);
 
   let width, height,
       yScale, xScale,
@@ -77,7 +79,7 @@ export default function link(scope, elem, attrs, ctrl) {
       return text.getBBox().width;
     }));
 
-    return max_text_width;
+    return Math.ceil(max_text_width);
   }
 
   function getXAxisHeight(elem) {
@@ -310,6 +312,8 @@ export default function link(scope, elem, attrs, ctrl) {
       resetCardHighLight(event);
     });
 
+    _renderAnnotations();
+
     ctrl.events.emit('render-complete', {
       "chartWidth": chartWidth
     });
@@ -506,6 +510,7 @@ export default function link(scope, elem, attrs, ctrl) {
   function onMouseLeave() {
     appEvents.emit('graph-hover-clear');
     clearCrosshair();
+    //annotationTooltip.destroy();
   }
 
   function onMouseMove(event) {
@@ -515,6 +520,7 @@ export default function link(scope, elem, attrs, ctrl) {
       // Clear crosshair and tooltip
       clearCrosshair();
       tooltip.destroy();
+      annotationTooltip.destroy();
 
       selection.x2 = limitSelection(event.offsetX);
       drawSelection(selection.x1, selection.x2);
@@ -522,6 +528,7 @@ export default function link(scope, elem, attrs, ctrl) {
       emitGraphHoverEvet(event);
       drawCrosshair(event.offsetX);
       tooltip.show(event); //, data);
+      annotationTooltip.show(event);
     }
   }
 
@@ -637,6 +644,62 @@ export default function link(scope, elem, attrs, ctrl) {
   $heatmap.on("mousedown", onMouseDown);
   $heatmap.on("mousemove", onMouseMove);
   $heatmap.on("mouseleave", onMouseLeave);
+
+  function _renderAnnotations() {
+    if (!ctrl.annotations || ctrl.annotations.length == 0) {
+      return;
+    }
+  
+    if (!heatmap) {
+      return;
+    }
+
+    let annoData = _.map(ctrl.annotations, (d,i) => ({"x": Math.floor(yAxisWidth + xScale(d.time)), "id":i, "anno": d.source}));
+
+
+    let anno = heatmap
+      .append("g")
+      .attr("class", "statusmap-annotations")
+      .attr("transform", "translate(0.5,0)")
+      .selectAll(".statusmap-annotations")
+      .data(annoData)
+      .enter().append("g")
+      ;
+    anno.append("line")
+      //.attr("class", "statusmap-annotation-tick")
+      .attr("x1", d => d.x)
+      .attr("y1", chartTop)
+      .attr("x2", d => d.x)
+      .attr("y2", chartBottom)
+      .style("stroke", d => d.anno.iconColor)
+      .style("stroke-width", 1)
+      .style("stroke-dasharray", "3,3")
+    ;
+    anno.append("polygon")
+      .attr("points", d => [[d.x, chartBottom+1], [d.x-5, chartBottom+6], [d.x+5, chartBottom+6]].join(" "))
+      .style("stroke-width", 0)
+      .style("fill", d => d.anno.iconColor)
+    ;
+    // Polygons didn't fire mouseevents
+    anno.append("rect") 
+      .attr("x", d => d.x-5)
+      .attr("width", 10)
+      .attr("y", chartBottom+1)
+      .attr("height", 5)
+      .attr("class", "statusmap-annotation-tick")
+      .attr("annoId", d => d.id)
+      .style("opacity", 0)
+    ;
+
+    let $ticks = $heatmap.find(".statusmap-annotation-tick");
+    $ticks.on("mouseenter", (event) => {
+      annotationTooltip.mouseOverAnnotationTick = true;
+    })
+    .on("mouseleave", (event) => {
+      annotationTooltip.mouseOverAnnotationTick = false;
+    });
+    
+  }
 }
 
 function grafanaTimeFormat(ticks, min, max) {
