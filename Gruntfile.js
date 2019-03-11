@@ -3,8 +3,18 @@ module.exports = (grunt) => {
 
   grunt.loadNpmTasks('grunt-execute');
   grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-notify');
 
   grunt.initConfig({
+    notify: {
+      watch: {
+        options: {
+          message: 'grunt watch Complete',
+          title: 'flant-statusmap-panel rebuilded',
+          duration: 2
+        }
+      }
+    },
 
     clean: ['dist'],
 
@@ -25,7 +35,7 @@ module.exports = (grunt) => {
     watch: {
       rebuild_all: {
         files: ['src/**/*', 'plugin.json'],
-        tasks: ['default'],
+        tasks: ['default', 'notify:watch'],
         options: {
           spawn: false,
           livereload: true
