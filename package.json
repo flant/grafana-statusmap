@@ -1,7 +1,7 @@
 {
-  "name": "status-hetamap",
-  "version": "0.0.1",
-  "description": "Status Heatmap panel plugin for grafana",
+  "name": "flant-statusmap-panel",
+  "version": "0.1.0",
+  "description": "Grafana panel plugin to visualize status of multiple objects over time",
   "main": "README.md",
   "scripts": {
     "build": "grunt"
@@ -10,7 +10,7 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/flant/grafana-status-heatmap.git"
+    "url": "https://github.com/flant/grafana-statusmap.git"
   },
   "devDependencies": {
     "babel": "^6.23.0",
