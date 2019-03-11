@@ -15,8 +15,14 @@
 
 ### Supported environment
 
-* Prometheus datasource
-* Tested with Grafana 5.1.3
+* Tested with datasources:
+  - Prometheus
+  - InfluxDB
+  - Mysql
+* Tested with Grafana:
+  - 5.1.3
+  - 5.4.3
+  - 6.0.0
 
 ## Installation
 
@@ -49,7 +55,18 @@ above. These objects should have _discrete statuses_ which are sets of predefine
 
 ## Configuration
 
-### Prometheus
+### Datasource notes
+
+To create neat graphs your datasource should return good data. Plugin adjust `$__interval` variable depending on
+bucket width in panel options. Your queries should aggregate statuses over `$__interval`.
+
+To make multiple values mode works as expected you should define multiple queries: one query for each possible status.
+
+Plugin doesn't aggregate data in time for now, it only renders input data as buckets. Because of this
+data should contain points for each timestamp in time range and equal timestamps for every possible
+target (y-axis label). This limitation is addressed by [issue #53](https://github.com/flant/grafana-statusmap/issues/53).
+
+#### Prometheus
 
 To work with data from Prometheus you will need to setup discrete statuses for your objects.
 Requirements to store these statuses in metrics are as follows:
@@ -82,6 +99,28 @@ coffee_maker_status:discrete{status="3"} 1
 
 Now, when Prometheus has `0` and `1` values for each status, all these metrics can be
 aggregated, so you will get all available statuses of your objects over time.
+
+#### InfluxDB
+
+Choose 'Time series' for 'Format as' and use `GROUP BY ($__interval)` in query. `$tag_<tag name>` can be used in 'Alias by' to define y-axis labels.
+
+#### Mysql
+
+Example query with aggregation over `$__interval` is like this (you need one query for each possible status value):
+
+```
+SELECT
+  $__timeGroupAlias(date_insert,$__interval),
+  name AS metric,
+  min(statusi) AS "statusi"
+FROM coffee_makers
+WHERE
+  $__timeFilter(date_insert) AND statusi=1
+GROUP BY 1,2
+ORDER BY $__timeGroup(date_insert,$__interval)
+```
+
+`metric` column is used as y-axis label.
 
 ### Panel
 
