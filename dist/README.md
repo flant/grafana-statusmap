@@ -13,6 +13,8 @@
 * Increasing rows/buckets' interval for better visual representation
 * Representing null values as empty bucket or zero value
 
+:calendar: New features are planned in [#62](https://github.com/flant/grafana-statusmap/issues/62)
+
 ### Supported environment
 
 * Tested with datasources:
