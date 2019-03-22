@@ -206,9 +206,14 @@ export class StatusHeatmapCtrl extends MetricsPanelCtrl {
      * (but not wait for completion). This resolves
      * issue 11806.
      */
-    return this.annotationsSrv.datasourcePromises.then(r => {
+    // 5.x before 5.4 doesn't have dataPromises
+    if ("undefined" !== typeof(this.annotationsSrv.datasourcePromises)) {
+      return this.annotationsSrv.datasourcePromises.then(r => {
+        return super.issueQueries(datasource);
+      });
+    } else {
       return super.issueQueries(datasource);
-    });
+    }
   }
 
 

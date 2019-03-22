@@ -208,9 +208,14 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/core', 'app/core/utils/k
              * (but not wait for completion). This resolves
              * issue 11806.
              */
-            return _this.annotationsSrv.datasourcePromises.then(function (r) {
+            // 5.x before 5.4 doesn't have dataPromises
+            if ("undefined" !== typeof _this.annotationsSrv.datasourcePromises) {
+              return _this.annotationsSrv.datasourcePromises.then(function (r) {
+                return _get(StatusHeatmapCtrl.prototype.__proto__ || Object.getPrototypeOf(StatusHeatmapCtrl.prototype), 'issueQueries', _this).call(_this, datasource);
+              });
+            } else {
               return _get(StatusHeatmapCtrl.prototype.__proto__ || Object.getPrototypeOf(StatusHeatmapCtrl.prototype), 'issueQueries', _this).call(_this, datasource);
-            });
+            }
           };
 
           _this.onDataReceived = function (dataList) {
