@@ -1,5 +1,8 @@
 # Statusmap panel for Grafana
 
+[Slack](https://cloud-native.slack.com/messages/CHGSGTAHY) (EN) |
+[Telegram](https://t.me/statusmap_ru) (RU)
+
 ![Statusmap sample panel](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/flant-statusmap-panel.png)
 
 ![Statusmap sample panel with dark theme](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/flant-statusmap-panel-dark.png)
