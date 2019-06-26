@@ -1,12 +1,21 @@
 import d3 from 'd3';
 import $ from 'jquery';
 import _ from 'lodash';
-import kbn from 'app/core/utils/kbn';
+import {StatusHeatmapCtrl} from "./status_heatmap_ctrl";
 
 let TOOLTIP_PADDING_X = 30;
 let TOOLTIP_PADDING_Y = 5;
 
-export class StatusHeatmapTooltip {
+export class StatusmapTooltip {
+  tooltip: any;
+  scope: any;
+  dashboard: any;
+  panelCtrl: StatusHeatmapCtrl;
+  panel: any;
+  heatmapPanel: any;
+  mouseOverBucket: any;
+  originalFillColor: any;
+
   constructor(elem, scope) {
     this.scope = scope;
     this.dashboard = scope.ctrl.dashboard;

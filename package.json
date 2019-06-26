@@ -4,7 +4,8 @@
   "description": "Grafana panel plugin to visualize status of multiple objects over time",
   "main": "README.md",
   "scripts": {
-    "build": "grunt"
+    "build": "grunt",
+    "check-types": "node_modules/typescript/bin/tsc"
   },
   "author": "Flant JSC",
   "license": "Apache-2.0",
@@ -13,28 +14,42 @@
     "url": "https://github.com/flant/grafana-statusmap.git"
   },
   "devDependencies": {
-    "babel": "^6.23.0",
-    "babel-eslint": "^7.2.3",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-plugin-transform-es2015-modules-systemjs": "^6.24.1",
-    "babel-plugin-transform-object-rest-spread": "^6.23.0",
-    "babel-preset-es2015": "^6.24.1",
-    "grunt": "^1.0.1",
-    "grunt-babel": "^6.0.0",
+    "@babel/core": "7.6.4",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
+    "@babel/plugin-transform-for-of": "^7.0.0",
+    "@babel/plugin-transform-modules-systemjs": "^7.0.0",
+    "@babel/plugin-syntax-dynamic-import": "7.2.0",
+    "@babel/preset-env": "7.6.3",
+    "@babel/preset-typescript": "7.6.0",
+    "@types/d3": "4.13.1",
+    "@types/d3-scale-chromatic": "1.3.1",
+    "@types/angular": "1.6.56",
+    "@types/grafana": "github:flant/types-grafana",
+    "@types/jquery": "1.10.35",
+    "@types/lodash": "4.14.123",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-jest": "24.8.0",
+    "babel-loader": "8.0.5",
+    "babel-plugin-angularjs-annotate": "0.10.0",
+    "babel-eslint": "^10.0.2",
+    "eslint": "^4.12.1",
+    "grunt": "^1.0.4",
+    "grunt-angular-templates": "1.1.0",
+    "grunt-babel": "^8.0.0",
     "grunt-contrib-clean": "^1.1.0",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-sass": "^1.0.0",
     "grunt-contrib-uglify": "^3.0.1",
     "grunt-contrib-watch": "^1.0.0",
-    "grunt-execute": "^0.2.2",
     "grunt-notify": "^0.4.5",
-    "grunt-systemjs-builder": "^1.0.0",
-    "load-grunt-tasks": "^3.5.2"
+    "load-grunt-tasks": "^3.5.2",
+    "typescript": "3.7.2"
   },
   "dependencies": {
-    "d3": "^4.11.0",
-    "d3-scale-chromatic": "^1.1.1",
-    "lodash": "^4.17.4",
-    "moment": "^2.18.1"
+    "d3": "4.13.0",
+    "d3-scale-chromatic": "1.5.0",
+    "lodash": "4.17.15",
+    "moment": "2.24.0"
   }
 }

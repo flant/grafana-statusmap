@@ -1,7 +1,23 @@
 import _ from 'lodash';
+import {StatusHeatmapCtrl} from "./status_heatmap_ctrl";
+
+interface Tooltip {
+  tooltip: string;
+  color: string;
+}
+
+declare class DiscreteColorThreshold {
+  color: string;
+  value: number;
+  tooltip: string;
+}
 
 // Helper methods to handle discrete color mode
 export class ColorModeDiscrete {
+  scope: any;
+  panelCtrl: StatusHeatmapCtrl;
+  panel: any;
+
   constructor(scope) {
     this.scope = scope;
     this.panelCtrl = scope.ctrl;
@@ -9,9 +25,9 @@ export class ColorModeDiscrete {
   }
 
   // get tooltip for each value ordered by thresholds priority
-  convertValuesToTooltips(values) {
+  convertValuesToTooltips(values:any[]) : Tooltip[] {
     let thresholds = this.panel.color.thresholds;
-    let tooltips = [];
+    let tooltips:Tooltip[] = [];
 
     for (let i = 0; i < thresholds.length; i++) {
       for (let j = 0; j < values.length; j++) {
@@ -26,9 +42,8 @@ export class ColorModeDiscrete {
     return tooltips;
   }
 
-
-  getNotMatchedValues(values) {
-    let notMatched = [];
+  getNotMatchedValues(values:any[]) {
+    let notMatched:any[] = [];
     for (let j = 0; j < values.length; j++) {
       if (!this.getMatchedThreshold(values[j])) {
         notMatched.push(values[j]);
@@ -37,8 +52,8 @@ export class ColorModeDiscrete {
     return notMatched;
   }
 
-  getNotColoredValues(values) {
-    let notMatched = [];
+  getNotColoredValues(values:any[]) {
+    let notMatched:any[] = [];
     for (let j = 0; j < values.length; j++) {
       let threshold = this.getMatchedThreshold(values[j]);
       if (!threshold || !threshold.color || threshold.color == "") {
@@ -47,7 +62,6 @@ export class ColorModeDiscrete {
     }
     return notMatched;
   }
-
 
   getDiscreteColor(index) {
     let color = this.getThreshold(index).color;

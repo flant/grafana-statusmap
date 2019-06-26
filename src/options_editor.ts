@@ -1,6 +1,10 @@
 import kbn from 'app/core/utils/kbn';
 
 export class StatusHeatmapOptionsEditorCtrl {
+  panel: any;
+  panelCtrl: any;
+  unitFormats: any;
+
   constructor($scope) {
     $scope.editor = this;
     this.panelCtrl = $scope.ctrl;
