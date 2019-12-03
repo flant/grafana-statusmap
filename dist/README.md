@@ -1,3 +1,7 @@
+[![Download from Github](https://img.shields.io/github/tag-date/flant/grafana-statusmap.svg?logo=github&label=latest)](https://github.com/flant/grafana-statusmap/releases/latest)
+[![Telegram chat RU](https://img.shields.io/badge/@statusmap_ru-RU-informational.svg?logo=telegram)](https://t.me/statusmap_ru)
+[![Slack chat EN](https://img.shields.io/badge/%23grafana--statusmap-EN-informational.svg?logo=slack)](https://cloud-native.slack.com/messages/CHGSGTAHY)
+
 # Statusmap panel for Grafana
 
 ![Statusmap sample panel](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/flant-statusmap-panel.png)
