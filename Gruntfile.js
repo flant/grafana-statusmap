@@ -1,7 +1,7 @@
+'use strict';
 module.exports = (grunt) => {
   require('load-grunt-tasks')(grunt);
 
-  grunt.loadNpmTasks('grunt-execute');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-notify');
 
@@ -22,10 +22,10 @@ module.exports = (grunt) => {
       src_to_dist: {
         cwd: 'src',
         expand: true,
-        src: ['**/*', '!**/*.js', '!**/*.scss'],
+        src: ['**/*', '!**/*.js', '!**/*.ts', '!**/*.scss'],
         dest: 'dist'
       },
-      pluginDef: {
+      root_to_dist: {
         expand: true,
         src: ['plugin.json', 'README.md', 'CHANGELOG.md'],
         dest: 'dist'
@@ -46,14 +46,23 @@ module.exports = (grunt) => {
     babel: {
       options: {
         sourceMap: true,
-        presets: ['es2015'],
-        plugins: ['transform-es2015-modules-systemjs', 'transform-es2015-for-of', 'transform-class-properties', 'transform-object-rest-spread'],
+        presets: ['@babel/preset-env', '@babel/typescript'],
+        plugins: ['angularjs-annotate', '@babel/plugin-transform-modules-systemjs', '@babel/plugin-transform-for-of', '@babel/plugin-proposal-class-properties', '@babel/plugin-proposal-object-rest-spread'],
+      },
+      d3lib: {
+        files: [{
+          cwd: 'src',
+          expand: true,
+          src: ['libs/**/*.js'],
+          dest: 'dist',
+          ext: '.js'
+        }]
       },
       dist: {
         files: [{
           cwd: 'src',
           expand: true,
-          src: ['*.js', '**/*.js'],
+          src: ['*.ts', '**/*.ts'],
           dest: 'dist',
           ext: '.js'
         }]
@@ -71,7 +80,7 @@ module.exports = (grunt) => {
 
   });
 
-  grunt.registerTask('default', ['clean', 'copy:src_to_dist', 'copy:pluginDef', 'babel', 'sass']);
+  grunt.registerTask('default', ['clean', 'copy:src_to_dist', 'copy:root_to_dist', 'babel', 'sass']);
   // grunt.registerTask('clean', ['clean']);
   // grunt.registerTask('watch', ['watch']);
 };

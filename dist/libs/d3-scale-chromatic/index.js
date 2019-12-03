@@ -5,213 +5,161 @@ System.register(["./categorical/Accent", "./categorical/Dark2", "./categorical/P
 
   return {
     setters: [function (_categoricalAccent) {
-      var _exportObj = {};
-      _exportObj.schemeAccent = _categoricalAccent.default;
-
-      _export(_exportObj);
+      _export("schemeAccent", _categoricalAccent.default);
     }, function (_categoricalDark) {
-      var _exportObj2 = {};
-      _exportObj2.schemeDark2 = _categoricalDark.default;
-
-      _export(_exportObj2);
+      _export("schemeDark2", _categoricalDark.default);
     }, function (_categoricalPaired) {
-      var _exportObj3 = {};
-      _exportObj3.schemePaired = _categoricalPaired.default;
-
-      _export(_exportObj3);
+      _export("schemePaired", _categoricalPaired.default);
     }, function (_categoricalPastel) {
-      var _exportObj4 = {};
-      _exportObj4.schemePastel1 = _categoricalPastel.default;
-
-      _export(_exportObj4);
+      _export("schemePastel1", _categoricalPastel.default);
     }, function (_categoricalPastel2) {
-      var _exportObj5 = {};
-      _exportObj5.schemePastel2 = _categoricalPastel2.default;
-
-      _export(_exportObj5);
+      _export("schemePastel2", _categoricalPastel2.default);
     }, function (_categoricalSet) {
-      var _exportObj6 = {};
-      _exportObj6.schemeSet1 = _categoricalSet.default;
-
-      _export(_exportObj6);
+      _export("schemeSet1", _categoricalSet.default);
     }, function (_categoricalSet2) {
-      var _exportObj7 = {};
-      _exportObj7.schemeSet2 = _categoricalSet2.default;
-
-      _export(_exportObj7);
+      _export("schemeSet2", _categoricalSet2.default);
     }, function (_categoricalSet3) {
-      var _exportObj8 = {};
-      _exportObj8.schemeSet3 = _categoricalSet3.default;
-
-      _export(_exportObj8);
+      _export("schemeSet3", _categoricalSet3.default);
     }, function (_divergingBrBG) {
-      var _exportObj9 = {};
-      _exportObj9.interpolateBrBG = _divergingBrBG.default;
-      _exportObj9.schemeBrBG = _divergingBrBG.scheme;
-
-      _export(_exportObj9);
+      _export({
+        interpolateBrBG: _divergingBrBG.default,
+        schemeBrBG: _divergingBrBG.scheme
+      });
     }, function (_divergingPRGn) {
-      var _exportObj10 = {};
-      _exportObj10.interpolatePRGn = _divergingPRGn.default;
-      _exportObj10.schemePRGn = _divergingPRGn.scheme;
-
-      _export(_exportObj10);
+      _export({
+        interpolatePRGn: _divergingPRGn.default,
+        schemePRGn: _divergingPRGn.scheme
+      });
     }, function (_divergingPiYG) {
-      var _exportObj11 = {};
-      _exportObj11.interpolatePiYG = _divergingPiYG.default;
-      _exportObj11.schemePiYG = _divergingPiYG.scheme;
-
-      _export(_exportObj11);
+      _export({
+        interpolatePiYG: _divergingPiYG.default,
+        schemePiYG: _divergingPiYG.scheme
+      });
     }, function (_divergingPuOr) {
-      var _exportObj12 = {};
-      _exportObj12.interpolatePuOr = _divergingPuOr.default;
-      _exportObj12.schemePuOr = _divergingPuOr.scheme;
-
-      _export(_exportObj12);
+      _export({
+        interpolatePuOr: _divergingPuOr.default,
+        schemePuOr: _divergingPuOr.scheme
+      });
     }, function (_divergingRdBu) {
-      var _exportObj13 = {};
-      _exportObj13.interpolateRdBu = _divergingRdBu.default;
-      _exportObj13.schemeRdBu = _divergingRdBu.scheme;
-
-      _export(_exportObj13);
+      _export({
+        interpolateRdBu: _divergingRdBu.default,
+        schemeRdBu: _divergingRdBu.scheme
+      });
     }, function (_divergingRdGy) {
-      var _exportObj14 = {};
-      _exportObj14.interpolateRdGy = _divergingRdGy.default;
-      _exportObj14.schemeRdGy = _divergingRdGy.scheme;
-
-      _export(_exportObj14);
+      _export({
+        interpolateRdGy: _divergingRdGy.default,
+        schemeRdGy: _divergingRdGy.scheme
+      });
     }, function (_divergingRdYlBu) {
-      var _exportObj15 = {};
-      _exportObj15.interpolateRdYlBu = _divergingRdYlBu.default;
-      _exportObj15.schemeRdYlBu = _divergingRdYlBu.scheme;
-
-      _export(_exportObj15);
+      _export({
+        interpolateRdYlBu: _divergingRdYlBu.default,
+        schemeRdYlBu: _divergingRdYlBu.scheme
+      });
     }, function (_divergingRdYlGn) {
-      var _exportObj16 = {};
-      _exportObj16.interpolateRdYlGn = _divergingRdYlGn.default;
-      _exportObj16.schemeRdYlGn = _divergingRdYlGn.scheme;
-
-      _export(_exportObj16);
+      _export({
+        interpolateRdYlGn: _divergingRdYlGn.default,
+        schemeRdYlGn: _divergingRdYlGn.scheme
+      });
     }, function (_divergingGnYlRd) {
-      var _exportObj17 = {};
-      _exportObj17.interpolateGnYlRd = _divergingGnYlRd.default;
-      _exportObj17.schemeGnYlRd = _divergingGnYlRd.scheme;
-
-      _export(_exportObj17);
+      _export({
+        interpolateGnYlRd: _divergingGnYlRd.default,
+        schemeGnYlRd: _divergingGnYlRd.scheme
+      });
     }, function (_divergingSpectral) {
-      var _exportObj18 = {};
-      _exportObj18.interpolateSpectral = _divergingSpectral.default;
-      _exportObj18.schemeSpectral = _divergingSpectral.scheme;
-
-      _export(_exportObj18);
+      _export({
+        interpolateSpectral: _divergingSpectral.default,
+        schemeSpectral: _divergingSpectral.scheme
+      });
     }, function (_sequentialMultiBuGn) {
-      var _exportObj19 = {};
-      _exportObj19.interpolateBuGn = _sequentialMultiBuGn.default;
-      _exportObj19.schemeBuGn = _sequentialMultiBuGn.scheme;
-
-      _export(_exportObj19);
+      _export({
+        interpolateBuGn: _sequentialMultiBuGn.default,
+        schemeBuGn: _sequentialMultiBuGn.scheme
+      });
     }, function (_sequentialMultiBuPu) {
-      var _exportObj20 = {};
-      _exportObj20.interpolateBuPu = _sequentialMultiBuPu.default;
-      _exportObj20.schemeBuPu = _sequentialMultiBuPu.scheme;
-
-      _export(_exportObj20);
+      _export({
+        interpolateBuPu: _sequentialMultiBuPu.default,
+        schemeBuPu: _sequentialMultiBuPu.scheme
+      });
     }, function (_sequentialMultiGnBu) {
-      var _exportObj21 = {};
-      _exportObj21.interpolateGnBu = _sequentialMultiGnBu.default;
-      _exportObj21.schemeGnBu = _sequentialMultiGnBu.scheme;
-
-      _export(_exportObj21);
+      _export({
+        interpolateGnBu: _sequentialMultiGnBu.default,
+        schemeGnBu: _sequentialMultiGnBu.scheme
+      });
     }, function (_sequentialMultiOrRd) {
-      var _exportObj22 = {};
-      _exportObj22.interpolateOrRd = _sequentialMultiOrRd.default;
-      _exportObj22.schemeOrRd = _sequentialMultiOrRd.scheme;
-
-      _export(_exportObj22);
+      _export({
+        interpolateOrRd: _sequentialMultiOrRd.default,
+        schemeOrRd: _sequentialMultiOrRd.scheme
+      });
     }, function (_sequentialMultiPuBuGn) {
-      var _exportObj23 = {};
-      _exportObj23.interpolatePuBuGn = _sequentialMultiPuBuGn.default;
-      _exportObj23.schemePuBuGn = _sequentialMultiPuBuGn.scheme;
-
-      _export(_exportObj23);
+      _export({
+        interpolatePuBuGn: _sequentialMultiPuBuGn.default,
+        schemePuBuGn: _sequentialMultiPuBuGn.scheme
+      });
     }, function (_sequentialMultiPuBu) {
-      var _exportObj24 = {};
-      _exportObj24.interpolatePuBu = _sequentialMultiPuBu.default;
-      _exportObj24.schemePuBu = _sequentialMultiPuBu.scheme;
-
-      _export(_exportObj24);
+      _export({
+        interpolatePuBu: _sequentialMultiPuBu.default,
+        schemePuBu: _sequentialMultiPuBu.scheme
+      });
     }, function (_sequentialMultiPuRd) {
-      var _exportObj25 = {};
-      _exportObj25.interpolatePuRd = _sequentialMultiPuRd.default;
-      _exportObj25.schemePuRd = _sequentialMultiPuRd.scheme;
-
-      _export(_exportObj25);
+      _export({
+        interpolatePuRd: _sequentialMultiPuRd.default,
+        schemePuRd: _sequentialMultiPuRd.scheme
+      });
     }, function (_sequentialMultiRdPu) {
-      var _exportObj26 = {};
-      _exportObj26.interpolateRdPu = _sequentialMultiRdPu.default;
-      _exportObj26.schemeRdPu = _sequentialMultiRdPu.scheme;
-
-      _export(_exportObj26);
+      _export({
+        interpolateRdPu: _sequentialMultiRdPu.default,
+        schemeRdPu: _sequentialMultiRdPu.scheme
+      });
     }, function (_sequentialMultiYlGnBu) {
-      var _exportObj27 = {};
-      _exportObj27.interpolateYlGnBu = _sequentialMultiYlGnBu.default;
-      _exportObj27.schemeYlGnBu = _sequentialMultiYlGnBu.scheme;
-
-      _export(_exportObj27);
+      _export({
+        interpolateYlGnBu: _sequentialMultiYlGnBu.default,
+        schemeYlGnBu: _sequentialMultiYlGnBu.scheme
+      });
     }, function (_sequentialMultiYlGn) {
-      var _exportObj28 = {};
-      _exportObj28.interpolateYlGn = _sequentialMultiYlGn.default;
-      _exportObj28.schemeYlGn = _sequentialMultiYlGn.scheme;
-
-      _export(_exportObj28);
+      _export({
+        interpolateYlGn: _sequentialMultiYlGn.default,
+        schemeYlGn: _sequentialMultiYlGn.scheme
+      });
     }, function (_sequentialMultiYlOrBr) {
-      var _exportObj29 = {};
-      _exportObj29.interpolateYlOrBr = _sequentialMultiYlOrBr.default;
-      _exportObj29.schemeYlOrBr = _sequentialMultiYlOrBr.scheme;
-
-      _export(_exportObj29);
+      _export({
+        interpolateYlOrBr: _sequentialMultiYlOrBr.default,
+        schemeYlOrBr: _sequentialMultiYlOrBr.scheme
+      });
     }, function (_sequentialMultiYlOrRd) {
-      var _exportObj30 = {};
-      _exportObj30.interpolateYlOrRd = _sequentialMultiYlOrRd.default;
-      _exportObj30.schemeYlOrRd = _sequentialMultiYlOrRd.scheme;
-
-      _export(_exportObj30);
+      _export({
+        interpolateYlOrRd: _sequentialMultiYlOrRd.default,
+        schemeYlOrRd: _sequentialMultiYlOrRd.scheme
+      });
     }, function (_sequentialSingleBlues) {
-      var _exportObj31 = {};
-      _exportObj31.interpolateBlues = _sequentialSingleBlues.default;
-      _exportObj31.schemeBlues = _sequentialSingleBlues.scheme;
-
-      _export(_exportObj31);
+      _export({
+        interpolateBlues: _sequentialSingleBlues.default,
+        schemeBlues: _sequentialSingleBlues.scheme
+      });
     }, function (_sequentialSingleGreens) {
-      var _exportObj32 = {};
-      _exportObj32.interpolateGreens = _sequentialSingleGreens.default;
-      _exportObj32.schemeGreens = _sequentialSingleGreens.scheme;
-
-      _export(_exportObj32);
+      _export({
+        interpolateGreens: _sequentialSingleGreens.default,
+        schemeGreens: _sequentialSingleGreens.scheme
+      });
     }, function (_sequentialSingleGreys) {
-      var _exportObj33 = {};
-      _exportObj33.interpolateGreys = _sequentialSingleGreys.default;
-      _exportObj33.schemeGreys = _sequentialSingleGreys.scheme;
-
-      _export(_exportObj33);
+      _export({
+        interpolateGreys: _sequentialSingleGreys.default,
+        schemeGreys: _sequentialSingleGreys.scheme
+      });
     }, function (_sequentialSinglePurples) {
-      var _exportObj34 = {};
-      _exportObj34.interpolatePurples = _sequentialSinglePurples.default;
-      _exportObj34.schemePurples = _sequentialSinglePurples.scheme;
-
-      _export(_exportObj34);
+      _export({
+        interpolatePurples: _sequentialSinglePurples.default,
+        schemePurples: _sequentialSinglePurples.scheme
+      });
     }, function (_sequentialSingleReds) {
-      var _exportObj35 = {};
-      _exportObj35.interpolateReds = _sequentialSingleReds.default;
-      _exportObj35.schemeReds = _sequentialSingleReds.scheme;
-
-      _export(_exportObj35);
+      _export({
+        interpolateReds: _sequentialSingleReds.default,
+        schemeReds: _sequentialSingleReds.scheme
+      });
     }, function (_sequentialSingleOranges) {
-      var _exportObj36 = {};
-      _exportObj36.interpolateOranges = _sequentialSingleOranges.default;
-      _exportObj36.schemeOranges = _sequentialSingleOranges.scheme;
-
-      _export(_exportObj36);
+      _export({
+        interpolateOranges: _sequentialSingleOranges.default,
+        schemeOranges: _sequentialSingleOranges.scheme
+      });
     }],
     execute: function () {}
   };

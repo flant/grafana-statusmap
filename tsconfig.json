@@ -1,0 +1,55 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "target": "es5",
+    "lib": ["es6", "dom"],
+    "rootDir": ".",
+    "module": "esnext",
+    "allowJs": true,
+    // Don't emit; allow Babel to transform files.
+    "noEmit": true,
+    // Enable strictest settings like strictNullChecks & noImplicitAny.
+    "strict": true,
+    // Disallow features that require cross-file information for emit.
+    "isolatedModules": true,
+    "declaration": false,
+    "allowSyntheticDefaultImports": true,
+    // Import non-ES modules as default imports.
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "importHelpers": true,
+    "noEmitHelpers": true,
+    "removeComments": false,
+    "inlineSourceMap": false,
+    "sourceMap": true,
+    "emitDecoratorMetadata": false,
+    "experimentalDecorators": true,
+    "strictNullChecks": false,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitUseStrict": false,
+    "noImplicitAny": true,
+    "noEmitOnError": false,
+    "downlevelIteration": true,
+    "noUnusedLocals": true,
+    "pretty": true,
+    "typeRoots": ["./node_modules/@types"] //,/* ,"src/types"*/
+    //"types": [
+    //  "lodash"
+    //]
+    ,
+    "baseUrl": ".",
+    "paths": {
+      "app/*": ["./node_modules/@types/grafana/app/*"]
+    }
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ]
+}

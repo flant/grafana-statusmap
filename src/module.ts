@@ -1,9 +1,20 @@
-import { MetricsPanelCtrl } from 'app/plugins/sdk';
+// Libraries
 import _ from 'lodash';
-import { contextSrv } from 'app/core/core';
-import kbn from 'app/core/utils/kbn';
+import { auto } from 'angular';
 
+// Components
 import './color_legend';
+
+// Utils
+import kbn from 'app/core/utils/kbn';
+import {loadPluginCss} from 'app/plugins/sdk';
+
+// Types
+import { MetricsPanelCtrl } from 'app/plugins/sdk';
+import { contextSrv } from 'app/core/core';
+import { AnnotationsSrv } from 'app/features/annotations/annotations_srv';
+
+import {CardsStorage, Card} from './graph';
 import rendering from './rendering';
 // import aggregates, { aggregatesMap } from './aggregates';
 // import fragments, { fragmentsMap } from './fragments';
@@ -11,57 +22,11 @@ import rendering from './rendering';
 import {statusHeatmapOptionsEditor} from './options_editor';
 import {ColorModeDiscrete} from "./color_mode_discrete";
 
+
 const CANVAS = 'CANVAS';
 const SVG = 'SVG';
 const VALUE_INDEX = 0,
       TIME_INDEX = 1;
-
-const panelDefaults = {
-  // aggregate: aggregates.AVG,
-  // fragment: fragments.HOUR,
-  color: {
-    mode: 'spectrum',
-    cardColor: '#b4ff00',
-    colorScale: 'sqrt',
-    exponent: 0.5,
-    colorScheme: 'interpolateGnYlRd',
-    // discrete mode settings
-    defaultColor: '#757575',
-    thresholds: [] // manual colors
-  },
-  cards: {
-    cardMinWidth: 5,
-    cardVSpacing: 2,
-    cardHSpacing: 2,
-    cardRound: null
-  },
-  xAxis: {
-    show: true,
-    showWeekends: true,
-    minBucketWidthToShowWeekends: 4,
-    showCrosshair: true,
-    labelFormat: '%a %m/%d'
-  },
-  yAxis: {
-    show: true,
-    showCrosshair: false
-  },
-  tooltip: {
-    show: true
-  },
-  legend: {
-    show: true
-  },
-  data: {
-    unitFormat: 'short',
-    decimals: null
-  },
-  // how null points should be handled
-  nullPointMode: 'as empty',
-  yAxisSort: 'metrics',
-  highlightCards: true,
-  useMax: true
-};
 
 const renderer = CANVAS;
 
@@ -97,13 +62,100 @@ const colorSchemes = [
 let colorModes = ['opacity', 'spectrum', 'discrete'];
 let opacityScales = ['linear', 'sqrt'];
 
-export class StatusHeatmapCtrl extends MetricsPanelCtrl {
+interface DataWarning {
+  title: string;
+  tip: string;
+}
+
+interface DataWarnings {
+  noColorDefined: DataWarning;
+  multipleValues: DataWarning;
+}
+
+interface ColorThreshold {
+
+}
+
+
+
+
+loadPluginCss({
+  dark: 'plugins/flant-statusmap-panel/css/statusmap.dark.css',
+  light: 'plugins/flant-statusmap-panel/css/statusmap.light.css'
+});
+
+class StatusHeatmapCtrl extends MetricsPanelCtrl {
   static templateUrl = 'module.html';
 
+  opacityScales: any = [];
+  colorModes: any = [];
+  colorSchemes: any = [];
+  unitFormats: any;
+  data: any;
+  cardsData: any;
+  graph: any;
+  multipleValues: boolean;
+  noColorDefined: boolean;
+  discreteHelper: ColorModeDiscrete;
+  dataWarnings: DataWarnings;
+
+  annotations: object[] = [];
+  annotationsPromise: any;
+
+  panelDefaults: any = {
+    // datasource name, null = default datasource
+    datasource: null,
+    // color mode
+    color: {
+      mode: 'spectrum',
+      cardColor: '#b4ff00',
+      colorScale: 'sqrt',
+      exponent: 0.5,
+      colorScheme: 'interpolateGnYlRd',
+      // discrete mode settings
+      defaultColor: '#757575',
+      thresholds: [] // manual colors
+    },
+    // buckets settings
+    cards: {
+      cardMinWidth: 5,
+      cardVSpacing: 2,
+      cardHSpacing: 2,
+      cardRound: null
+    },
+    xAxis: {
+      show: true,
+      showWeekends: true,
+      minBucketWidthToShowWeekends: 4,
+      showCrosshair: true,
+      labelFormat: '%a %m/%d'
+    },
+    yAxis: {
+      show: true,
+      showCrosshair: false
+    },
+    tooltip: {
+      show: true
+    },
+    legend: {
+      show: true
+    },
+    data: {
+      unitFormat: 'short',
+      decimals: null
+    },
+    // how null points should be handled
+    nullPointMode: 'as empty',
+    yAxisSort: 'metrics',
+    highlightCards: true,
+    useMax: true
+  };
+
   /** @ngInject */
-  constructor($scope, $injector, $rootScope, timeSrv, annotationsSrv) {
+  constructor($scope: any, $injector: auto.IInjectorService, private annotationsSrv: AnnotationsSrv) {
     super($scope, $injector);
-    _.defaultsDeep(this.panel, panelDefaults);
+
+    _.defaultsDeep(this.panel, this.panelDefaults);
 
     this.opacityScales = opacityScales;
     this.colorModes = colorModes;
@@ -131,31 +183,39 @@ export class StatusHeatmapCtrl extends MetricsPanelCtrl {
     };
 
     this.annotations = [];
-    this.annotationsSrv = annotationsSrv;
 
-    this.events.on('data-received', this.onDataReceived);
-    this.events.on('data-snapshot-load', this.onDataReceived);
-    this.events.on('data-error', this.onDataError);
-    this.events.on('init-edit-mode', this.onInitEditMode);
-    this.events.on('render', this.onRender);
-    this.events.on('refresh', this.postRefresh);
+    this.events.on('render', this.onRender.bind(this));
+    this.events.on('data-received', this.onDataReceived.bind(this));
+    this.events.on('data-error', this.onDataError.bind(this));
+    this.events.on('data-snapshot-load', this.onDataReceived.bind(this));
+    this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
+    this.events.on('refresh', this.postRefresh.bind(this));
     // custom event from rendering.js
-    this.events.on('render-complete', this.onRenderComplete);
+    this.events.on('render-complete', this.onRenderComplete.bind(this));
   }
 
-  onRenderComplete = (data) => {
+  onRenderComplete(data):void {
     this.graph.chartWidth = data.chartWidth;
     this.renderingCompleted();
-  };
+  }
+
+  getChartWidth():number {
+    const wndWidth = $(window).width();
+    // gripPos.w is a width in grid's measurements. Grid size in Grafana is 24.
+    const panelWidthFactor = this.panel.gridPos.w / 24;
+    const panelWidth = Math.ceil(wndWidth * panelWidthFactor);
+    // approximate chartWidth because y axis ticks not rendered yet on first data receive.
+    const chartWidth = _.max([
+      panelWidth - 200,
+      panelWidth/2
+    ]);
+
+    return chartWidth!;
+  }
 
   // override calculateInterval for discrete color mode
-  calculateInterval = () => {
-    let panelWidth = Math.ceil($(window).width() * (this.panel.gridPos.w / 24));
-    // approximate chartWidth because y axis ticks not rendered yet on first data receive.
-    let chartWidth = _.max([
-        panelWidth - 200,
-        panelWidth/2
-      ]);
+  calculateInterval() {
+    let chartWidth = this.getChartWidth();
 
     let minCardWidth = this.panel.cards.cardMinWidth;
     let minSpacing = this.panel.cards.cardHSpacing;
@@ -169,6 +229,7 @@ export class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
     // Calculate low limit of interval
     let lowLimitMs = 1; // 1 millisecond default low limit
+    
     let intervalOverride = this.panel.interval;
 
     // if no panel interval check datasource
@@ -188,12 +249,13 @@ export class StatusHeatmapCtrl extends MetricsPanelCtrl {
     if (lowLimitMs > intervalMs) {
       intervalMs = lowLimitMs;
     }
+    let interval = kbn.secondsToHms(intervalMs / 1000);
 
     this.intervalMs = intervalMs;
-    this.interval = kbn.secondsToHms(intervalMs / 1000);
-  };
+    this.interval = interval;
+  }
 
-  issueQueries = (datasource) => {
+  issueQueries(datasource: any) {
     this.annotationsPromise = this.annotationsSrv.getAnnotations({
       dashboard: this.dashboard,
       panel: this.panel,
@@ -206,49 +268,65 @@ export class StatusHeatmapCtrl extends MetricsPanelCtrl {
      * (but not wait for completion). This resolves
      * issue 11806.
      */
-    // 5.x before 5.4 doesn't have dataPromises
+    // 5.x before 5.4 doesn't have datasourcePromises. 
+
     if ("undefined" !== typeof(this.annotationsSrv.datasourcePromises)) {
       return this.annotationsSrv.datasourcePromises.then(r => {
-        return super.issueQueries(datasource);
+        return this.issueQueriesWithInterval(datasource, this.interval);
       });
     } else {
-      return super.issueQueries(datasource);
+      return this.issueQueriesWithInterval(datasource, this.interval);
     }
   }
 
+  // Grafana 6.2 (and older) is using this.interval for queries,
+  // but Grafana 6.3+ is calculating interval again in queryRunner,
+  // so we need to save-restore this.panel.interval.
+  issueQueriesWithInterval(datasource: any, interval: any) {
+    var origInterval = this.panel.interval;
+    this.panel.interval = this.interval;
+    var res = super.issueQueries(datasource);
+    this.panel.interval = origInterval;
+    return res;
+  }
 
-  onDataReceived = (dataList) => {
+
+  onDataReceived(dataList: any) {
     this.data      = dataList;
     this.cardsData = this.convertToCards(this.data);
 
+    console.log("OnDataReceived");
+
     this.annotationsPromise.then(
-      result => {
+      (result: { alertState: any; annotations: any }) => {
         this.loading = false;
         //this.alertState = result.alertState;
         if (result.annotations && result.annotations.length > 0) {
           this.annotations = result.annotations;
         } else {
-          this.annotations = null;
+          this.annotations = [];
         }
+        console.log("annotationsPromise result " + this.annotations.length + " annotations");
         this.render();
       },
       () => {
         this.loading = false;
-        this.annotations = null;
+        this.annotations = [];
+        console.log("annotationsPromise onrejected");
         this.render();
       }
     );
 
     //this.render();
-  };
+  }
 
-  onInitEditMode = () => {
+  onInitEditMode() {
     this.addEditorTab('Options', statusHeatmapOptionsEditor, 2);
     this.unitFormats = kbn.getUnitFormats();
-  };
+  }
 
-  onRender = () => {
-    if (!this.data) { return; }
+  onRender() {
+    if (!this.range || !this.data) { return; }
 
     this.multipleValues = false;
     if (!this.panel.useMax) {
@@ -264,47 +342,47 @@ export class StatusHeatmapCtrl extends MetricsPanelCtrl {
         this.noColorDefined = this.cardsData.noColorDefined;
       }
     }
-  };
+  }
 
-  onCardColorChange = (newColor) => {
+  onCardColorChange(newColor) {
     this.panel.color.cardColor = newColor;
     this.render();
-  };
+  }
 
-  onDataError = () => {
+  onDataError() {
     this.data = [];
     this.annotations = [];
     this.render();
-  };
+  }
 
-  postRefresh = () => {
+  postRefresh() {
     this.noColorDefined = false;
-  };
+  }
 
-  onEditorAddThreshold = () => {
+  onEditorAddThreshold() {
     this.panel.color.thresholds.push({ color: this.panel.defaultColor });
     this.render();
-  };
+  }
 
-  onEditorRemoveThreshold = (index) => {
+  onEditorRemoveThreshold(index:number) {
     this.panel.color.thresholds.splice(index, 1);
     this.render();
-  };
+  }
 
-  onEditorRemoveThresholds = () => {
+  onEditorRemoveThresholds() {
     this.panel.color.thresholds = [];
     this.render();
-  };
+  }
 
-  onEditorAddThreeLights = () => {
+  onEditorAddThreeLights() {
     this.panel.color.thresholds.push({color: "red", value: 2, tooltip: "error" });
     this.panel.color.thresholds.push({color: "yellow", value: 1, tooltip: "warning" });
     this.panel.color.thresholds.push({color: "green", value: 0, tooltip: "ok" });
     this.render();
-  };
+  }
   
   /* https://ethanschoonover.com/solarized/ */
-  onEditorAddSolarized = () => {
+  onEditorAddSolarized() {
     this.panel.color.thresholds.push({color: "#b58900", value: 0, tooltip: "yellow" });
     this.panel.color.thresholds.push({color: "#cb4b16", value: 1, tooltip: "orange" });
     this.panel.color.thresholds.push({color: "#dc322f", value: 2, tooltip: "red" });
@@ -316,13 +394,13 @@ export class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.render();
   }
 
-  link = (scope, elem, attrs, ctrl) => {
+  link(scope, elem, attrs, ctrl) {
     rendering(scope, elem, attrs, ctrl);
-  };
+  }
 
   // group values into buckets by target
-  convertToCards = (data) => {
-    let cardsData = {
+  convertToCards(data) {
+  let cardsData = <CardsStorage> {
       cards: [],
       xBucketSize: 0,
       yBucketSize: 0,
@@ -355,14 +433,11 @@ export class StatusHeatmapCtrl extends MetricsPanelCtrl {
       let target = cardsData.targets[i];
 
       for (let j = 0; j < cardsData.xBucketSize; j++) {
-        let card = {
-          id: i*cardsData.xBucketSize + j,
-          values: [],
-          multipleValues: false,
-          noColorDefined: false,
-          y: target,
-          x: -1,
-        };
+        let card = new Card();
+        card.id = i*cardsData.xBucketSize + j;
+        card.values = [];
+        card.y = target;
+        card.x = -1;
 
         // collect values from all timeseries with target
         for (let si = 0; si < cardsData.targetIndex[target].length; si++) {
@@ -399,5 +474,9 @@ export class StatusHeatmapCtrl extends MetricsPanelCtrl {
     }
 
     return cardsData;
-  };
+  }
 }
+
+export {
+  StatusHeatmapCtrl, StatusHeatmapCtrl as PanelCtrl
+};

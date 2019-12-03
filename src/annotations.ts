@@ -1,12 +1,20 @@
 import d3 from 'd3';
 import $ from 'jquery';
 import _ from 'lodash';
-import kbn from 'app/core/utils/kbn';
 
 let TOOLTIP_PADDING_X = 30;
 let TOOLTIP_PADDING_Y = 10;
 
 export class AnnotationTooltip {
+  scope: any;
+  dashboard: any;
+  panelCtrl: any;
+  panel: any;
+  mouseOverAnnotationTick: boolean;
+
+  tooltipBase: any;
+  tooltip: any;
+
   constructor(elem, scope) {
     this.scope = scope;
     this.dashboard = scope.ctrl.dashboard;
@@ -90,7 +98,7 @@ export class AnnotationTooltip {
     let tooltipTimeFormat = 'YYYY-MM-DD HH:mm:ss';
     let annoTime = this.dashboard.formatDate(anno.time, tooltipTimeFormat);
     let annoText = anno.text;
-    let annoTags = [];
+    let annoTags:any = [];
     if (anno.tags) {
       annoTags = _.map(anno.tags, t => ({"text": t, "backColor": "rgb(63, 43, 91)", "borderColor":"rgb(101, 81, 129)"}))
     }

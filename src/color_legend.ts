@@ -1,19 +1,17 @@
-import angular from 'angular';
 import _ from 'lodash';
 import $ from 'jquery';
 import d3 from 'd3';
 import * as d3ScaleChromatic from './libs/d3-scale-chromatic/index';
 import {contextSrv} from 'app/core/core';
 import {tickStep} from 'app/core/utils/ticks';
-
-let mod = angular.module('grafana.directives');
+import coreModule from 'app/core/core_module';
 
 const LEGEND_STEP_WIDTH = 2;
 
 /**
  * Bigger color legend for opacity and spectrum modes editor.
  */
-mod.directive('optionsColorLegend', function() {
+coreModule.directive('optionsColorLegend', function() {
   return {
     restrict: 'E',
     template: '<div class="status-heatmap-color-legend"><svg width="16.8rem" height="24px"></svg></div>',
@@ -47,7 +45,7 @@ mod.directive('optionsColorLegend', function() {
 /**
  * Graph legend with values.
  */
-mod.directive('statusHeatmapLegend', function() {
+coreModule.directive('statusHeatmapLegend', function() {
   return {
     restrict: 'E',
     template: '<div class="status-heatmap-color-legend"><svg width="100px" height="6px"></svg></div>',
@@ -160,11 +158,13 @@ function drawDiscreteColorLegend(elem, colorOptions, discreteHelper) {
   let valuesNumber = thresholds.length;
 
   // graph width as a fallback
-  let $heatmap = $(elem).parent().parent().parent().find('.status-heatmap-panel');
-  let graphWidth  = $heatmap.find('svg').attr("width");
+  const $heatmap = $(elem).parent().parent().parent().find('.status-heatmap-panel');
+  const graphWidthAttr  = $heatmap.find('svg').attr("width");
+  let graphWidth = parseInt(graphWidthAttr);
+
 
   // calculate max width of tooltip and use it as width for each item
-  let textWidth = [];
+  let textWidth:number[] = [];
   legend.selectAll(".hidden-texts")
     .data(tooltips)
     .enter().append("text")
@@ -179,8 +179,8 @@ function drawDiscreteColorLegend(elem, colorOptions, discreteHelper) {
 
   let legendWidth = Math.floor(_.min([
     graphWidth - 30,
-    (_.max(textWidth) + 3) * valuesNumber,
-  ]));
+    (_.max(textWidth)! + 3) * valuesNumber,
+  ])!);
   legendElem.attr("width", legendWidth);
 
   let legendHeight = legendElem.attr("height");
@@ -398,7 +398,7 @@ function buildLegendTicks(rangeFrom, rangeTo, maxValue, minValue) {
   let range = rangeTo - rangeFrom;
   let tickStepSize = tickStep(rangeFrom, rangeTo, 3);
   let ticksNum = Math.round(range / tickStepSize);
-  let ticks = [];
+  let ticks:any = [];
 
   for (let i = 0; i < ticksNum; i++) {
     let current = tickStepSize * i;
