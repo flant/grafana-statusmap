@@ -1,6 +1,6 @@
 "use strict";
 
-System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/sdk", "./graph", "./rendering", "./options_editor", "./color_mode_discrete"], function (_export, _context) {
+System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/sdk", "./statusmap_data", "./rendering", "./options_editor", "./color_mode_discrete"], function (_export, _context) {
   "use strict";
 
   var _, kbn, loadPluginCss, MetricsPanelCtrl, Card, rendering, statusHeatmapOptionsEditor, ColorModeDiscrete, CANVAS, SVG, VALUE_INDEX, TIME_INDEX, renderer, colorSchemes, colorModes, opacityScales, StatusHeatmapCtrl;
@@ -37,8 +37,8 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
     }, function (_appPluginsSdk) {
       loadPluginCss = _appPluginsSdk.loadPluginCss;
       MetricsPanelCtrl = _appPluginsSdk.MetricsPanelCtrl;
-    }, function (_graph) {
-      Card = _graph.Card;
+    }, function (_statusmap_data) {
+      Card = _statusmap_data.Card;
     }, function (_rendering) {
       rendering = _rendering.default;
     }, function (_options_editor) {

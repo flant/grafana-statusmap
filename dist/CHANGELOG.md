@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.2.0
+
+- Migrate code base to typescript
+- Fixes to work in 6.3.0+ grafana
+
 ## v0.1.1
 
 - Fix for annotations in grafana 5.x before 5.4

@@ -11,17 +11,14 @@ import {loadPluginCss} from 'app/plugins/sdk';
 
 // Types
 import { MetricsPanelCtrl } from 'app/plugins/sdk';
-import { contextSrv } from 'app/core/core';
 import { AnnotationsSrv } from 'app/features/annotations/annotations_srv';
-
-import {CardsStorage, Card} from './graph';
+import {CardsStorage, Card} from './statusmap_data';
 import rendering from './rendering';
 // import aggregates, { aggregatesMap } from './aggregates';
 // import fragments, { fragmentsMap } from './fragments';
 // import { labelFormats } from './xAxisLabelFormats';
 import {statusHeatmapOptionsEditor} from './options_editor';
 import {ColorModeDiscrete} from "./color_mode_discrete";
-
 
 const CANVAS = 'CANVAS';
 const SVG = 'SVG';
