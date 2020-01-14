@@ -6,6 +6,7 @@ class Card {
     id: number = 0;
     // Array of values in this bucket
     values: any[] = [];
+    columns: any[] = [];
     // card has multiple values
     multipleValues: boolean = false;
     // card has values that has no color

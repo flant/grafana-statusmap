@@ -16,7 +16,7 @@ System.register([], function (_export, _context) {
   return {
     setters: [],
     execute: function () {
-      // Helper methods to handle discrete color mode
+      // Extra Series methods to handle discrete color mode
       _export("ColorModeDiscrete", ColorModeDiscrete =
       /*#__PURE__*/
       function () {
@@ -49,6 +49,24 @@ System.register([], function (_export, _context) {
                     "color": thresholds[i].color
                   });
                 }
+              }
+            }
+
+            return tooltips;
+          }
+        }, {
+          key: "convertValueToTooltips",
+          value: function convertValueToTooltips(values) {
+            var thresholds = this.panel.color.thresholds;
+            var tooltips = [];
+
+            for (var i = 0; i < thresholds.length; i++) {
+              //for (let j = 0; j < values.length; j++) {
+              if (values == thresholds[i].value) {
+                tooltips.push({
+                  "tooltip": thresholds[i].tooltip ? thresholds[i].tooltip : values,
+                  "color": thresholds[i].color
+                }); //}
               }
             }
 
@@ -92,6 +110,23 @@ System.register([], function (_export, _context) {
             }
 
             return color;
+          }
+        }, {
+          key: "getBucketColorSingle",
+          value: function getBucketColorSingle(value) {
+            //let thresholds = this.panel.color.thresholds;
+            if (value == null) {
+              // treat as null value
+              return 'rgba(0,0,0,1)'; //return this.getMatchedThreshold(null).color;
+            }
+
+            var threshold = this.getMatchedThreshold(value);
+
+            if (!threshold || !threshold.color || threshold.color == "") {
+              return 'rgba(0,0,0,1)';
+            } else {
+              return threshold.color;
+            }
           } // returns color from first matched thresold in order from 0 to thresholds.length
 
         }, {
@@ -135,6 +170,27 @@ System.register([], function (_export, _context) {
             }
 
             return 'rgba(0,0,0,1)';
+          }
+        }, {
+          key: "updateCardsValuesHasColorInfoSingle",
+          value: function updateCardsValuesHasColorInfoSingle() {
+            if (!this.panelCtrl.cardsData) {
+              return;
+            }
+
+            this.panelCtrl.cardsData.noColorDefined = false;
+            var cards = this.panelCtrl.cardsData.cards;
+
+            for (var i = 0; i < cards.length; i++) {
+              cards[i].noColorDefined = false;
+              var values = cards[i].value;
+              var threshold = this.getMatchedThreshold(values);
+
+              if (!threshold || !threshold.color || threshold.color == "") {
+                cards[i].noColorDefined = true;
+                this.panelCtrl.cardsData.noColorDefined = true;
+              }
+            }
           }
         }, {
           key: "updateCardsValuesHasColorInfo",

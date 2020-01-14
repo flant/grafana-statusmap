@@ -7,6 +7,7 @@ import {tickStep, getScaledDecimals, getFlotTickSize} from 'app/core/utils/ticks
 import * as d3 from 'd3';
 import * as d3ScaleChromatic from './libs/d3-scale-chromatic/index';
 import {StatusmapTooltip} from './tooltip';
+import {StatusHeatmapTooltipExtraSeries} from './tooltipextraseries';
 import {AnnotationTooltip} from './annotations';
 
 let MIN_CARD_SIZE = 5,
@@ -50,6 +51,7 @@ export class StatusmapRenderer {
   panel: any;
   $heatmap: any;
   tooltip: StatusmapTooltip;
+  tooltipExtraSeries:StatusHeatmapTooltipExtraSeries;
   annotationTooltip: AnnotationTooltip;
   heatmap: any;
   timeRange: any;
@@ -64,6 +66,7 @@ export class StatusmapRenderer {
     // $heatmap is JQuery object, but heatmap is D3
     this.$heatmap = this.elem.find('.status-heatmap-panel');
     this.tooltip = new StatusmapTooltip(this.$heatmap, this.scope);
+    this.tooltipExtraSeries = new StatusHeatmapTooltipExtraSeries(this.$heatmap, this.scope);
     this.annotationTooltip = new AnnotationTooltip(this.$heatmap, this.scope);
 
     this.yOffset = 0;
@@ -94,6 +97,7 @@ export class StatusmapRenderer {
     this.$heatmap.on('mousedown', this.onMouseDown.bind(this));
     this.$heatmap.on('mousemove', this.onMouseMove.bind(this));
     this.$heatmap.on('mouseleave', this.onMouseLeave.bind(this));
+    this.$heatmap.on('click', this.onMouseClick.bind(this));
   }
 
   onGraphHoverClear() {
@@ -507,7 +511,11 @@ export class StatusmapRenderer {
     } else if (this.panel.color.mode === 'spectrum') {
       return this.colorScale(d.value);
     } else if (this.panel.color.mode === 'discrete') {
-      return this.ctrl.discreteHelper.getBucketColor(d.values);
+      if (this.panel.seriesFilterIndex != -1 || this.panel.seriesFilterIndex != null) {
+        return this.ctrl.discreteExtraSeries.getBucketColorSingle(d.values[this.panel.seriesFilterIndex]);
+      } else {
+        return this.ctrl.discreteExtraSeries.getBucketColor(d.values);
+      }
     }
   }
 
@@ -572,10 +580,17 @@ export class StatusmapRenderer {
     this.clearSelection();
   }
 
-  onMouseLeave() {
+  onMouseLeave(e) {
     appEvents.emit('graph-hover-clear');
     this.clearCrosshair();
     //annotationTooltip.destroy();
+    if (e.relatedTarget) {
+      if (e.relatedTarget.className == "statusmap-tooltip-extraseries graph-tooltip grafana-tooltip" || e.relatedTarget.className == "graph-tooltip-time" ) {
+      } else {
+        this.tooltipExtraSeries.destroy();
+      }
+    }
+    this.annotationTooltip.destroy(); 
   }
 
   onMouseMove(event) {
@@ -596,6 +611,13 @@ export class StatusmapRenderer {
       this.drawCrosshair(offset.x);
       this.tooltip.show(event); //, data); // pos, this.data
       this.annotationTooltip.show(event);
+    }
+  }
+
+  public onMouseClick(event) {
+    this.tooltipExtraSeries.show(event)
+    if (this.ctrl.panel.usingUrl) {
+      this.tooltip.destroy();
     }
   }
 
@@ -739,7 +761,7 @@ export class StatusmapRenderer {
 
     let annoData = _.map(this.ctrl.annotations, (d,i) => ({"x": Math.floor(this.yAxisWidth + this.xScale(d.time)), "id":i, "anno": d.source}));
 
-    //console.log({"ctrl_annotations": this.ctrl.annotations, "annoData": annoData});
+    //({"ctrl_annotations": this.ctrl.annotations, "annoData": annoData});
 
     let anno = this.heatmap
         .append("g")

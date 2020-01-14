@@ -53,7 +53,7 @@ System.register(["lodash", "jquery", "d3", "./libs/d3-scale-chromatic/index", "a
     drawLegendValues(elem, opacityScale, rangeFrom, rangeTo, maxValue, minValue, legendWidth);
   }
 
-  function drawDiscreteColorLegend(elem, colorOptions, discreteHelper) {
+  function drawDiscreteColorLegend(elem, colorOptions, discreteExtraSeries) {
     var legendElem = $(elem).find('svg');
     var legend = d3.select(legendElem.get(0));
     clearLegend(elem);
@@ -87,7 +87,7 @@ System.register(["lodash", "jquery", "d3", "./libs/d3-scale-chromatic/index", "a
       return d * itemWidth;
     }).attr("y", 0).attr("width", itemWidth + 1) // Overlap rectangles to prevent gaps
     .attr("height", legendHeight).attr("stroke-width", 0).attr("fill", function (d) {
-      return discreteHelper.getDiscreteColor(d);
+      return discreteExtraSeries.getDiscreteColor(d);
     });
     drawDiscreteLegendValues(elem, colorOptions, legendWidth);
   }
@@ -378,7 +378,7 @@ System.register(["lodash", "jquery", "d3", "./libs/d3-scale-chromatic/index", "a
                   drawOpacityLegend(elem, colorOptions, rangeFrom, rangeTo, maxValue, minValue);
                 } else if (panel.color.mode === 'discrete') {
                   var _colorOptions = panel.color;
-                  drawDiscreteColorLegend(elem, _colorOptions, ctrl.discreteHelper);
+                  drawDiscreteColorLegend(elem, _colorOptions, ctrl.discreteExtraSeries);
                 }
               }
             }
