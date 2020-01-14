@@ -131,9 +131,15 @@ System.register(["d3", "jquery", "lodash"], function (_export, _context) {
             var tooltipTimeFormat = 'YYYY-MM-DD HH:mm:ss';
             var time = this.dashboard.formatDate(+x, tooltipTimeFormat);
             var tooltipHtml = "<div class=\"graph-tooltip-time\">".concat(time, "</div>\n      <div class=\"statusmap-histogram\"></div>");
+            var statuses;
 
             if (this.panel.color.mode === 'discrete') {
-              var statuses = this.panelCtrl.discreteHelper.convertValuesToTooltips(values);
+              if (this.panel.seriesFilterIndex > 0) {
+                statuses = this.panelCtrl.discreteExtraSeries.convertValueToTooltips(value);
+              } else {
+                statuses = this.panelCtrl.discreteExtraSeries.convertValuesToTooltips(values);
+              }
+
               var statusesHtml = '';
 
               if (statuses.length === 1) {
@@ -163,7 +169,7 @@ System.register(["d3", "jquery", "lodash"], function (_export, _context) {
 
             if (this.panel.color.mode === 'discrete') {
               if (card.noColorDefined) {
-                var badValues = this.panelCtrl.discreteHelper.getNotColoredValues(values);
+                var badValues = this.panelCtrl.discreteExtraSeries.getNotColoredValues(values);
                 tooltipHtml += "<div><b>Error:</b> ".concat(this.panelCtrl.dataWarnings.noColorDefined.title, "\n        <br>not colored values:\n        <ul>\n          ").concat(_.join(_.map(badValues, function (v) {
                   return "<li>".concat(v, "</li>");
                 }), ""), "\n        </ul>\n        </div>");

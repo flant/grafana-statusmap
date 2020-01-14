@@ -27,6 +27,8 @@ System.register([], function (_export, _context) {
 
         _defineProperty(this, "values", []);
 
+        _defineProperty(this, "columns", []);
+
         _defineProperty(this, "multipleValues", false);
 
         _defineProperty(this, "noColorDefined", false);

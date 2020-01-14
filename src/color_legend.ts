@@ -77,7 +77,7 @@ coreModule.directive('statusHeatmapLegend', function() {
             drawOpacityLegend(elem, colorOptions, rangeFrom, rangeTo, maxValue, minValue);
           } else if (panel.color.mode === 'discrete') {
             let colorOptions = panel.color;
-            drawDiscreteColorLegend(elem, colorOptions, ctrl.discreteHelper);
+            drawDiscreteColorLegend(elem, colorOptions, ctrl.discreteExtraSeries);
           }
         }
       }
@@ -148,7 +148,7 @@ function drawOpacityLegend(elem, options, rangeFrom, rangeTo, maxValue, minValue
   drawLegendValues(elem, opacityScale, rangeFrom, rangeTo, maxValue, minValue, legendWidth);
 }
 
-function drawDiscreteColorLegend(elem, colorOptions, discreteHelper) {
+function drawDiscreteColorLegend(elem, colorOptions, discreteExtraSeries) {
   let legendElem = $(elem).find('svg');
   let legend = d3.select(legendElem.get(0));
   clearLegend(elem);
@@ -196,7 +196,7 @@ function drawDiscreteColorLegend(elem, colorOptions, discreteHelper) {
     .attr("width", itemWidth + 1) // Overlap rectangles to prevent gaps
     .attr("height", legendHeight)
     .attr("stroke-width", 0)
-    .attr("fill", d => discreteHelper.getDiscreteColor(d));
+    .attr("fill", d => discreteExtraSeries.getDiscreteColor(d));
 
   drawDiscreteLegendValues(elem, colorOptions, legendWidth);
 }
