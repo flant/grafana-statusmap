@@ -614,6 +614,7 @@ export class StatusmapRenderer {
     if (this.ctrl.panel.usingUrl) {
       this.tooltip.destroy();
     }
+  }
 
   getEventPos(event, offset) {
     const x = this.xScale.invert(offset.x - this.yAxisWidth).valueOf();

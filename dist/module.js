@@ -150,12 +150,12 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
       _export("PanelCtrl", _export("StatusHeatmapCtrl", StatusHeatmapCtrl =
       /*#__PURE__*/
       function (_MetricsPanelCtrl) {
-        StatusHeatmapCtrl.$inject = ["$scope", "$injector", "annotationsSrv"];
+        StatusHeatmapCtrl.$inject = ["$scope", "$injector", "timeSrv", "annotationsSrv", "$window", "datasourceSrv", "variableSrv", "templateSrv"];
 
         _inherits(StatusHeatmapCtrl, _MetricsPanelCtrl);
 
         /** @ngInject */
-        function StatusHeatmapCtrl($scope, $injector, annotationsSrv) {
+        function StatusHeatmapCtrl($scope, $injector, timeSrv, annotationsSrv, $window, datasourceSrv, variableSrv, templateSrv) {
           var _this;
 
           _classCallCheck(this, StatusHeatmapCtrl);
@@ -236,14 +236,78 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
             nullPointMode: 'as empty',
             yAxisSort: 'metrics',
             highlightCards: true,
-            useMax: true
+            useMax: true,
+            urls: [{
+              tooltip: '',
+              label: '',
+              base_url: '',
+              usehelper: true,
+              useseriesname: true,
+              forcelowercase: true,
+              icon_fa: 'external-link',
+              helper: {
+                index: -1,
+                type: 'date',
+                format: 'YYYY/MM/DD/HH_mm_ss'
+              }
+            }],
+            showvalue: -1,
+            usingUrl: false
+          });
+
+          _defineProperty(_assertThisInitialized(_this), "onEditorAddUrl", function () {
+            _this.panel.urls.push({
+              label: '',
+              base_url: '',
+              usehelper: true,
+              useseriesname: true,
+              forcelowercase: true,
+              icon_fa: 'external-link',
+              helper: {
+                index: -1,
+                type: 'date',
+                format: 'YYYY/MM/DD/HH_mm_ss'
+              }
+            });
+
+            _this.render();
+          });
+
+          _defineProperty(_assertThisInitialized(_this), "onEditorRemoveUrl", function (index) {
+            _this.panel.urls.splice(index, 1);
+
+            _this.render();
+          });
+
+          _defineProperty(_assertThisInitialized(_this), "onEditorRemoveUrls", function () {
+            _this.panel.urls = [];
+
+            _this.render();
           });
 
           _.defaultsDeep(_this.panel, _this.panelDefaults);
 
           _this.opacityScales = opacityScales;
           _this.colorModes = colorModes;
-          _this.colorSchemes = colorSchemes; // default graph width for discrete card width calculation
+          _this.colorSchemes = colorSchemes;
+          _this.variableSrv = variableSrv;
+
+          _this.renderLink = function (link, scopedVars, format) {
+            var scoped = {};
+
+            for (var key in scopedVars) {
+              scoped[key] = {
+                value: scopedVars[key]
+              };
+            }
+
+            if (format) {
+              return _this.templateSrv.replace(link, scoped, format);
+            } else {
+              return _this.templateSrv.replace(link, scoped);
+            }
+          }; // default graph width for discrete card width calculation
+
 
           _this.graph = {
             "chartWidth": -1
@@ -262,6 +326,8 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
             }
           };
           _this.annotations = [];
+          _this.annotationsSrv = annotationsSrv;
+          _this.timeSrv = timeSrv;
 
           _this.events.on('render', _this.onRender.bind(_assertThisInitialized(_this)));
 
@@ -430,7 +496,11 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
             this.noColorDefined = false;
 
             if (this.panel.color.mode === 'discrete') {
-              this.discreteHelper.updateCardsValuesHasColorInfo();
+              if (this.panel.showvalue == -1) {
+                this.discreteHelper.updateCardsValuesHasColorInfo();
+              } else {
+                this.discreteHelper.updateCardsValuesHasColorInfoSingle();
+              }
 
               if (this.cardsData) {
                 this.noColorDefined = this.cardsData.noColorDefined;
@@ -591,6 +661,9 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
                 var card = new Card();
                 card.id = i * cardsData.xBucketSize + j;
                 card.values = [];
+                card.columns = [];
+                card.multipleValues = false;
+                card.noColorDefined = false;
                 card.y = target;
                 card.x = -1; // collect values from all timeseries with target
 
@@ -616,7 +689,7 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
                 if (card.values.length > 1) {
                   cardsData.multipleValues = true;
                   card.multipleValues = true;
-                  card.value = card.maxValue; // max value by default
+                  card.value = this.panel.showvalue != -1 ? card.values[this.panel.showvalue] : card.maxValue;
                 } else {
                   card.value = card.maxValue; // max value by default
                 }
