@@ -7,6 +7,7 @@ import {tickStep, getScaledDecimals, getFlotTickSize} from 'app/core/utils/ticks
 import * as d3 from 'd3';
 import * as d3ScaleChromatic from './libs/d3-scale-chromatic/index';
 import {StatusmapTooltip} from './tooltip';
+import {StatusHeatmapTooltipHelper} from './tooltiphelper';
 import {AnnotationTooltip} from './annotations';
 
 let MIN_CARD_SIZE = 5,
@@ -50,6 +51,7 @@ export class StatusmapRenderer {
   panel: any;
   $heatmap: any;
   tooltip: StatusmapTooltip;
+  tooltipHelper:StatusHeatmapTooltipHelper;
   annotationTooltip: AnnotationTooltip;
   heatmap: any;
   timeRange: any;
@@ -64,6 +66,7 @@ export class StatusmapRenderer {
     // $heatmap is JQuery object, but heatmap is D3
     this.$heatmap = this.elem.find('.status-heatmap-panel');
     this.tooltip = new StatusmapTooltip(this.$heatmap, this.scope);
+    this.tooltipHelper = new StatusHeatmapTooltipHelper(this.$heatmap, this.scope);
     this.annotationTooltip = new AnnotationTooltip(this.$heatmap, this.scope);
 
     this.yOffset = 0;
@@ -572,10 +575,17 @@ export class StatusmapRenderer {
     this.clearSelection();
   }
 
-  onMouseLeave() {
+  onMouseLeave(e) {
     appEvents.emit('graph-hover-clear');
     this.clearCrosshair();
     //annotationTooltip.destroy();
+    if (e.relatedTarget) {
+      if (e.relatedTarget.className == "statusmap-tooltiphelper graph-tooltip grafana-tooltip" || e.relatedTarget.className == "graph-tooltip-time" ) {
+      } else {
+        this.tooltipHelper.destroy();
+      }
+    }
+    this.annotationTooltip.destroy(); 
   }
 
   onMouseMove(event) {
@@ -598,6 +608,12 @@ export class StatusmapRenderer {
       this.annotationTooltip.show(event);
     }
   }
+
+  onMouseClick(event) {
+    this.tooltipHelper.show(event)
+    if (this.ctrl.panel.usingUrl) {
+      this.tooltip.destroy();
+    }
 
   getEventPos(event, offset) {
     const x = this.xScale.invert(offset.x - this.yAxisWidth).valueOf();

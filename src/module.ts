@@ -145,11 +145,27 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     nullPointMode: 'as empty',
     yAxisSort: 'metrics',
     highlightCards: true,
-    useMax: true
+    useMax: true,
+    urls: [{
+      tooltip: '',
+      label: '',
+      base_url: '',
+      usehelper: true,
+      useseriesname: true,
+      forcelowercase: true,
+      icon_fa: 'external-link',
+      helper: {
+        index: -1,
+        type: 'date',
+        format: 'YYYY/MM/DD/HH_mm_ss'
+      }
+    }],
+    showvalue: -1,
+    usingUrl: false
   };
 
   /** @ngInject */
-  constructor($scope: any, $injector: auto.IInjectorService, private annotationsSrv: AnnotationsSrv) {
+  constructor($scope: any, $injector: auto.IInjectorService, timeSrv, private annotationsSrv: AnnotationsSrv, $window, datasourceSrv, variableSrv, templateSrv) {
     super($scope, $injector);
 
     _.defaultsDeep(this.panel, this.panelDefaults);
@@ -157,6 +173,19 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.opacityScales = opacityScales;
     this.colorModes = colorModes;
     this.colorSchemes = colorSchemes;
+    this.variableSrv = variableSrv;
+
+    this.renderLink = (link, scopedVars, format) => {
+      var scoped = {}
+      for (var key in scopedVars) {
+        scoped[key] = { value: scopedVars[key] }
+      }
+      if (format) {
+        return this.templateSrv.replace(link, scoped, format)
+      } else {
+        return this.templateSrv.replace(link, scoped)
+      }
+    }
 
     // default graph width for discrete card width calculation
     this.graph = {
@@ -180,6 +209,9 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     };
 
     this.annotations = [];
+    this.annotationsSrv = annotationsSrv;
+    
+    this.timeSrv = timeSrv;
 
     this.events.on('render', this.onRender.bind(this));
     this.events.on('data-received', this.onDataReceived.bind(this));
@@ -334,7 +366,11 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
     this.noColorDefined = false;
     if (this.panel.color.mode === 'discrete') {
-      this.discreteHelper.updateCardsValuesHasColorInfo();
+      if (this.panel.showvalue == -1) {
+        this.discreteHelper.updateCardsValuesHasColorInfo();
+      } else {
+        this.discreteHelper.updateCardsValuesHasColorInfoSingle();
+      }
       if (this.cardsData) {
         this.noColorDefined = this.cardsData.noColorDefined;
       }
@@ -361,6 +397,28 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.render();
   }
 
+  onEditorAddUrl = () => {
+    this.panel.urls.push({
+      label: '',
+      base_url: '',
+      usehelper: true,
+      useseriesname: true,
+      forcelowercase: true,
+      icon_fa: 'external-link',
+      helper: {
+        index: -1,
+        type: 'date',
+        format: 'YYYY/MM/DD/HH_mm_ss'
+      }
+    });
+    this.render();
+  }
+
+  onEditorRemoveUrl = (index) => {
+    this.panel.urls.splice(index, 1);
+    this.render();
+  }
+
   onEditorRemoveThreshold(index:number) {
     this.panel.color.thresholds.splice(index, 1);
     this.render();
@@ -368,6 +426,12 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
   onEditorRemoveThresholds() {
     this.panel.color.thresholds = [];
+    this.render();
+  }
+
+
+  onEditorRemoveUrls = () => {
+    this.panel.urls = [];
     this.render();
   }
 
@@ -433,6 +497,9 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
         let card = new Card();
         card.id = i*cardsData.xBucketSize + j;
         card.values = [];
+        card.columns = [];
+        card.multipleValues = false;
+        card.noColorDefined = false;
         card.y = target;
         card.x = -1;
 
@@ -453,7 +520,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
         if (card.values.length > 1) {
           cardsData.multipleValues = true;
           card.multipleValues = true;
-          card.value = card.maxValue; // max value by default
+          card.value = this.panel.showvalue != -1 ? card.values[this.panel.showvalue] : card.maxValue;
         } else {
           card.value = card.maxValue; // max value by default
         }

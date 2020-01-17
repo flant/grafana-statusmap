@@ -109,6 +109,25 @@ export class ColorModeDiscrete {
     return 'rgba(0,0,0,1)';
   }
 
+
+  updateCardsValuesHasColorInfoSingle() {
+    if (!this.panelCtrl.cardsData) {
+      return;
+    }
+    this.panelCtrl.cardsData.noColorDefined = false;
+    var cards = this.panelCtrl.cardsData.cards;
+    for (var i = 0; i < cards.length; i++) {
+      cards[i].noColorDefined = false;
+      var values = cards[i].value;
+      var threshold = this.getMatchedThreshold(values);
+      if (!threshold || !threshold.color || threshold.color == "") {
+        cards[i].noColorDefined = true;
+        this.panelCtrl.cardsData.noColorDefined = true;
+        break;
+      }
+    }
+  }
+
   updateCardsValuesHasColorInfo() {
     if (!this.panelCtrl.cardsData) {
       return
