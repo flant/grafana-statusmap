@@ -221,6 +221,12 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.events.on('refresh', this.postRefresh.bind(this));
     // custom event from rendering.js
     this.events.on('render-complete', this.onRenderComplete.bind(this));
+
+    this.events.on('mouse-click', this.onMouseClick.bind(this));
+  }
+
+  onMouseClick(event) {
+    console.log('HA HECHO CLICK EN MODULE');
   }
 
   onRenderComplete(data):void {
@@ -457,6 +463,12 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
   link(scope, elem, attrs, ctrl) {
     rendering(scope, elem, attrs, ctrl);
+  }
+
+  retrieveTimeVar() {
+    var time = this.timeSrv.timeRangeForUrl();
+    var var_time = '&from=' + time.from + '&to=' + time.to;
+    return var_time;
   }
 
   // group values into buckets by target

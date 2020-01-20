@@ -344,10 +344,17 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
 
           _this.events.on('render-complete', _this.onRenderComplete.bind(_assertThisInitialized(_this)));
 
+          _this.events.on('mouse-click', _this.onMouseClick.bind(_assertThisInitialized(_this)));
+
           return _this;
         }
 
         _createClass(StatusHeatmapCtrl, [{
+          key: "onMouseClick",
+          value: function onMouseClick(event) {
+            console.log('HA HECHO CLICK EN MODULE');
+          }
+        }, {
           key: "onRenderComplete",
           value: function onRenderComplete(data) {
             this.graph.chartWidth = data.chartWidth;
@@ -616,6 +623,13 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
           key: "link",
           value: function link(scope, elem, attrs, ctrl) {
             rendering(scope, elem, attrs, ctrl);
+          }
+        }, {
+          key: "retrieveTimeVar",
+          value: function retrieveTimeVar() {
+            var time = this.timeSrv.timeRangeForUrl();
+            var var_time = '&from=' + time.from + '&to=' + time.to;
+            return var_time;
           } // group values into buckets by target
 
         }, {

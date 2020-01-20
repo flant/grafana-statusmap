@@ -97,6 +97,7 @@ export class StatusmapRenderer {
     this.$heatmap.on('mousedown', this.onMouseDown.bind(this));
     this.$heatmap.on('mousemove', this.onMouseMove.bind(this));
     this.$heatmap.on('mouseleave', this.onMouseLeave.bind(this));
+    this.$heatmap.on('click', this.onMouseClick.bind(this));
   }
 
   onGraphHoverClear() {
@@ -609,7 +610,7 @@ export class StatusmapRenderer {
     }
   }
 
-  onMouseClick(event) {
+  public onMouseClick(event) {
     this.tooltipHelper.show(event)
     if (this.ctrl.panel.usingUrl) {
       this.tooltip.destroy();
