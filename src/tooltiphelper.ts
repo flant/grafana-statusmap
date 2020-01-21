@@ -102,7 +102,7 @@ export class StatusHeatmapTooltipHelper {
             if (this.panel.color.mode === 'discrete') {
             let statuses: any = "";
                 
-            if (this.panelCtrl.panel.showvalue == -1) {
+            if (this.panelCtrl.panel.seriesFilterIndex == -1) {
               statuses = this.panelCtrl.discreteHelper.convertValuesToTooltips(values);
             } else {
                 statuses = this.panelCtrl.discreteHelper.convertValueToTooltips(value);

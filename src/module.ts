@@ -160,7 +160,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
         format: 'YYYY/MM/DD/HH_mm_ss'
       }
     }],
-    showvalue: -1,
+    seriesFilterIndex: -1,
     usingUrl: false
   };
 
@@ -366,7 +366,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
     this.noColorDefined = false;
     if (this.panel.color.mode === 'discrete') {
-      if (this.panel.showvalue == -1) {
+      if (this.panel.seriesFilterIndex == -1) {
         this.discreteHelper.updateCardsValuesHasColorInfo();
       } else {
         this.discreteHelper.updateCardsValuesHasColorInfoSingle();
@@ -526,7 +526,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
         if (card.values.length > 1) {
           cardsData.multipleValues = true;
           card.multipleValues = true;
-          card.value = this.panel.showvalue != -1 ? card.values[this.panel.showvalue] : card.maxValue;
+          card.value = this.panel.seriesFilterIndex != -1 ? card.values[this.panel.seriesFilterIndex] : card.maxValue;
         } else {
           card.value = card.maxValue; // max value by default
         }
