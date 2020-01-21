@@ -19,6 +19,7 @@ import rendering from './rendering';
 // import { labelFormats } from './xAxisLabelFormats';
 import {statusHeatmapOptionsEditor} from './options_editor';
 import {ColorModeDiscrete} from "./color_mode_discrete";
+import { HelperFormat } from './helper_format';
 
 const CANVAS = 'CANVAS';
 const SVG = 'SVG';
@@ -157,7 +158,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
       helper: {
         index: -1,
         type: 'date',
-        format: 'YYYY/MM/DD/HH_mm_ss'
+        format: HelperFormat.date
       }
     }],
     seriesFilterIndex: -1,
