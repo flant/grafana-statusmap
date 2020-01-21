@@ -221,12 +221,6 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.events.on('refresh', this.postRefresh.bind(this));
     // custom event from rendering.js
     this.events.on('render-complete', this.onRenderComplete.bind(this));
-
-    this.events.on('mouse-click', this.onMouseClick.bind(this));
-  }
-
-  onMouseClick(event) {
-    console.log('HA HECHO CLICK EN MODULE');
   }
 
   onRenderComplete(data):void {
