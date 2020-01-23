@@ -1,9 +1,9 @@
 "use strict";
 
-System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/sdk", "./statusmap_data", "./rendering", "./options_editor", "./color_mode_discrete"], function (_export, _context) {
+System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/sdk", "./statusmap_data", "./rendering", "./options_editor", "./color_mode_discrete", "./helper_format"], function (_export, _context) {
   "use strict";
 
-  var _, kbn, loadPluginCss, MetricsPanelCtrl, Card, rendering, statusHeatmapOptionsEditor, ColorModeDiscrete, CANVAS, SVG, VALUE_INDEX, TIME_INDEX, renderer, colorSchemes, colorModes, opacityScales, StatusHeatmapCtrl;
+  var _, kbn, loadPluginCss, MetricsPanelCtrl, Card, rendering, statusHeatmapOptionsEditor, ColorModeDiscrete, HelperFormat, CANVAS, SVG, VALUE_INDEX, TIME_INDEX, renderer, colorSchemes, colorModes, opacityScales, StatusHeatmapCtrl;
 
   function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -45,6 +45,8 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
       statusHeatmapOptionsEditor = _options_editor.statusHeatmapOptionsEditor;
     }, function (_color_mode_discrete) {
       ColorModeDiscrete = _color_mode_discrete.ColorModeDiscrete;
+    }, function (_helper_format) {
+      HelperFormat = _helper_format.HelperFormat;
     }],
     execute: function () {
       CANVAS = 'CANVAS';
@@ -185,6 +187,8 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
 
           _defineProperty(_assertThisInitialized(_this), "dataWarnings", void 0);
 
+          _defineProperty(_assertThisInitialized(_this), "helperFormats", []);
+
           _defineProperty(_assertThisInitialized(_this), "annotations", []);
 
           _defineProperty(_assertThisInitialized(_this), "annotationsPromise", void 0);
@@ -247,11 +251,11 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
               icon_fa: 'external-link',
               helper: {
                 index: -1,
-                type: 'date',
+                type: HelperFormat.Date,
                 format: 'YYYY/MM/DD/HH_mm_ss'
               }
             }],
-            showvalue: -1,
+            seriesFilterIndex: -1,
             usingUrl: false
           });
 
@@ -265,7 +269,7 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
               icon_fa: 'external-link',
               helper: {
                 index: -1,
-                type: 'date',
+                type: HelperFormat.Date,
                 format: 'YYYY/MM/DD/HH_mm_ss'
               }
             });
@@ -291,6 +295,7 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
           _this.colorModes = colorModes;
           _this.colorSchemes = colorSchemes;
           _this.variableSrv = variableSrv;
+          _this.helperFormats = HelperFormat;
 
           _this.renderLink = function (link, scopedVars, format) {
             var scoped = {};
@@ -344,17 +349,10 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
 
           _this.events.on('render-complete', _this.onRenderComplete.bind(_assertThisInitialized(_this)));
 
-          _this.events.on('mouse-click', _this.onMouseClick.bind(_assertThisInitialized(_this)));
-
           return _this;
         }
 
         _createClass(StatusHeatmapCtrl, [{
-          key: "onMouseClick",
-          value: function onMouseClick(event) {
-            console.log('HA HECHO CLICK EN MODULE');
-          }
-        }, {
           key: "onRenderComplete",
           value: function onRenderComplete(data) {
             this.graph.chartWidth = data.chartWidth;
@@ -503,7 +501,7 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
             this.noColorDefined = false;
 
             if (this.panel.color.mode === 'discrete') {
-              if (this.panel.showvalue == -1) {
+              if (this.panel.seriesFilterIndex == -1) {
                 this.discreteHelper.updateCardsValuesHasColorInfo();
               } else {
                 this.discreteHelper.updateCardsValuesHasColorInfoSingle();
@@ -539,6 +537,25 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
               color: this.panel.defaultColor
             });
             this.render();
+          }
+        }, {
+          key: "getHelperFormatValue",
+          value: function getHelperFormatValue(helperFormat) {
+            console.log(helperFormat);
+
+            switch (helperFormat) {
+              case 'Date':
+                return 'YYYY/MM/DD/HH_mm_ss';
+                break;
+
+              case 'Raw':
+                return '';
+                break;
+
+              default:
+                return '';
+                break;
+            }
           }
         }, {
           key: "onEditorRemoveThreshold",
@@ -703,7 +720,7 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
                 if (card.values.length > 1) {
                   cardsData.multipleValues = true;
                   card.multipleValues = true;
-                  card.value = this.panel.showvalue != -1 ? card.values[this.panel.showvalue] : card.maxValue;
+                  card.value = this.panel.seriesFilterIndex != -1 ? card.values[this.panel.seriesFilterIndex] : card.maxValue;
                 } else {
                   card.value = card.maxValue; // max value by default
                 }

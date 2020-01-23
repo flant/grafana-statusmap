@@ -20,6 +20,7 @@ import rendering from './rendering';
 import {statusHeatmapOptionsEditor} from './options_editor';
 import {ColorModeDiscrete} from "./color_mode_discrete";
 import { HelperFormat } from './helper_format';
+import { HelperFormatValues } from './helper_format_values';
 
 const CANVAS = 'CANVAS';
 const SVG = 'SVG';
@@ -96,6 +97,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   noColorDefined: boolean;
   discreteHelper: ColorModeDiscrete;
   dataWarnings: DataWarnings;
+  helperFormats: any = [];
 
   annotations: object[] = [];
   annotationsPromise: any;
@@ -157,8 +159,8 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
       icon_fa: 'external-link',
       helper: {
         index: -1,
-        type: 'date',
-        format: HelperFormat.date
+        type: HelperFormat.Date,
+        format: 'YYYY/MM/DD/HH_mm_ss'
       }
     }],
     seriesFilterIndex: -1,
@@ -175,6 +177,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.colorModes = colorModes;
     this.colorSchemes = colorSchemes;
     this.variableSrv = variableSrv;
+    this.helperFormats = HelperFormat;
 
     this.renderLink = (link, scopedVars, format) => {
       var scoped = {}
@@ -408,7 +411,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
       icon_fa: 'external-link',
       helper: {
         index: -1,
-        type: 'date',
+        type: HelperFormat.Date,
         format: 'YYYY/MM/DD/HH_mm_ss'
       }
     });

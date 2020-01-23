@@ -182,6 +182,34 @@ __Show tooltip__ toggles tooltip display on mouse over buckets.
 
 __Y axis sort__ can be used to sort labels on Y axis. Metrics — sort y labels as they are defined on Metrics tab. a→z and z→a sort labels descending or ascending in a [natural](https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/String/localeCompare) order.
 
+#### Tooltip with external link
+![Tooltip with external link](src/img/tooltip-url.png)
+
+A new tooltip that will appear when mouse click in a value showing one or more links to navigate. It can be configured in the options editor. Also it can be disabled to not appear. 
+
+#### Tooltip editor
+![Tooltip options](src/img/tooltip-editor.png)
+
+__Show Helper Tooltip when clicking elements__ toggles tooltip with links display on mouse click.
+
+__Add new URL__ creates a new form to add a new link
+
+__Remove all URLs__ removes all the urls created before
+
+__Label__ name to show in the link instead of the URL
+
+__URL__ URL to navigate
+
+__Icon__ icon to show next to the url
+
+__Force lowercase__ forces the url to be lowercase even if it is written in capital letters
+
+__Helper completer__ toggles helper to write the URL
+
+__Helper series index__ fields index to use its value on URL using $helper. Use -1 to disable it
+
+__Helper date format__ date format to transform helper
+
 ## Development
 
 To test and improve the plugin you can run Grafana instance in Docker using following command (in
