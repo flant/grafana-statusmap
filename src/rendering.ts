@@ -805,7 +805,6 @@ export class StatusmapRenderer {
 }
 
 function grafanaTimeFormat(ticks, min, max) {
-  console.log('Entra aquí');
   if (min && max && ticks) {
     let range = max - min;
     let secPerTick = (range/ticks) / 1000;

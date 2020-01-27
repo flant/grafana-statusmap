@@ -134,9 +134,9 @@ export class StatusHeatmapTooltipHelper {
                 //Set up helper
                 if (curl[i].usehelper == true) {
                   let tf: any = curl[i].helper.format
-                  let vh: any = card.x
+                  let vh: any = card.values[curl[i].helper.index]
                   let helper: any = this.dashboard.formatDate(+vh, tf)
-
+                  
                   curl[i].base_url = _.replace(curl[i].base_url, /\$helper/g, helper)
                 }
                 //Change time var
