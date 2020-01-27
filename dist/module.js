@@ -1,9 +1,9 @@
 "use strict";
 
-System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/sdk", "./statusmap_data", "./rendering", "./options_editor", "./color_mode_discrete", "./helper_format"], function (_export, _context) {
+System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/sdk", "./statusmap_data", "./rendering", "./options_editor", "./color_mode_discrete", "./helper_format", "./helper_format_values"], function (_export, _context) {
   "use strict";
 
-  var _, kbn, loadPluginCss, MetricsPanelCtrl, Card, rendering, statusHeatmapOptionsEditor, ColorModeDiscrete, HelperFormat, CANVAS, SVG, VALUE_INDEX, TIME_INDEX, renderer, colorSchemes, colorModes, opacityScales, StatusHeatmapCtrl;
+  var _, kbn, loadPluginCss, MetricsPanelCtrl, Card, rendering, statusHeatmapOptionsEditor, ColorModeDiscrete, HelperFormat, HelperFormatValues, CANVAS, SVG, VALUE_INDEX, TIME_INDEX, renderer, colorSchemes, colorModes, opacityScales, StatusHeatmapCtrl;
 
   function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -47,6 +47,8 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
       ColorModeDiscrete = _color_mode_discrete.ColorModeDiscrete;
     }, function (_helper_format) {
       HelperFormat = _helper_format.HelperFormat;
+    }, function (_helper_format_values) {
+      HelperFormatValues = _helper_format_values.HelperFormatValues;
     }],
     execute: function () {
       CANVAS = 'CANVAS';
@@ -250,9 +252,7 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
               forcelowercase: true,
               icon_fa: 'external-link',
               helper: {
-                index: -1,
-                type: HelperFormat.Date,
-                format: 'YYYY/MM/DD/HH_mm_ss'
+                index: -1
               }
             }],
             seriesFilterIndex: -1,
@@ -268,9 +268,7 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
               forcelowercase: true,
               icon_fa: 'external-link',
               helper: {
-                index: -1,
-                type: HelperFormat.Date,
-                format: 'YYYY/MM/DD/HH_mm_ss'
+                index: -1
               }
             });
 
@@ -349,6 +347,8 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
 
           _this.events.on('render-complete', _this.onRenderComplete.bind(_assertThisInitialized(_this)));
 
+          _this.events.on('onChangeType', _this.onChangeType.bind(_assertThisInitialized(_this)));
+
           return _this;
         }
 
@@ -357,6 +357,23 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
           value: function onRenderComplete(data) {
             this.graph.chartWidth = data.chartWidth;
             this.renderingCompleted();
+          }
+        }, {
+          key: "onChangeType",
+          value: function onChangeType(url) {
+            switch (url.type) {
+              case HelperFormat.Date:
+                url.helper.format = HelperFormatValues.Date;
+                break;
+
+              case HelperFormat.Raw:
+                url.helper.format = HelperFormatValues.Raw;
+                break;
+
+              default:
+                url.helper.format = HelperFormatValues.Raw;
+                break;
+            }
           }
         }, {
           key: "getChartWidth",

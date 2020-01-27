@@ -158,9 +158,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
       forcelowercase: true,
       icon_fa: 'external-link',
       helper: {
-        index: -1,
-        type: HelperFormat.Date,
-        format: 'YYYY/MM/DD/HH_mm_ss'
+        index: -1
       }
     }],
     seriesFilterIndex: -1,
@@ -225,11 +223,26 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.events.on('refresh', this.postRefresh.bind(this));
     // custom event from rendering.js
     this.events.on('render-complete', this.onRenderComplete.bind(this));
+    this.events.on('onChangeType', this.onChangeType.bind(this));
   }
 
   onRenderComplete(data):void {
     this.graph.chartWidth = data.chartWidth;
     this.renderingCompleted();
+  }
+
+  onChangeType(url): void {
+    switch (url.type) {
+      case HelperFormat.Date:
+        url.helper.format = HelperFormatValues.Date;
+        break;
+      case HelperFormat.Raw:
+        url.helper.format = HelperFormatValues.Raw;
+        break;
+      default:
+        url.helper.format = HelperFormatValues.Raw;
+        break;
+    }
   }
 
   getChartWidth():number {
@@ -410,9 +423,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
       forcelowercase: true,
       icon_fa: 'external-link',
       helper: {
-        index: -1,
-        type: HelperFormat.Date,
-        format: 'YYYY/MM/DD/HH_mm_ss'
+        index: -1
       }
     });
     this.render();

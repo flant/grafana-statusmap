@@ -2,6 +2,7 @@ import d3 from 'd3';
 import _ from 'lodash';
 import kbn from 'app/core/utils/kbn';
 import $ from 'jquery';
+import { HelperFormatValue } from './helper_format_value';
 
 const TOOLTIP_PADDING_X = -50;
 const TOOLTIP_PADDING_Y = 5;
@@ -135,8 +136,9 @@ export class StatusHeatmapTooltipHelper {
                 if (curl[i].usehelper == true) {
                   let tf: any = curl[i].helper.format
                   let vh: any = card.values[curl[i].helper.index]
-                  let helper: any = this.dashboard.formatDate(+vh, tf)
-                  
+                  //let helper: any = this.dashboard.formatDate(+vh, tf)
+                  let helper: any = this.formatHelper(vh,tf);
+
                   curl[i].base_url = _.replace(curl[i].base_url, /\$helper/g, helper)
                 }
                 //Change time var
@@ -177,6 +179,21 @@ export class StatusHeatmapTooltipHelper {
             this.tooltip.html(tooltipHtml);
 
             this.move(pos);
+        }
+
+        public formatHelper (value: any, type: any) {
+            let helper: any = '';
+
+            switch(type) {
+                case HelperFormatValue.Date:
+                    helper = this.dashboard.formatDate(+value, type);
+                    return helper;
+                case HelperFormatValue.Raw:
+                    helper = value;
+                    return helper;
+                default:
+                    return helper;
+            }
         }
 
         public move(pos: any) {
