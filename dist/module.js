@@ -539,25 +539,6 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
             this.render();
           }
         }, {
-          key: "getHelperFormatValue",
-          value: function getHelperFormatValue(helperFormat) {
-            console.log(helperFormat);
-
-            switch (helperFormat) {
-              case 'Date':
-                return 'YYYY/MM/DD/HH_mm_ss';
-                break;
-
-              case 'Raw':
-                return '';
-                break;
-
-              default:
-                return '';
-                break;
-            }
-          }
-        }, {
           key: "onEditorRemoveThreshold",
           value: function onEditorRemoveThreshold(index) {
             this.panel.color.thresholds.splice(index, 1);
