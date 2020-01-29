@@ -1,9 +1,9 @@
 "use strict";
 
-System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/sdk", "./statusmap_data", "./rendering", "./options_editor", "./color_mode_discrete", "./helper_format", "./helper_format_values"], function (_export, _context) {
+System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/sdk", "./statusmap_data", "./rendering", "./options_editor", "./color_mode_discrete", "./helper_format", "./helper_format_value"], function (_export, _context) {
   "use strict";
 
-  var _, kbn, loadPluginCss, MetricsPanelCtrl, Card, rendering, statusHeatmapOptionsEditor, ColorModeDiscrete, HelperFormat, HelperFormatValues, CANVAS, SVG, VALUE_INDEX, TIME_INDEX, renderer, colorSchemes, colorModes, opacityScales, StatusHeatmapCtrl;
+  var _, kbn, loadPluginCss, MetricsPanelCtrl, Card, rendering, statusHeatmapOptionsEditor, ColorModeDiscrete, HelperFormat, HelperFormatValue, CANVAS, SVG, VALUE_INDEX, TIME_INDEX, renderer, colorSchemes, colorModes, opacityScales, StatusHeatmapCtrl;
 
   function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -47,8 +47,8 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
       ColorModeDiscrete = _color_mode_discrete.ColorModeDiscrete;
     }, function (_helper_format) {
       HelperFormat = _helper_format.HelperFormat;
-    }, function (_helper_format_values) {
-      HelperFormatValues = _helper_format_values.HelperFormatValues;
+    }, function (_helper_format_value) {
+      HelperFormatValue = _helper_format_value.HelperFormatValue;
     }],
     execute: function () {
       CANVAS = 'CANVAS';
@@ -363,15 +363,15 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
           value: function onChangeType(url) {
             switch (url.type) {
               case HelperFormat.Date:
-                url.helper.format = HelperFormatValues.Date;
+                url.helper.format = HelperFormatValue.Date;
                 break;
 
               case HelperFormat.Raw:
-                url.helper.format = HelperFormatValues.Raw;
+                url.helper.format = HelperFormatValue.Raw;
                 break;
 
               default:
-                url.helper.format = HelperFormatValues.Raw;
+                url.helper.format = HelperFormatValue.Raw;
                 break;
             }
           }

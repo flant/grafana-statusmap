@@ -20,7 +20,7 @@ import rendering from './rendering';
 import {statusHeatmapOptionsEditor} from './options_editor';
 import {ColorModeDiscrete} from "./color_mode_discrete";
 import { HelperFormat } from './helper_format';
-import { HelperFormatValues } from './helper_format_values';
+import { HelperFormatValue } from './helper_format_value';
 
 const CANVAS = 'CANVAS';
 const SVG = 'SVG';
@@ -234,13 +234,13 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   onChangeType(url): void {
     switch (url.type) {
       case HelperFormat.Date:
-        url.helper.format = HelperFormatValues.Date;
+        url.helper.format = HelperFormatValue.Date;
         break;
       case HelperFormat.Raw:
-        url.helper.format = HelperFormatValues.Raw;
+        url.helper.format = HelperFormatValue.Raw;
         break;
       default:
-        url.helper.format = HelperFormatValues.Raw;
+        url.helper.format = HelperFormatValue.Raw;
         break;
     }
   }
