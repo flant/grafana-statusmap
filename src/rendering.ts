@@ -351,6 +351,7 @@ export class StatusmapRenderer {
 
     let cards = this.heatmap.selectAll(".status-heatmap-card").data(this.cardsData.cards);
     cards.append("title");
+    console.log(cards);
     cards = cards.enter().append("rect")
         .attr("cardId", c => c.id)
         .attr("x", this.getCardX.bind(this))
@@ -721,7 +722,45 @@ export class StatusmapRenderer {
 
 
   render() {
-    this.data = this.ctrl.data;
+    //this.data = this.ctrl.data;
+    //this.data = this.ctrl.data.slice(0,5);
+
+
+    //console.log('En RENDERRRR');
+    //console.log(this.ctrl.data);
+    //console.log(this.ctrl.data[0].alias);
+    console.log('Page size: ');
+    console.log(this.ctrl.pageSize);
+    console.log('Current page: ');
+    console.log(this.ctrl.currentPage);
+    console.log('Last value: ');
+    console.log(this.ctrl.lastValue);
+    console.log('Data length: ');
+    //console.log(this.data.length);
+    console.log(this.ctrl.data.length);
+    console.log('Real data complete: ');
+    console.log(this.ctrl.data);
+
+    /*for (let index = 0; index < this.ctrl.pageSize; index++) {
+      this.data += this.ctrl.data[index];
+    }*/
+
+    //console.log('En RENDERRRR 2');
+    //console.log(this.data.slice(0,5));
+
+    if (this.ctrl.currentPage === 0) {
+      this.data = this.ctrl.data.slice(0,this.ctrl.pageSize);
+      this.ctrl.lastValue = this.ctrl.pageSize + 1;
+    } else {
+      while(this.ctrl.lastValue <= this.ctrl.data.length){
+        this.data = this.ctrl.data.slice(this.ctrl.lastValue,this.ctrl.lastValue+this.ctrl.pageSize);
+        this.ctrl.lastValue = this.ctrl.lastValue+this.ctrl.pageSize;
+      }
+      //console.log(this.ctrl.data);
+      //console.log(this.ctrl.data.slice(6,11));
+      //this.data = this.ctrl.data.slice(6,11);
+    }
+
     this.panel = this.ctrl.panel;
     this.timeRange = this.ctrl.range;
     this.cardsData = this.ctrl.cardsData;
@@ -793,6 +832,10 @@ export class StatusmapRenderer {
         .style("opacity", 0)
     ;
 
+    console.log('ANNO: ');
+    console.log(anno);
+    console.log(annoData);
+
     let $ticks = this.$heatmap.find(".statusmap-annotation-tick");
     $ticks
       .on("mouseenter", (event) => {
@@ -801,6 +844,9 @@ export class StatusmapRenderer {
       .on("mouseleave", (event) => {
         this.annotationTooltip.mouseOverAnnotationTick = false;
       });
+
+    console.log('TICKS: ');
+    console.log($ticks);
   }
 }
 

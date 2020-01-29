@@ -102,6 +102,11 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   annotations: object[] = [];
   annotationsPromise: any;
 
+  currentPage: number = 0;
+  pageSize: number = 5;
+  numberOfPages: number = 0;
+  lastValue: number = 0;
+
   panelDefaults: any = {
     // datasource name, null = default datasource
     datasource: null,
@@ -362,6 +367,9 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
         this.render();
       }
     );
+
+    this.numberOfPages = Math.ceil(this.data.length/this.pageSize);
+    console.log(this.numberOfPages);
 
     //this.render();
   }
