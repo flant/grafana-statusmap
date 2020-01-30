@@ -594,7 +594,11 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
             } else if (this.panel.color.mode === 'spectrum') {
               return this.colorScale(d.value);
             } else if (this.panel.color.mode === 'discrete') {
-              return this.ctrl.discreteHelper.getBucketColor(d.values);
+              if (this.panel.seriesFilterIndex > 0) {
+                return this.ctrl.discreteHelper.getBucketColorSingle(d.values);
+              } else {
+                return this.ctrl.discreteHelper.getBucketColor(d.values);
+              }
             }
           }
         }, {

@@ -59,10 +59,14 @@ System.register([], function (_export, _context) {
           value: function convertValueToTooltips(values) {
             var thresholds = this.panel.color.thresholds;
             var tooltips = [];
+            console.log(thresholds);
 
             for (var i = 0; i < thresholds.length; i++) {
               //for (let j = 0; j < values.length; j++) {
               if (values == thresholds[i].value) {
+                console.log('ENTRAAAAA');
+                console.log(values);
+                console.log(thresholds[i].value);
                 tooltips.push({
                   "tooltip": thresholds[i].tooltip ? thresholds[i].tooltip : values,
                   "color": thresholds[i].color
@@ -186,6 +190,7 @@ System.register([], function (_export, _context) {
               cards[i].noColorDefined = false;
               var values = cards[i].value;
               var threshold = this.getMatchedThreshold(values);
+              console.log(threshold);
 
               if (!threshold || !threshold.color || threshold.color == "") {
                 cards[i].noColorDefined = true;

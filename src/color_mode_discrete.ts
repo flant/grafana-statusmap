@@ -46,9 +46,14 @@ export class ColorModeDiscrete {
     let thresholds = this.panel.color.thresholds;
     let tooltips = [];
 
+    console.log(thresholds);
+
     for (let i = 0; i < thresholds.length; i++) {
       //for (let j = 0; j < values.length; j++) {
         if (values == thresholds[i].value) {
+          console.log('ENTRAAAAA')
+          console.log(values);
+          console.log(thresholds[i].value);
           tooltips.push({
             "tooltip": thresholds[i].tooltip?thresholds[i].tooltip:values,
             "color": thresholds[i].color
@@ -152,6 +157,7 @@ export class ColorModeDiscrete {
       cards[i].noColorDefined = false;
       var values = cards[i].value;
       var threshold = this.getMatchedThreshold(values);
+      console.log(threshold);
       if (!threshold || !threshold.color || threshold.color == "") {
         cards[i].noColorDefined = true;
         this.panelCtrl.cardsData.noColorDefined = true;
