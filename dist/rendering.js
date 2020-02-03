@@ -831,8 +831,8 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
             console.log('Last value: ');
             console.log(this.ctrl.lastValue);
             console.log('Data length: '); //console.log(this.data.length);
+            //console.log(this.ctrl.data.length);
 
-            console.log(this.ctrl.data.length);
             console.log('Real data complete: ');
             console.log(this.ctrl.data);
             /*for (let index = 0; index < this.ctrl.pageSize; index++) {

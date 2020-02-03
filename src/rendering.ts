@@ -741,7 +741,7 @@ export class StatusmapRenderer {
     console.log(this.ctrl.lastValue);
     console.log('Data length: ');
     //console.log(this.data.length);
-    console.log(this.ctrl.data.length);
+    //console.log(this.ctrl.data.length);
     console.log('Real data complete: ');
     console.log(this.ctrl.data);
 
