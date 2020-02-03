@@ -94,13 +94,16 @@ export class ColorModeDiscrete {
   }
 
   getBucketColorSingle(value) {
-    let thresholds = this.panel.color.thresholds;
+    //let thresholds = this.panel.color.thresholds;
     if (value == null) {
       // treat as null value
       return 'rgba(0,0,0,1)';
       //return this.getMatchedThreshold(null).color;
     }
       let threshold = this.getMatchedThreshold(value);
+
+      console.log("THHHHRESHOLDDD", threshold);
+
       if (!threshold || !threshold.color || threshold.color == "") {
         return 'rgba(0,0,0,1)';
       } else {
@@ -138,7 +141,9 @@ export class ColorModeDiscrete {
 
     for (let i = 0; i < thresholds.length; i++) {
       for (let j = 0; j < values.length; j++) {
+        console.log("MULTICOLOR:", j, values[j], thresholds[i].value);
         if (values[j] == thresholds[i].value) {
+          console.log("ESTOY AQUI?");
           return this.getDiscreteColor(i);
         }
       }
@@ -203,6 +208,7 @@ export class ColorModeDiscrete {
 
     let thresholds = this.panel.color.thresholds;
     for (let k = 0; k < thresholds.length; k++) {
+      console.log("VALUE: ",value, thresholds[k].value);
       if (value == thresholds[k].value) {
         return thresholds[k];
       }

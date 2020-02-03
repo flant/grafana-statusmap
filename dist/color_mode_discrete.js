@@ -118,14 +118,14 @@ System.register([], function (_export, _context) {
         }, {
           key: "getBucketColorSingle",
           value: function getBucketColorSingle(value) {
-            var thresholds = this.panel.color.thresholds;
-
+            //let thresholds = this.panel.color.thresholds;
             if (value == null) {
               // treat as null value
               return 'rgba(0,0,0,1)'; //return this.getMatchedThreshold(null).color;
             }
 
             var threshold = this.getMatchedThreshold(value);
+            console.log("THHHHRESHOLDDD", threshold);
 
             if (!threshold || !threshold.color || threshold.color == "") {
               return 'rgba(0,0,0,1)';
@@ -168,7 +168,10 @@ System.register([], function (_export, _context) {
 
             for (var i = 0; i < thresholds.length; i++) {
               for (var _j = 0; _j < values.length; _j++) {
+                console.log("MULTICOLOR:", _j, values[_j], thresholds[i].value);
+
                 if (values[_j] == thresholds[i].value) {
+                  console.log("ESTOY AQUI?");
                   return this.getDiscreteColor(i);
                 }
               }
@@ -244,6 +247,8 @@ System.register([], function (_export, _context) {
             var thresholds = this.panel.color.thresholds;
 
             for (var k = 0; k < thresholds.length; k++) {
+              console.log("VALUE: ", value, thresholds[k].value);
+
               if (value == thresholds[k].value) {
                 return thresholds[k];
               }
