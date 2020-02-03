@@ -102,11 +102,6 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   annotations: object[] = [];
   annotationsPromise: any;
 
-  currentPage: number = 0;
-  pageSize: number = 5;
-  numberOfPages: number = 0;
-  lastValue: number = 0;
-
   panelDefaults: any = {
     // datasource name, null = default datasource
     datasource: null,
@@ -167,7 +162,13 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
       }
     }],
     seriesFilterIndex: -1,
-    usingUrl: false
+    usingUrl: false,
+    paginationActivated: false,
+
+    currentPage: 0,
+    pageSize: 5,
+    numberOfPages: 0,
+    lastValue: 0
   };
 
   /** @ngInject */
@@ -368,8 +369,8 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
       }
     );
 
-    this.numberOfPages = Math.ceil(this.data.length/this.pageSize);
-    console.log(this.numberOfPages);
+    this.panel.numberOfPages = Math.ceil(this.data.length/this.panel.pageSize);
+    console.log(this.panel.numberOfPages);
 
     //this.render();
   }

@@ -204,12 +204,16 @@
     </div>
   </div>
 
-  </<div class="section gf-form-group width-30">
-    <h5 class="section-heading">Number of pages</h5>
+  <div class="section gf-form-group width-30">
+    <h5 class="section-heading">Pagination options</h5>
     <div class="gf-form">
+      <gf-form-switch class="gf-form" label="Activate pagination" label-class="width-12"
+        checked="ctrl.panel.paginationActivated" on-change="ctrl.render()"></gf-form-switch>
+    </div>
+    <div class="gf-form" ng-if="ctrl.panel.paginationActivated">
       <label class="gf-form-label width-9">Items per page</label>
       <input type="number" class="gf-form-input width-5" placeholder="2" data-placement="right"
-        bs-tooltip="'Number of items to show per page.'" ng-model="ctrl.pageSize" ng-change="ctrl.refresh()"
+        bs-tooltip="'Number of items to show per page.'" ng-model="ctrl.panel.pageSize" ng-change="ctrl.refresh()"
         ng-model-onblur>
     </div>
   </div>
