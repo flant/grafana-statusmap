@@ -131,7 +131,7 @@ export class StatusHeatmapTooltipHelper {
 
             for (let i = 0; i < curl.length; i++) {
                 //Change name var
-                curl[i].base_url = _.replace(curl[i].base_url, /\$name/g, y)
+                curl[i].base_url = _.replace(curl[i].base_url, /\$series_label/g, y)
                 //Set up helper
                 if (curl[i].usehelper == true) {
                   let tf: any = curl[i].helper.format

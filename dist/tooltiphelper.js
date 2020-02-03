@@ -151,7 +151,7 @@ System.register(["d3", "lodash", "jquery", "./helper_format_value"], function (_
 
             for (var i = 0; i < curl.length; i++) {
               //Change name var
-              curl[i].base_url = _.replace(curl[i].base_url, /\$name/g, y); //Set up helper
+              curl[i].base_url = _.replace(curl[i].base_url, /\$series_label/g, y); //Set up helper
 
               if (curl[i].usehelper == true) {
                 var tf = curl[i].helper.format;
