@@ -158,7 +158,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
       tooltip: '',
       label: '',
       base_url: '',
-      usehelper: true,
+      usehelper: false,
       useseriesname: true,
       forcelowercase: true,
       icon_fa: 'external-link',
@@ -394,6 +394,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
       if (this.panel.seriesFilterIndex == -1) {
         this.discreteHelper.updateCardsValuesHasColorInfo();
       } else {
+        console.log(this.cardsData);
         this.discreteHelper.updateCardsValuesHasColorInfoSingle();
       }
       if (this.cardsData) {
@@ -426,7 +427,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.panel.urls.push({
       label: '',
       base_url: '',
-      usehelper: true,
+      usehelper: false,
       useseriesname: true,
       forcelowercase: true,
       icon_fa: 'external-link',
@@ -549,6 +550,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
         if (card.values.length > 1) {
           cardsData.multipleValues = true;
           card.multipleValues = true;
+          console.log('PEPITOOOOOOOOOO');
           card.value = this.panel.seriesFilterIndex != -1 ? card.values[this.panel.seriesFilterIndex] : card.maxValue;
         } else {
           card.value = card.maxValue; // max value by default

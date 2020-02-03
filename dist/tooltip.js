@@ -131,9 +131,25 @@ System.register(["d3", "jquery", "lodash"], function (_export, _context) {
             var tooltipTimeFormat = 'YYYY-MM-DD HH:mm:ss';
             var time = this.dashboard.formatDate(+x, tooltipTimeFormat);
             var tooltipHtml = "<div class=\"graph-tooltip-time\">".concat(time, "</div>\n      <div class=\"statusmap-histogram\"></div>");
+<<<<<<< HEAD
 
             if (this.panel.color.mode === 'discrete') {
               var statuses = this.panelCtrl.discreteHelper.convertValuesToTooltips(values);
+=======
+            var statuses;
+
+            if (this.panel.color.mode === 'discrete') {
+              console.log('HOSTIAS VALUES MENCANTEN');
+              console.log(values);
+              console.log(value);
+
+              if (this.panel.seriesFilterIndex > 0) {
+                statuses = this.panelCtrl.discreteHelper.convertValueToTooltips(value);
+              } else {
+                statuses = this.panelCtrl.discreteHelper.convertValuesToTooltips(values);
+              }
+
+>>>>>>> 945c24f4abea81045061399d6fbc14a8ad0e2c99
               var statusesHtml = '';
 
               if (statuses.length === 1) {
@@ -142,6 +158,11 @@ System.register(["d3", "jquery", "lodash"], function (_export, _context) {
                 statusesHtml = "statuses:";
               }
 
+<<<<<<< HEAD
+=======
+              console.log('ESTUTESE: ');
+              console.log(statuses);
+>>>>>>> 945c24f4abea81045061399d6fbc14a8ad0e2c99
               tooltipHtml += "\n      <div>\n        name: <b>".concat(y, "</b> <br>\n        ").concat(statusesHtml, "\n        <ul>\n          ").concat(_.join(_.map(statuses, function (v) {
                 return "<li style=\"background-color: ".concat(v.color, "\" class=\"discrete-item\">").concat(v.tooltip, "</li>");
               }), ""), "\n        </ul>\n      </div>");

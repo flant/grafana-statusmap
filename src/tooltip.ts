@@ -89,14 +89,26 @@ export class StatusmapTooltip {
     let tooltipHtml = `<div class="graph-tooltip-time">${time}</div>
       <div class="statusmap-histogram"></div>`;
 
+    let statuses;
+
     if (this.panel.color.mode === 'discrete') {
-      let statuses = this.panelCtrl.discreteHelper.convertValuesToTooltips(values);
+      console.log('HOSTIAS VALUES MENCANTEN');
+      console.log(values);
+      console.log(value);
+      if (this.panel.seriesFilterIndex > 0) {
+        statuses = this.panelCtrl.discreteHelper.convertValueToTooltips(value);
+      } else {
+        statuses = this.panelCtrl.discreteHelper.convertValuesToTooltips(values);
+      }
+      
       let statusesHtml = '';
       if (statuses.length === 1) {
         statusesHtml = "status:";
       } else if (statuses.length > 1) {
         statusesHtml = "statuses:";
       }
+      console.log('ESTUTESE: ');
+      console.log(statuses);
       tooltipHtml += `
       <div>
         name: <b>${y}</b> <br>

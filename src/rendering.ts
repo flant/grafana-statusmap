@@ -512,7 +512,11 @@ export class StatusmapRenderer {
     } else if (this.panel.color.mode === 'spectrum') {
       return this.colorScale(d.value);
     } else if (this.panel.color.mode === 'discrete') {
-      return this.ctrl.discreteHelper.getBucketColor(d.values);
+      if (this.panel.seriesFilterIndex != -1 || this.panel.seriesFilterIndex != null) {
+        return this.ctrl.discreteHelper.getBucketColorSingle(d.values[this.panel.seriesFilterIndex]);
+      } else {
+        return this.ctrl.discreteHelper.getBucketColor(d.values);
+      }
     }
   }
 
