@@ -447,10 +447,7 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
             this.setOpacityScale(maxValue);
             var cards = this.heatmap.selectAll(".status-heatmap-card").data(this.cardsData.cards);
             cards.append("title");
-<<<<<<< HEAD
             console.log(cards);
-=======
->>>>>>> 945c24f4abea81045061399d6fbc14a8ad0e2c99
             cards = cards.enter().append("rect").attr("cardId", function (c) {
               return c.id;
             }).attr("x", this.getCardX.bind(this)).attr("width", this.getCardWidth.bind(this)).attr("y", this.getCardY.bind(this)).attr("height", this.getCardHeight.bind(this)).attr("rx", this.cardRound).attr("ry", this.cardRound).attr("class", "bordered status-heatmap-card").style("fill", this.getCardColor.bind(this)).style("stroke", this.getCardColor.bind(this)).style("stroke-width", 0) //.style("stroke-width", getCardStrokeWidth)
@@ -598,15 +595,11 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
             } else if (this.panel.color.mode === 'spectrum') {
               return this.colorScale(d.value);
             } else if (this.panel.color.mode === 'discrete') {
-<<<<<<< HEAD
-              return this.ctrl.discreteHelper.getBucketColor(d.values);
-=======
               if (this.panel.seriesFilterIndex != -1 || this.panel.seriesFilterIndex != null) {
                 return this.ctrl.discreteHelper.getBucketColorSingle(d.values[this.panel.seriesFilterIndex]);
               } else {
                 return this.ctrl.discreteHelper.getBucketColor(d.values);
               }
->>>>>>> 945c24f4abea81045061399d6fbc14a8ad0e2c99
             }
           }
         }, {
@@ -826,7 +819,6 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
         }, {
           key: "render",
           value: function render() {
-<<<<<<< HEAD
             //this.data = this.ctrl.data;
             //this.data = this.ctrl.data.slice(0,5);
             //console.log('En RENDERRRR');
@@ -862,9 +854,6 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
 
             }
 
-=======
-            this.data = this.ctrl.data;
->>>>>>> 945c24f4abea81045061399d6fbc14a8ad0e2c99
             this.panel = this.ctrl.panel;
             this.timeRange = this.ctrl.range;
             this.cardsData = this.ctrl.cardsData;
@@ -928,23 +917,17 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
             }).attr("width", 10).attr("y", this.chartBottom + 1).attr("height", 5).attr("class", "statusmap-annotation-tick").attr("annoId", function (d) {
               return d.id;
             }).style("opacity", 0);
-<<<<<<< HEAD
             console.log('ANNO: ');
             console.log(anno);
             console.log(annoData);
-=======
->>>>>>> 945c24f4abea81045061399d6fbc14a8ad0e2c99
             var $ticks = this.$heatmap.find(".statusmap-annotation-tick");
             $ticks.on("mouseenter", function (event) {
               _this3.annotationTooltip.mouseOverAnnotationTick = true;
             }).on("mouseleave", function (event) {
               _this3.annotationTooltip.mouseOverAnnotationTick = false;
             });
-<<<<<<< HEAD
             console.log('TICKS: ');
             console.log($ticks);
-=======
->>>>>>> 945c24f4abea81045061399d6fbc14a8ad0e2c99
           }
         }]);
 
