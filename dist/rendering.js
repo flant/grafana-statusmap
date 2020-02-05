@@ -819,43 +819,39 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
         }, {
           key: "render",
           value: function render() {
-            if (this.ctrl.panel.paginationActivated) {
-              //this.data = this.ctrl.data;
-              //this.data = this.ctrl.data.slice(0,5);
-              //console.log('En RENDERRRR');
-              //console.log(this.ctrl.data);
-              //console.log(this.ctrl.data[0].alias);
-              console.log('Page size: ');
-              console.log(this.ctrl.panel.pageSize);
-              console.log('Current page: ');
-              console.log(this.ctrl.panel.currentPage);
-              console.log('Last value: ');
-              console.log(this.ctrl.panel.lastValue);
-              console.log('Data length: '); //console.log(this.data.length);
-              //console.log(this.ctrl.data.length);
+            //this.data = this.ctrl.data;
+            //this.data = this.ctrl.data.slice(0,5);
+            //console.log('En RENDERRRR');
+            //console.log(this.ctrl.data);
+            //console.log(this.ctrl.data[0].alias);
+            console.log('Page size: ');
+            console.log(this.ctrl.pageSize);
+            console.log('Current page: ');
+            console.log(this.ctrl.currentPage);
+            console.log('Last value: ');
+            console.log(this.ctrl.lastValue);
+            console.log('Data length: '); //console.log(this.data.length);
+            //console.log(this.ctrl.data.length);
 
-              console.log('Real data complete: ');
-              console.log(this.ctrl.data);
-              /*for (let index = 0; index < this.ctrl.pageSize; index++) {
-                this.data += this.ctrl.data[index];
-              }*/
-              //console.log('En RENDERRRR 2');
-              //console.log(this.data.slice(0,5));
+            console.log('Real data complete: ');
+            console.log(this.ctrl.data);
+            /*for (let index = 0; index < this.ctrl.pageSize; index++) {
+              this.data += this.ctrl.data[index];
+            }*/
+            //console.log('En RENDERRRR 2');
+            //console.log(this.data.slice(0,5));
 
-              if (this.ctrl.panel.currentPage === 0) {
-                this.data = this.ctrl.data.slice(0, this.ctrl.panel.pageSize);
-                this.ctrl.panel.lastValue = this.ctrl.panel.pageSize + 1;
-              } else {
-                while (this.ctrl.panel.lastValue <= this.ctrl.data.length) {
-                  this.data = this.ctrl.data.slice(this.ctrl.panel.lastValue, this.ctrl.panel.lastValue + this.ctrl.panel.pageSize);
-                  this.ctrl.panel.lastValue = this.ctrl.panel.lastValue + this.ctrl.panel.pageSize;
-                } //console.log(this.ctrl.data);
-                //console.log(this.ctrl.data.slice(6,11));
-                //this.data = this.ctrl.data.slice(6,11);
-
-              }
+            if (this.ctrl.currentPage === 0) {
+              this.data = this.ctrl.data.slice(0, this.ctrl.pageSize);
+              this.ctrl.lastValue = this.ctrl.pageSize + 1;
             } else {
-              this.data = this.ctrl.data;
+              while (this.ctrl.lastValue <= this.ctrl.data.length) {
+                this.data = this.ctrl.data.slice(this.ctrl.lastValue, this.ctrl.lastValue + this.ctrl.pageSize);
+                this.ctrl.lastValue = this.ctrl.lastValue + this.ctrl.pageSize;
+              } //console.log(this.ctrl.data);
+              //console.log(this.ctrl.data.slice(6,11));
+              //this.data = this.ctrl.data.slice(6,11);
+
             }
 
             this.panel = this.ctrl.panel;

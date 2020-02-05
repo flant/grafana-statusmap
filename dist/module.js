@@ -194,6 +194,14 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
 
           _defineProperty(_assertThisInitialized(_this), "annotationsPromise", void 0);
 
+          _defineProperty(_assertThisInitialized(_this), "currentPage", 0);
+
+          _defineProperty(_assertThisInitialized(_this), "pageSize", 5);
+
+          _defineProperty(_assertThisInitialized(_this), "numberOfPages", 0);
+
+          _defineProperty(_assertThisInitialized(_this), "lastValue", 0);
+
           _defineProperty(_assertThisInitialized(_this), "panelDefaults", {
             // datasource name, null = default datasource
             datasource: null,
@@ -488,8 +496,8 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
 
               _this3.render();
             });
-            this.panel.numberOfPages = Math.ceil(this.data.length / this.panel.pageSize);
-            console.log(this.panel.numberOfPages); //this.render();
+            this.numberOfPages = Math.ceil(this.data.length / this.pageSize);
+            console.log(this.numberOfPages); //this.render();
           }
         }, {
           key: "onInitEditMode",
