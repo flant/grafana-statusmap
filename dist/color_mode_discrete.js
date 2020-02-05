@@ -59,20 +59,10 @@ System.register([], function (_export, _context) {
           value: function convertValueToTooltips(values) {
             var thresholds = this.panel.color.thresholds;
             var tooltips = [];
-<<<<<<< HEAD
-            console.log(thresholds);
-=======
->>>>>>> master
 
             for (var i = 0; i < thresholds.length; i++) {
               //for (let j = 0; j < values.length; j++) {
               if (values == thresholds[i].value) {
-<<<<<<< HEAD
-                console.log('ENTRAAAAA');
-                console.log(values);
-                console.log(thresholds[i].value);
-=======
->>>>>>> master
                 tooltips.push({
                   "tooltip": thresholds[i].tooltip ? thresholds[i].tooltip : values,
                   "color": thresholds[i].color
@@ -131,10 +121,6 @@ System.register([], function (_export, _context) {
             }
 
             var threshold = this.getMatchedThreshold(value);
-<<<<<<< HEAD
-            console.log("THHHHRESHOLDDD", threshold);
-=======
->>>>>>> master
 
             if (!threshold || !threshold.color || threshold.color == "") {
               return 'rgba(0,0,0,1)';
@@ -202,18 +188,10 @@ System.register([], function (_export, _context) {
               cards[i].noColorDefined = false;
               var values = cards[i].value;
               var threshold = this.getMatchedThreshold(values);
-<<<<<<< HEAD
-              console.log(threshold);
-=======
->>>>>>> master
 
               if (!threshold || !threshold.color || threshold.color == "") {
                 cards[i].noColorDefined = true;
                 this.panelCtrl.cardsData.noColorDefined = true;
-<<<<<<< HEAD
-                break;
-=======
->>>>>>> master
               }
             }
           }

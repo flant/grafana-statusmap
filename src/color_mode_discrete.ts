@@ -46,20 +46,9 @@ export class ColorModeDiscrete {
     let thresholds = this.panel.color.thresholds;
     let tooltips = [];
 
-<<<<<<< HEAD
-    console.log(thresholds);
-
     for (let i = 0; i < thresholds.length; i++) {
       //for (let j = 0; j < values.length; j++) {
         if (values == thresholds[i].value) {
-          console.log('ENTRAAAAA')
-          console.log(values);
-          console.log(thresholds[i].value);
-=======
-    for (let i = 0; i < thresholds.length; i++) {
-      //for (let j = 0; j < values.length; j++) {
-        if (values == thresholds[i].value) {
->>>>>>> master
           tooltips.push({
             "tooltip": thresholds[i].tooltip?thresholds[i].tooltip:values,
             "color": thresholds[i].color
@@ -108,11 +97,6 @@ export class ColorModeDiscrete {
     }
       let threshold = this.getMatchedThreshold(value);
 
-<<<<<<< HEAD
-      console.log("THHHHRESHOLDDD", threshold);
-
-=======
->>>>>>> master
       if (!threshold || !threshold.color || threshold.color == "") {
         return 'rgba(0,0,0,1)';
       } else {
@@ -171,17 +155,9 @@ export class ColorModeDiscrete {
       cards[i].noColorDefined = false;
       var values = cards[i].value;
       var threshold = this.getMatchedThreshold(values);
-<<<<<<< HEAD
-      console.log(threshold);
       if (!threshold || !threshold.color || threshold.color == "") {
         cards[i].noColorDefined = true;
         this.panelCtrl.cardsData.noColorDefined = true;
-        break;
-=======
-      if (!threshold || !threshold.color || threshold.color == "") {
-        cards[i].noColorDefined = true;
-        this.panelCtrl.cardsData.noColorDefined = true;
->>>>>>> master
       }
     }
   }

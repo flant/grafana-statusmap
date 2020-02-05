@@ -92,20 +92,10 @@ export class StatusmapTooltip {
     let statuses;
 
     if (this.panel.color.mode === 'discrete') {
-<<<<<<< HEAD
-      console.log('HOSTIAS VALUES MENCANTEN');
-      console.log(values);
-      console.log(value);
-      if (this.panel.seriesFilterIndex > 0) {
-        statuses = this.panelCtrl.discreteHelper.convertValueToTooltips(value);
-      } else {
-        statuses = this.panelCtrl.discreteHelper.convertValuesToTooltips(values);
-=======
       if (this.panel.seriesFilterIndex > 0) {
         statuses = this.panelCtrl.discreteExtraSeries.convertValueToTooltips(value);
       } else {
         statuses = this.panelCtrl.discreteExtraSeries.convertValuesToTooltips(values);
->>>>>>> master
       }
       
       let statusesHtml = '';

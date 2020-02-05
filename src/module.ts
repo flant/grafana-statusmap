@@ -19,12 +19,7 @@ import rendering from './rendering';
 // import { labelFormats } from './xAxisLabelFormats';
 import {statusHeatmapOptionsEditor} from './options_editor';
 import {ColorModeDiscrete} from "./color_mode_discrete";
-<<<<<<< HEAD
-import { HelperFormat } from './helper_format';
-import { HelperFormatValue } from './helper_format_value';
-=======
 import { ExtraSeriesFormat, ExtraSeriesFormatValue } from './extra_series_format';
->>>>>>> master
 
 const CANVAS = 'CANVAS';
 const SVG = 'SVG';
@@ -101,11 +96,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   noColorDefined: boolean;
   discreteExtraSeries: ColorModeDiscrete;
   dataWarnings: DataWarnings;
-<<<<<<< HEAD
-  helperFormats: any = [];
-=======
   extraSeriesFormats: any = [];
->>>>>>> master
 
   annotations: object[] = [];
   annotationsPromise: any;
@@ -161,34 +152,16 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
       tooltip: '',
       label: '',
       base_url: '',
-<<<<<<< HEAD
-      usehelper: false,
-      useseriesname: true,
-      forcelowercase: true,
-      icon_fa: 'external-link',
-      helper: {
-=======
       useExtraSeries: false,
       useseriesname: true,
       forcelowercase: true,
       icon_fa: 'external-link',
       extraSeries: {
->>>>>>> master
         index: -1
       }
     }],
     seriesFilterIndex: -1,
-<<<<<<< HEAD
-    usingUrl: false,
-    paginationActivated: false,
-
-    currentPage: 0,
-    pageSize: 5,
-    numberOfPages: 0,
-    lastValue: 0
-=======
     usingUrl: false
->>>>>>> master
   };
 
   /** @ngInject */
@@ -201,11 +174,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.colorModes = colorModes;
     this.colorSchemes = colorSchemes;
     this.variableSrv = variableSrv;
-<<<<<<< HEAD
-    this.helperFormats = HelperFormat;
-=======
     this.extraSeriesFormats = ExtraSeriesFormat;
->>>>>>> master
 
     this.renderLink = (link, scopedVars, format) => {
       var scoped = {}
@@ -263,16 +232,6 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
   onChangeType(url): void {
     switch (url.type) {
-<<<<<<< HEAD
-      case HelperFormat.Date:
-        url.helper.format = HelperFormatValue.Date;
-        break;
-      case HelperFormat.Raw:
-        url.helper.format = HelperFormatValue.Raw;
-        break;
-      default:
-        url.helper.format = HelperFormatValue.Raw;
-=======
       case ExtraSeriesFormat.Date:
         url.extraSeries.format = ExtraSeriesFormatValue.Date;
         break;
@@ -281,7 +240,6 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
         break;
       default:
         url.extraSeries.format = ExtraSeriesFormatValue.Raw;
->>>>>>> master
         break;
     }
   }
@@ -424,16 +382,9 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.noColorDefined = false;
     if (this.panel.color.mode === 'discrete') {
       if (this.panel.seriesFilterIndex == -1) {
-<<<<<<< HEAD
-        this.discreteHelper.updateCardsValuesHasColorInfo();
-      } else {
-        console.log(this.cardsData);
-        this.discreteHelper.updateCardsValuesHasColorInfoSingle();
-=======
         this.discreteExtraSeries.updateCardsValuesHasColorInfo();
       } else {
         this.discreteExtraSeries.updateCardsValuesHasColorInfoSingle();
->>>>>>> master
       }
       if (this.cardsData) {
         this.noColorDefined = this.cardsData.noColorDefined;
@@ -465,19 +416,11 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.panel.urls.push({
       label: '',
       base_url: '',
-<<<<<<< HEAD
-      usehelper: false,
-      useseriesname: true,
-      forcelowercase: true,
-      icon_fa: 'external-link',
-      helper: {
-=======
       useExtraSeries: false,
       useseriesname: true,
       forcelowercase: true,
       icon_fa: 'external-link',
       extraSeries: {
->>>>>>> master
         index: -1
       }
     });
@@ -596,10 +539,6 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
         if (card.values.length > 1) {
           cardsData.multipleValues = true;
           card.multipleValues = true;
-<<<<<<< HEAD
-          console.log('PEPITOOOOOOOOOO');
-=======
->>>>>>> master
           card.value = this.panel.seriesFilterIndex != -1 ? card.values[this.panel.seriesFilterIndex] : card.maxValue;
         } else {
           card.value = card.maxValue; // max value by default

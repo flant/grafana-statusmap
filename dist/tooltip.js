@@ -134,21 +134,10 @@ System.register(["d3", "jquery", "lodash"], function (_export, _context) {
             var statuses;
 
             if (this.panel.color.mode === 'discrete') {
-<<<<<<< HEAD
-              console.log('HOSTIAS VALUES MENCANTEN');
-              console.log(values);
-              console.log(value);
-
-              if (this.panel.seriesFilterIndex > 0) {
-                statuses = this.panelCtrl.discreteHelper.convertValueToTooltips(value);
-              } else {
-                statuses = this.panelCtrl.discreteHelper.convertValuesToTooltips(values);
-=======
               if (this.panel.seriesFilterIndex > 0) {
                 statuses = this.panelCtrl.discreteExtraSeries.convertValueToTooltips(value);
               } else {
                 statuses = this.panelCtrl.discreteExtraSeries.convertValuesToTooltips(values);
->>>>>>> master
               }
 
               var statusesHtml = '';
