@@ -134,6 +134,7 @@ System.register(["d3", "jquery", "lodash"], function (_export, _context) {
             var statuses;
 
             if (this.panel.color.mode === 'discrete') {
+<<<<<<< HEAD
               console.log('HOSTIAS VALUES MENCANTEN');
               console.log(values);
               console.log(value);
@@ -142,6 +143,12 @@ System.register(["d3", "jquery", "lodash"], function (_export, _context) {
                 statuses = this.panelCtrl.discreteHelper.convertValueToTooltips(value);
               } else {
                 statuses = this.panelCtrl.discreteHelper.convertValuesToTooltips(values);
+=======
+              if (this.panel.seriesFilterIndex > 0) {
+                statuses = this.panelCtrl.discreteExtraSeries.convertValueToTooltips(value);
+              } else {
+                statuses = this.panelCtrl.discreteExtraSeries.convertValuesToTooltips(values);
+>>>>>>> master
               }
 
               var statusesHtml = '';
@@ -175,7 +182,7 @@ System.register(["d3", "jquery", "lodash"], function (_export, _context) {
 
             if (this.panel.color.mode === 'discrete') {
               if (card.noColorDefined) {
-                var badValues = this.panelCtrl.discreteHelper.getNotColoredValues(values);
+                var badValues = this.panelCtrl.discreteExtraSeries.getNotColoredValues(values);
                 tooltipHtml += "<div><b>Error:</b> ".concat(this.panelCtrl.dataWarnings.noColorDefined.title, "\n        <br>not colored values:\n        <ul>\n          ").concat(_.join(_.map(badValues, function (v) {
                   return "<li>".concat(v, "</li>");
                 }), ""), "\n        </ul>\n        </div>");

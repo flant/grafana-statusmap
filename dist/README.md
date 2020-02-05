@@ -190,7 +190,11 @@ A new tooltip that will appear when mouse click in a value showing one or more l
 #### Tooltip editor
 ![Tooltip options](src/img/tooltip-editor.png)
 
+<<<<<<< HEAD
 __Show Helper Tooltip when clicking elements__ toggles tooltip with links display on mouse click.
+=======
+__Show Extra Series Tooltip when clicking elements__ toggles tooltip with links display on mouse click.
+>>>>>>> master
 
 __Add new URL__ creates a new form to add a new link
 
@@ -204,11 +208,19 @@ __Icon__ icon to show next to the url
 
 __Force lowercase__ forces the url to be lowercase even if it is written in capital letters
 
+<<<<<<< HEAD
 __Helper completer__ toggles helper to write the URL
 
 __Helper series index__ fields index to use its value on URL using $helper. Use -1 to disable it
 
 __Helper date format__ date format to transform helper
+=======
+__Extra Series Completer__ toggles extra series to write the URL
+
+__Extra Series Index__ fields index to use its value on URL using $series_extra. Use -1 to disable it
+
+__Extra Series Date Format__ date format to transform extra herlper when its type is Date
+>>>>>>> master
 
 ## Development
 

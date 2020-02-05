@@ -1,9 +1,16 @@
 "use strict";
 
+<<<<<<< HEAD
 System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/core", "d3", "./libs/d3-scale-chromatic/index", "./tooltip", "./tooltiphelper", "./annotations"], function (_export, _context) {
   "use strict";
 
   var _, $, moment, kbn, appEvents, contextSrv, d3, d3ScaleChromatic, StatusmapTooltip, StatusHeatmapTooltipHelper, AnnotationTooltip, MIN_CARD_SIZE, CARD_H_SPACING, CARD_V_SPACING, CARD_ROUND, DATA_RANGE_WIDING_FACTOR, DEFAULT_X_TICK_SIZE_PX, DEFAULT_Y_TICK_SIZE_PX, X_AXIS_TICK_PADDING, Y_AXIS_TICK_PADDING, MIN_SELECTION_WIDTH, StatusmapRenderer;
+=======
+System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/core", "d3", "./libs/d3-scale-chromatic/index", "./tooltip", "./tooltipextraseries", "./annotations"], function (_export, _context) {
+  "use strict";
+
+  var _, $, moment, kbn, appEvents, contextSrv, d3, d3ScaleChromatic, StatusmapTooltip, StatusHeatmapTooltipExtraSeries, AnnotationTooltip, MIN_CARD_SIZE, CARD_H_SPACING, CARD_V_SPACING, CARD_ROUND, DATA_RANGE_WIDING_FACTOR, DEFAULT_X_TICK_SIZE_PX, DEFAULT_Y_TICK_SIZE_PX, X_AXIS_TICK_PADDING, Y_AXIS_TICK_PADDING, MIN_SELECTION_WIDTH, StatusmapRenderer;
+>>>>>>> master
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -66,8 +73,13 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
       d3ScaleChromatic = _libsD3ScaleChromaticIndex;
     }, function (_tooltip) {
       StatusmapTooltip = _tooltip.StatusmapTooltip;
+<<<<<<< HEAD
     }, function (_tooltiphelper) {
       StatusHeatmapTooltipHelper = _tooltiphelper.StatusHeatmapTooltipHelper;
+=======
+    }, function (_tooltipextraseries) {
+      StatusHeatmapTooltipExtraSeries = _tooltipextraseries.StatusHeatmapTooltipExtraSeries;
+>>>>>>> master
     }, function (_annotations) {
       AnnotationTooltip = _annotations.AnnotationTooltip;
     }],
@@ -143,7 +155,11 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
 
           _defineProperty(this, "tooltip", void 0);
 
+<<<<<<< HEAD
           _defineProperty(this, "tooltipHelper", void 0);
+=======
+          _defineProperty(this, "tooltipExtraSeries", void 0);
+>>>>>>> master
 
           _defineProperty(this, "annotationTooltip", void 0);
 
@@ -164,7 +180,11 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
           // $heatmap is JQuery object, but heatmap is D3
           this.$heatmap = this.elem.find('.status-heatmap-panel');
           this.tooltip = new StatusmapTooltip(this.$heatmap, this.scope);
+<<<<<<< HEAD
           this.tooltipHelper = new StatusHeatmapTooltipHelper(this.$heatmap, this.scope);
+=======
+          this.tooltipExtraSeries = new StatusHeatmapTooltipExtraSeries(this.$heatmap, this.scope);
+>>>>>>> master
           this.annotationTooltip = new AnnotationTooltip(this.$heatmap, this.scope);
           this.yOffset = 0;
           this.selection = {
@@ -596,9 +616,15 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
               return this.colorScale(d.value);
             } else if (this.panel.color.mode === 'discrete') {
               if (this.panel.seriesFilterIndex != -1 || this.panel.seriesFilterIndex != null) {
+<<<<<<< HEAD
                 return this.ctrl.discreteHelper.getBucketColorSingle(d.values[this.panel.seriesFilterIndex]);
               } else {
                 return this.ctrl.discreteHelper.getBucketColor(d.values);
+=======
+                return this.ctrl.discreteExtraSeries.getBucketColorSingle(d.values[this.panel.seriesFilterIndex]);
+              } else {
+                return this.ctrl.discreteExtraSeries.getBucketColor(d.values);
+>>>>>>> master
               }
             }
           }
@@ -679,8 +705,13 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
             this.clearCrosshair(); //annotationTooltip.destroy();
 
             if (e.relatedTarget) {
+<<<<<<< HEAD
               if (e.relatedTarget.className == "statusmap-tooltiphelper graph-tooltip grafana-tooltip" || e.relatedTarget.className == "graph-tooltip-time") {} else {
                 this.tooltipHelper.destroy();
+=======
+              if (e.relatedTarget.className == "statusmap-tooltip-extraseries graph-tooltip grafana-tooltip" || e.relatedTarget.className == "graph-tooltip-time") {} else {
+                this.tooltipExtraSeries.destroy();
+>>>>>>> master
               }
             }
 
@@ -714,7 +745,11 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
         }, {
           key: "onMouseClick",
           value: function onMouseClick(event) {
+<<<<<<< HEAD
             this.tooltipHelper.show(event);
+=======
+            this.tooltipExtraSeries.show(event);
+>>>>>>> master
 
             if (this.ctrl.panel.usingUrl) {
               this.tooltip.destroy();
@@ -898,7 +933,7 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
                 "id": i,
                 "anno": d.source
               };
-            }); //console.log({"ctrl_annotations": this.ctrl.annotations, "annoData": annoData});
+            }); //({"ctrl_annotations": this.ctrl.annotations, "annoData": annoData});
 
 
             var anno = this.heatmap.append("g").attr("class", "statusmap-annotations").attr("transform", "translate(0.5,0)").selectAll(".statusmap-annotations").data(annoData).enter().append("g");

@@ -1,9 +1,16 @@
 "use strict";
 
+<<<<<<< HEAD
 System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/sdk", "./statusmap_data", "./rendering", "./options_editor", "./color_mode_discrete", "./helper_format", "./helper_format_value"], function (_export, _context) {
   "use strict";
 
   var _, kbn, loadPluginCss, MetricsPanelCtrl, Card, rendering, statusHeatmapOptionsEditor, ColorModeDiscrete, HelperFormat, HelperFormatValue, CANVAS, SVG, VALUE_INDEX, TIME_INDEX, renderer, colorSchemes, colorModes, opacityScales, StatusHeatmapCtrl;
+=======
+System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/sdk", "./statusmap_data", "./rendering", "./options_editor", "./color_mode_discrete", "./extra_series_format"], function (_export, _context) {
+  "use strict";
+
+  var _, kbn, loadPluginCss, MetricsPanelCtrl, Card, rendering, statusHeatmapOptionsEditor, ColorModeDiscrete, ExtraSeriesFormat, ExtraSeriesFormatValue, CANVAS, SVG, VALUE_INDEX, TIME_INDEX, renderer, colorSchemes, colorModes, opacityScales, StatusHeatmapCtrl;
+>>>>>>> master
 
   function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -45,10 +52,16 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
       statusHeatmapOptionsEditor = _options_editor.statusHeatmapOptionsEditor;
     }, function (_color_mode_discrete) {
       ColorModeDiscrete = _color_mode_discrete.ColorModeDiscrete;
+<<<<<<< HEAD
     }, function (_helper_format) {
       HelperFormat = _helper_format.HelperFormat;
     }, function (_helper_format_value) {
       HelperFormatValue = _helper_format_value.HelperFormatValue;
+=======
+    }, function (_extra_series_format) {
+      ExtraSeriesFormat = _extra_series_format.ExtraSeriesFormat;
+      ExtraSeriesFormatValue = _extra_series_format.ExtraSeriesFormatValue;
+>>>>>>> master
     }],
     execute: function () {
       CANVAS = 'CANVAS';
@@ -185,11 +198,15 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
 
           _defineProperty(_assertThisInitialized(_this), "noColorDefined", void 0);
 
-          _defineProperty(_assertThisInitialized(_this), "discreteHelper", void 0);
+          _defineProperty(_assertThisInitialized(_this), "discreteExtraSeries", void 0);
 
           _defineProperty(_assertThisInitialized(_this), "dataWarnings", void 0);
 
+<<<<<<< HEAD
           _defineProperty(_assertThisInitialized(_this), "helperFormats", []);
+=======
+          _defineProperty(_assertThisInitialized(_this), "extraSeriesFormats", []);
+>>>>>>> master
 
           _defineProperty(_assertThisInitialized(_this), "annotations", []);
 
@@ -247,32 +264,52 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
               tooltip: '',
               label: '',
               base_url: '',
+<<<<<<< HEAD
               usehelper: false,
               useseriesname: true,
               forcelowercase: true,
               icon_fa: 'external-link',
               helper: {
+=======
+              useExtraSeries: false,
+              useseriesname: true,
+              forcelowercase: true,
+              icon_fa: 'external-link',
+              extraSeries: {
+>>>>>>> master
                 index: -1
               }
             }],
             seriesFilterIndex: -1,
+<<<<<<< HEAD
             usingUrl: false,
             paginationActivated: false,
             currentPage: 0,
             pageSize: 5,
             numberOfPages: 0,
             lastValue: 0
+=======
+            usingUrl: false
+>>>>>>> master
           });
 
           _defineProperty(_assertThisInitialized(_this), "onEditorAddUrl", function () {
             _this.panel.urls.push({
               label: '',
               base_url: '',
+<<<<<<< HEAD
               usehelper: false,
               useseriesname: true,
               forcelowercase: true,
               icon_fa: 'external-link',
               helper: {
+=======
+              useExtraSeries: false,
+              useseriesname: true,
+              forcelowercase: true,
+              icon_fa: 'external-link',
+              extraSeries: {
+>>>>>>> master
                 index: -1
               }
             });
@@ -298,7 +335,11 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
           _this.colorModes = colorModes;
           _this.colorSchemes = colorSchemes;
           _this.variableSrv = variableSrv;
+<<<<<<< HEAD
           _this.helperFormats = HelperFormat;
+=======
+          _this.extraSeriesFormats = ExtraSeriesFormat;
+>>>>>>> master
 
           _this.renderLink = function (link, scopedVars, format) {
             var scoped = {};
@@ -322,7 +363,7 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
           };
           _this.multipleValues = false;
           _this.noColorDefined = false;
-          _this.discreteHelper = new ColorModeDiscrete($scope);
+          _this.discreteExtraSeries = new ColorModeDiscrete($scope);
           _this.dataWarnings = {
             "noColorDefined": {
               title: 'Data has value with undefined color',
@@ -367,6 +408,7 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
           key: "onChangeType",
           value: function onChangeType(url) {
             switch (url.type) {
+<<<<<<< HEAD
               case HelperFormat.Date:
                 url.helper.format = HelperFormatValue.Date;
                 break;
@@ -377,6 +419,18 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
 
               default:
                 url.helper.format = HelperFormatValue.Raw;
+=======
+              case ExtraSeriesFormat.Date:
+                url.extraSeries.format = ExtraSeriesFormatValue.Date;
+                break;
+
+              case ExtraSeriesFormat.Raw:
+                url.extraSeries.format = ExtraSeriesFormatValue.Raw;
+                break;
+
+              default:
+                url.extraSeries.format = ExtraSeriesFormatValue.Raw;
+>>>>>>> master
                 break;
             }
           }
@@ -403,7 +457,7 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
             var intervalMs;
             var rangeMs = this.range.to.valueOf() - this.range.from.valueOf(); // this is minimal interval! kbn.round_interval will lower it.
 
-            intervalMs = this.discreteHelper.roundIntervalCeil(rangeMs / maxCardsCount); // Calculate low limit of interval
+            intervalMs = this.discreteExtraSeries.roundIntervalCeil(rangeMs / maxCardsCount); // Calculate low limit of interval
 
             var lowLimitMs = 1; // 1 millisecond default low limit
 
@@ -478,7 +532,6 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
 
             this.data = dataList;
             this.cardsData = this.convertToCards(this.data);
-            console.log("OnDataReceived");
             this.annotationsPromise.then(function (result) {
               _this3.loading = false; //this.alertState = result.alertState;
 
@@ -488,13 +541,10 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
                 _this3.annotations = [];
               }
 
-              console.log("annotationsPromise result " + _this3.annotations.length + " annotations");
-
               _this3.render();
             }, function () {
               _this3.loading = false;
               _this3.annotations = [];
-              console.log("annotationsPromise onrejected");
 
               _this3.render();
             });
@@ -526,10 +576,16 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
 
             if (this.panel.color.mode === 'discrete') {
               if (this.panel.seriesFilterIndex == -1) {
+<<<<<<< HEAD
                 this.discreteHelper.updateCardsValuesHasColorInfo();
               } else {
                 console.log(this.cardsData);
                 this.discreteHelper.updateCardsValuesHasColorInfoSingle();
+=======
+                this.discreteExtraSeries.updateCardsValuesHasColorInfo();
+              } else {
+                this.discreteExtraSeries.updateCardsValuesHasColorInfoSingle();
+>>>>>>> master
               }
 
               if (this.cardsData) {
@@ -726,7 +782,10 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
                 if (card.values.length > 1) {
                   cardsData.multipleValues = true;
                   card.multipleValues = true;
+<<<<<<< HEAD
                   console.log('PEPITOOOOOOOOOO');
+=======
+>>>>>>> master
                   card.value = this.panel.seriesFilterIndex != -1 ? card.values[this.panel.seriesFilterIndex] : card.maxValue;
                 } else {
                   card.value = card.maxValue; // max value by default

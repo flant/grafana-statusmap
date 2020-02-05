@@ -32,12 +32,20 @@
     font-weight: bold;
     text-shadow: 0 0 0.2em #212124, 0 0 0.2em #212124, 0 0 0.2em #212124; }
 
+<<<<<<< HEAD
 .statusmap-tooltiphelper {
+=======
+.statusmap-tooltip-extraseries {
+>>>>>>> master
   white-space: nowrap;
   font-size: 12px;
   background-color: #141414;
   color: #d8d9da; }
+<<<<<<< HEAD
   .statusmap-tooltiphelper .discrete-item {
+=======
+  .statusmap-tooltip-extraseries .discrete-item {
+>>>>>>> master
     color: #ffffff;
     padding: 1px;
     font-weight: bold;

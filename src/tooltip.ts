@@ -92,6 +92,7 @@ export class StatusmapTooltip {
     let statuses;
 
     if (this.panel.color.mode === 'discrete') {
+<<<<<<< HEAD
       console.log('HOSTIAS VALUES MENCANTEN');
       console.log(values);
       console.log(value);
@@ -99,6 +100,12 @@ export class StatusmapTooltip {
         statuses = this.panelCtrl.discreteHelper.convertValueToTooltips(value);
       } else {
         statuses = this.panelCtrl.discreteHelper.convertValuesToTooltips(values);
+=======
+      if (this.panel.seriesFilterIndex > 0) {
+        statuses = this.panelCtrl.discreteExtraSeries.convertValueToTooltips(value);
+      } else {
+        statuses = this.panelCtrl.discreteExtraSeries.convertValuesToTooltips(values);
+>>>>>>> master
       }
       
       let statusesHtml = '';
@@ -142,7 +149,7 @@ export class StatusmapTooltip {
     // Discrete mode errors
     if (this.panel.color.mode === 'discrete') {
       if (card.noColorDefined) {
-        let badValues = this.panelCtrl.discreteHelper.getNotColoredValues(values);
+        let badValues = this.panelCtrl.discreteExtraSeries.getNotColoredValues(values);
         tooltipHtml += `<div><b>Error:</b> ${this.panelCtrl.dataWarnings.noColorDefined.title}
         <br>not colored values:
         <ul>
