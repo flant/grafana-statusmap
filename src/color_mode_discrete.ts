@@ -199,7 +199,6 @@ export class ColorModeDiscrete {
 
     let thresholds = this.panel.color.thresholds;
     for (let k = 0; k < thresholds.length; k++) {
-      console.log("VALUE: ",value, thresholds[k].value);
       if (value == thresholds[k].value) {
         return thresholds[k];
       }

@@ -726,55 +726,60 @@ export class StatusmapRenderer {
 
 
   render() {
-    if(this.ctrl.panel.paginationActivated) {
-      //this.data = this.ctrl.data;
-      //this.data = this.ctrl.data.slice(0,5);
-
-
-      //console.log('En RENDERRRR');
-      //console.log(this.ctrl.data);
-      //console.log(this.ctrl.data[0].alias);
-      console.log('Page size: ');
-      console.log(this.ctrl.panel.pageSize);
-      console.log('Current page: ');
-      console.log(this.ctrl.panel.currentPage);
-      console.log('Last value: ');
-      console.log(this.ctrl.panel.lastValue);
-      console.log('Data length: ');
-      //console.log(this.data.length);
-      //console.log(this.ctrl.data.length);
-      console.log('Real data complete: ');
-      console.log(this.ctrl.data);
-
-      /*for (let index = 0; index < this.ctrl.pageSize; index++) {
-        this.data += this.ctrl.data[index];
-      }*/
-
-      //console.log('En RENDERRRR 2');
-      //console.log(this.data.slice(0,5));
-
-      if (this.ctrl.panel.currentPage === 0) {
-        this.data = this.ctrl.data.slice(0,this.ctrl.panel.pageSize);
-        this.ctrl.panel.lastValue = this.ctrl.panel.pageSize + 1;
-      } else {
-        while(this.ctrl.panel.lastValue <= this.ctrl.data.length){
-          this.data = this.ctrl.data.slice(this.ctrl.panel.lastValue,this.ctrl.panel.lastValue+this.ctrl.panel.pageSize);
-          this.ctrl.panel.lastValue = this.ctrl.panel.lastValue+this.ctrl.panel.pageSize;
-        }
-        //console.log(this.ctrl.data);
-        //console.log(this.ctrl.data.slice(6,11));
-        //this.data = this.ctrl.data.slice(6,11);
-      }
-    } else {
-      this.data = this.ctrl.data;
-    }
-
+    this.data = this.ctrl.data;
     this.panel = this.ctrl.panel;
     this.timeRange = this.ctrl.range;
     this.cardsData = this.ctrl.cardsData;
 
     if (!this.data || !this.cardsData || !this.setElementHeight()) {
       return;
+    } else {
+      if(this.ctrl.panel.usingPagination) {
+        if (!this.cardsData.targets) {
+          return;
+        }
+        console.log('LISTA COMPLETÍSIMA HERMANO:', this.ctrl.cardsData.targets);
+        console.log('DESDEEEEEEE:', this.ctrl.panel.pageSize*this.ctrl.panel.currentPage);
+        console.log('HASTAAAAAAA:', (this.ctrl.panel.pageSize*this.ctrl.panel.currentPage)+this.ctrl.panel.pageSize);
+
+
+
+        let cardsList = this.ctrl.cardsData.targets.slice(this.ctrl.panel.pageSize*this.ctrl.panel.currentPage, 
+          (this.ctrl.panel.pageSize*this.ctrl.panel.currentPage)+this.ctrl.panel.pageSize);
+
+        let cardsToShow = [];
+
+        console.log('LES TOCA AAAAAA:', cardsList);
+
+        console.log('LAS TOTALES SON: ', this.cardsData.cards);
+
+        for (let i = 0; i < this.cardsData.cards.length; i++) {
+          const card = this.cardsData.cards[i];
+          
+          for (let j = 0; j < cardsList.length; j++) {
+            const value = cardsList[j];
+
+            if (card.y === value) {
+              cardsToShow.push(card);
+            }
+            
+          }
+        }
+
+        console.log('LAS NUEVAS SON:', cardsToShow);
+
+        //this.cardsData.cards = cardsToShow;
+
+        /*if (this.ctrl.panel.currentPage === 1) {
+          this.data = this.ctrl.data.slice((this.ctrl.panel.currentPage-1), (this.ctrl.panel.pageSize*this.ctrl.panel.currentPage));
+          this.ctrl.panel.lastValue = this.ctrl.panel.pageSize + 1;
+        } else {
+          while(this.ctrl.panel.lastValue <= this.ctrl.data.length){
+            this.data = this.ctrl.data.slice(this.ctrl.panel.lastValue,this.ctrl.panel.lastValue+this.ctrl.panel.pageSize);
+            this.ctrl.panel.lastValue = this.ctrl.panel.lastValue+this.ctrl.panel.pageSize;
+          }
+        }*/
+      }
     }
 
     // Draw default axes and return if no data

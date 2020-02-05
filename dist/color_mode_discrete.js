@@ -240,8 +240,6 @@ System.register([], function (_export, _context) {
             var thresholds = this.panel.color.thresholds;
 
             for (var k = 0; k < thresholds.length; k++) {
-              console.log("VALUE: ", value, thresholds[k].value);
-
               if (value == thresholds[k].value) {
                 return thresholds[k];
               }
