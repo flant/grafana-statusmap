@@ -202,23 +202,6 @@
         bs-tooltip="'Filter with the serie index to show the value on graph. Use -1 to get all values'" ng-model="ctrl.panel.seriesFilterIndex" ng-change="ctrl.refresh()"
         ng-model-onblur>
     </div>
-<<<<<<< HEAD
-  </div>
-
-  <div class="section gf-form-group width-30">
-    <h5 class="section-heading">Pagination options</h5>
-    <div class="gf-form">
-      <gf-form-switch class="gf-form" label="Activate pagination" label-class="width-12"
-        checked="ctrl.panel.paginationActivated" on-change="ctrl.render()"></gf-form-switch>
-    </div>
-    <div class="gf-form" ng-if="ctrl.panel.paginationActivated">
-      <label class="gf-form-label width-9">Items per page</label>
-      <input type="number" class="gf-form-input width-5" placeholder="2" data-placement="right"
-        bs-tooltip="'Number of items to show per page.'" ng-model="ctrl.panel.pageSize" ng-change="ctrl.refresh()"
-        ng-model-onblur>
-    </div>
-=======
->>>>>>> master
   </div>
 
   <div class="section gf-form-group">
@@ -229,11 +212,7 @@
     </div>
 
     <div class="gf-form">
-<<<<<<< HEAD
-      <gf-form-switch class="gf-form" label="Show Helper Tooltip when clicking elements" label-class="width-12"
-=======
       <gf-form-switch class="gf-form" label="Show extraSeries Tooltip when clicking elements" label-class="width-12"
->>>>>>> master
         checked="ctrl.panel.usingUrl" on-change="ctrl.render()"></gf-form-switch>
     </div>
 
@@ -279,11 +258,7 @@
               <br>
               <em>$time</em> append &from...&to on the URL
               <br>
-<<<<<<< HEAD
-              <em>$helper</em> use helper value to use it on URL
-=======
               <em>$series_extra</em> use extraSeries value to use it on URL
->>>>>>> master
             </span>
           </info-popover>
         </div>
@@ -294,15 +269,6 @@
           <gf-form-switch class="gf-form" label-class="width-8" label="Force lowercase" checked="url.forcelowercase"
             on-change="ctrl.render()">
           </gf-form-switch>
-<<<<<<< HEAD
-          <gf-form-switch class="gf-form" label-class="width-6" label="Helper completer" checked="url.usehelper"
-            on-change="ctrl.render()">
-          </gf-form-switch>
-          <div class="gf-form" ng-if="url.usehelper == true">
-            <label class="gf-form-label width-8">Helper series index: </label>
-            <input type="text" class="gf-form-input width-12" placeholder="0" ng-if="url.usehelper == true"
-              data-placement="right" bs-tooltip="'Fields index to use its value on URL using $helper. Use -1 to disable it'" ng-model="url.helper.index"
-=======
           <gf-form-switch class="gf-form" label-class="width-6" label="Use Extra Serie Data" checked="url.useExtraSeries"
             on-change="ctrl.render()">
           </gf-form-switch>
@@ -310,20 +276,10 @@
             <label class="gf-form-label width-8">Extra Series Index: </label>
             <input type="number" class="gf-form-input width-12" placeholder="0" ng-if="url.useExtraSeries == true"
               data-placement="right" bs-tooltip="'Fields index to use its value on URL using $series_extra. Use -1 to disable it'" ng-model="url.extraSeries.index"
->>>>>>> master
               ng-change="ctrl.refresh()">
             
             <label class="gf-form-label width-9">Type</label>
             <div class="gf-form-select-wrapper width-8">
-<<<<<<< HEAD
-              <select class="input-small gf-form-input" ng-model="url.type" ng-options="s for s in ctrl.helperFormats" ng-change="ctrl.onChangeType(url)"></select>
-            </div>
-            
-            <div ng-if="url.type === 'Date'">
-              <label class="gf-form-label width-12">Helper date format: </label>
-              <input type="text" class="gf-form-input width-12" placeholder="YYYY/MM/DD/HH_mm_ss" ng-if="url.usehelper == true"
-                data-placement="right" bs-tooltip="'Date format to transformat helper'" ng-model="url.helper.format"
-=======
               <select class="input-small gf-form-input" ng-model="url.type" ng-options="s for s in ctrl.extraSeriesFormats" ng-change="ctrl.onChangeType(url)"></select>
             </div>
             
@@ -331,7 +287,6 @@
               <label class="gf-form-label width-12">Extra Series Date Format: </label>
               <input type="text" class="gf-form-input width-12" placeholder="YYYY/MM/DD/HH_mm_ss" ng-if="url.useExtraSeries == true"
                 data-placement="right" bs-tooltip="'Date format to transformat extraSeries'" ng-model="url.extraSeries.format"
->>>>>>> master
                 ng-change="ctrl.refresh()">
             </div>
           </div>
