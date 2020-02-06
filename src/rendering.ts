@@ -738,20 +738,17 @@ export class StatusmapRenderer {
         if (!this.cardsData.targets) {
           return;
         }
-        console.log('LISTA COMPLETÍSIMA HERMANO:', this.ctrl.cardsData.targets);
-        console.log('DESDEEEEEEE:', this.ctrl.panel.pageSize*this.ctrl.panel.currentPage);
-        console.log('HASTAAAAAAA:', (this.ctrl.panel.pageSize*this.ctrl.panel.currentPage)+this.ctrl.panel.pageSize);
 
+        if (!this.ctrl.dataComplete || this.ctrl.dataComplete === undefined) {
+          this.ctrl.dataComplete = this.cardsData.cards.slice();
+        }
 
+        this.cardsData.cards = this.ctrl.dataComplete.slice();
 
         let cardsList = this.ctrl.cardsData.targets.slice(this.ctrl.panel.pageSize*this.ctrl.panel.currentPage, 
           (this.ctrl.panel.pageSize*this.ctrl.panel.currentPage)+this.ctrl.panel.pageSize);
 
         let cardsToShow = [];
-
-        console.log('LES TOCA AAAAAA:', cardsList);
-
-        console.log('LAS TOTALES SON: ', this.cardsData.cards);
 
         for (let i = 0; i < this.cardsData.cards.length; i++) {
           const card = this.cardsData.cards[i];
@@ -766,19 +763,7 @@ export class StatusmapRenderer {
           }
         }
 
-        console.log('LAS NUEVAS SON:', cardsToShow);
-
-        //this.cardsData.cards = cardsToShow;
-
-        /*if (this.ctrl.panel.currentPage === 1) {
-          this.data = this.ctrl.data.slice((this.ctrl.panel.currentPage-1), (this.ctrl.panel.pageSize*this.ctrl.panel.currentPage));
-          this.ctrl.panel.lastValue = this.ctrl.panel.pageSize + 1;
-        } else {
-          while(this.ctrl.panel.lastValue <= this.ctrl.data.length){
-            this.data = this.ctrl.data.slice(this.ctrl.panel.lastValue,this.ctrl.panel.lastValue+this.ctrl.panel.pageSize);
-            this.ctrl.panel.lastValue = this.ctrl.panel.lastValue+this.ctrl.panel.pageSize;
-          }
-        }*/
+        this.cardsData.cards = cardsToShow;
       }
     }
 
