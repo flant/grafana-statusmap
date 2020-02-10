@@ -317,10 +317,13 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
         }, {
           key: "addYAxis",
           value: function addYAxis() {
+            console.log('ENTRA ANTES EN EL ADD Y AXIS');
+
             var ticks = _.uniq(_.map(this.data, function (d) {
               return d.target;
-            })); // Set default Y min and max if no data
+            }));
 
+            console.log('LOS TICKS EN EL ADD', ticks); // Set default Y min and max if no data
 
             if (_.isEmpty(this.data)) {
               ticks = [''];
@@ -394,6 +397,7 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
         }, {
           key: "addHeatmapCanvas",
           value: function addHeatmapCanvas() {
+            console.log('ENTRA ANTRES EN EL ADD CANVAS');
             var heatmap_elem = this.$heatmap[0];
             this.width = Math.floor(this.$heatmap.width()) - this.padding.right;
             this.height = Math.floor(this.$heatmap.height()) - this.padding.bottom;
@@ -827,16 +831,31 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
             if (!this.data || !this.cardsData || !this.setElementHeight()) {
               return;
             } else {
+              //this.data.splice(2,2);
+              console.log('DATITOOOSSSS', this.data);
+
+              if (this.ctrl.cardsDataComplete != undefined) {
+                this.cardsData.cards = this.ctrl.cardsDataComplete.slice();
+              }
+
               if (this.ctrl.panel.usingPagination) {
                 if (!this.cardsData.targets) {
                   return;
                 }
 
-                if (!this.ctrl.dataComplete || this.ctrl.dataComplete === undefined) {
-                  this.ctrl.dataComplete = this.cardsData.cards.slice();
+                console.log('ENTRA PRIMERO EN EL RENDER');
+                console.log('Antes del primer parseo', this.ctrl.cardsDataComplete);
+                console.log('Antes del primer parseo', this.data);
+
+                if ((!this.ctrl.cardsDataComplete || this.ctrl.cardsDataComplete === undefined) && (!this.ctrl.cardsDataLabelsComplete || this.ctrl.cardsDataLabelsComplete === undefined)) {
+                  this.ctrl.cardsDataComplete = this.cardsData.cards.slice();
+                  this.ctrl.cardsDataLabelsComplete = this.data.slice();
                 }
 
-                this.cardsData.cards = this.ctrl.dataComplete.slice();
+                console.log('Después del primer parseo', this.ctrl.cardsDataComplete); //console.log('Después del primer parseo', this.ctrl.cardsDataLabelsComplete);
+
+                this.cardsData.cards = this.ctrl.cardsDataComplete.slice();
+                this.data = this.ctrl.cardsDataLabelsComplete.slice();
                 var cardsList = this.ctrl.cardsData.targets.slice(this.ctrl.panel.pageSize * this.ctrl.panel.currentPage, this.ctrl.panel.pageSize * this.ctrl.panel.currentPage + this.ctrl.panel.pageSize);
                 var cardsToShow = [];
 
@@ -846,13 +865,26 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
                   for (var j = 0; j < cardsList.length; j++) {
                     var value = cardsList[j];
 
+                    for (var z = 0; z < this.data.length; z++) {
+                      if (this.data[z].alias === value) {
+                        console.log('MENCANTA DIVIDIR MINIÑO');
+                        this.data.splice(z, 1);
+                      }
+                    }
+
                     if (card.y === value) {
+                      console.log('DIVIDE OR DIE');
                       cardsToShow.push(card);
                     }
                   }
                 }
 
                 this.cardsData.cards = cardsToShow;
+              } else {
+                /**if (!this.cardsData.targets) {
+                  return;
+                }
+                 this.cardsData.cards = this.ctrl.cardsDataComplete;*/
               }
             } // Draw default axes and return if no data
 

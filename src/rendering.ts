@@ -220,7 +220,9 @@ export class StatusmapRenderer {
   }
 
   addYAxis() {
+    console.log('ENTRA ANTES EN EL ADD Y AXIS');
     let ticks = _.uniq(_.map(this.data, d => d.target));
+    console.log('LOS TICKS EN EL ADD', ticks);
 
     // Set default Y min and max if no data
     if (_.isEmpty(this.data)) {
@@ -289,6 +291,7 @@ export class StatusmapRenderer {
   // Create svg element, add axes and
   // calculate sizes for cards drawing
   addHeatmapCanvas() {
+    console.log('ENTRA ANTRES EN EL ADD CANVAS');
     let heatmap_elem = this.$heatmap[0];
 
     this.width = Math.floor(this.$heatmap.width()) - this.padding.right;
@@ -734,19 +737,36 @@ export class StatusmapRenderer {
     if (!this.data || !this.cardsData || !this.setElementHeight()) {
       return;
     } else {
+      //this.data.splice(2,2);
+      console.log('DATITOOOSSSS', this.data);
+      if (this.ctrl.cardsDataComplete != undefined) {
+        this.cardsData.cards = this.ctrl.cardsDataComplete.slice();
+      }
+
       if(this.ctrl.panel.usingPagination) {
         if (!this.cardsData.targets) {
           return;
         }
 
-        if (!this.ctrl.dataComplete || this.ctrl.dataComplete === undefined) {
-          this.ctrl.dataComplete = this.cardsData.cards.slice();
+        console.log('ENTRA PRIMERO EN EL RENDER');
+        console.log('Antes del primer parseo', this.ctrl.cardsDataComplete);
+        console.log('Antes del primer parseo', this.data);
+
+        if ((!this.ctrl.cardsDataComplete || this.ctrl.cardsDataComplete === undefined) &&
+            (!this.ctrl.cardsDataLabelsComplete || this.ctrl.cardsDataLabelsComplete === undefined)) {
+          this.ctrl.cardsDataComplete = this.cardsData.cards.slice();
+          this.ctrl.cardsDataLabelsComplete = this.data.slice();
         }
 
-        this.cardsData.cards = this.ctrl.dataComplete.slice();
+        console.log('Después del primer parseo', this.ctrl.cardsDataComplete);
+        //console.log('Después del primer parseo', this.ctrl.cardsDataLabelsComplete);
+
+        this.cardsData.cards = this.ctrl.cardsDataComplete.slice();
+        this.data = this.ctrl.cardsDataLabelsComplete.slice();
 
         let cardsList = this.ctrl.cardsData.targets.slice(this.ctrl.panel.pageSize*this.ctrl.panel.currentPage, 
           (this.ctrl.panel.pageSize*this.ctrl.panel.currentPage)+this.ctrl.panel.pageSize);
+
 
         let cardsToShow = [];
 
@@ -756,7 +776,15 @@ export class StatusmapRenderer {
           for (let j = 0; j < cardsList.length; j++) {
             const value = cardsList[j];
 
+            for (let z = 0; z < this.data.length; z++) {
+              if (this.data[z].alias === value) {
+                console.log('MENCANTA DIVIDIR MINIÑO');
+                this.data.splice(z,1);
+              }
+            }
+
             if (card.y === value) {
+              console.log('DIVIDE OR DIE');
               cardsToShow.push(card);
             }
             
@@ -764,6 +792,12 @@ export class StatusmapRenderer {
         }
 
         this.cardsData.cards = cardsToShow;
+      } else {
+        /**if (!this.cardsData.targets) {
+          return;
+        }
+
+        this.cardsData.cards = this.ctrl.cardsDataComplete;*/
       }
     }
 

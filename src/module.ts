@@ -92,6 +92,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   data: any;
   cardsData: any;
   cardsDataComplete: any;
+  cardsDataLabelsComplete: any;
   graph: any;
   multipleValues: boolean;
   noColorDefined: boolean;

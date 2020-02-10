@@ -180,6 +180,8 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
 
           _defineProperty(_assertThisInitialized(_this), "cardsDataComplete", void 0);
 
+          _defineProperty(_assertThisInitialized(_this), "cardsDataLabelsComplete", void 0);
+
           _defineProperty(_assertThisInitialized(_this), "graph", void 0);
 
           _defineProperty(_assertThisInitialized(_this), "multipleValues", void 0);
