@@ -263,7 +263,9 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
             currentPage: 1,
             pageSize: 2,
             numberOfPages: 1,
-            usingPagination: false
+            usingPagination: false,
+            ticksWhenPaginating: [],
+            totalElements: 0
           });
 
           _defineProperty(_assertThisInitialized(_this), "onEditorAddUrl", function () {
@@ -500,6 +502,7 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
 
             if (this.cardsData.targets) {
               this.panel.numberOfPages = Math.ceil(this.cardsData.targets.length / this.panel.pageSize);
+              this.panel.totalElements = this.cardsData.targets.length;
               console.log(this.panel.numberOfPages);
             } //this.render();
 

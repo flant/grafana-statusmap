@@ -167,7 +167,9 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     currentPage: 1,
     pageSize: 2,
     numberOfPages: 1,
-    usingPagination: false
+    usingPagination: false,
+    ticksWhenPaginating: [],
+    totalElements: 0
   };
 
   /** @ngInject */
@@ -367,6 +369,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
     if (this.cardsData.targets) {
       this.panel.numberOfPages = Math.ceil(this.cardsData.targets.length/this.panel.pageSize);
+      this.panel.totalElements = this.cardsData.targets.length;
       console.log(this.panel.numberOfPages);
     }
 

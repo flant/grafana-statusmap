@@ -5,6 +5,14 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
 
   var _, $, moment, kbn, appEvents, contextSrv, d3, d3ScaleChromatic, StatusmapTooltip, StatusHeatmapTooltipExtraSeries, AnnotationTooltip, MIN_CARD_SIZE, CARD_H_SPACING, CARD_V_SPACING, CARD_ROUND, DATA_RANGE_WIDING_FACTOR, DEFAULT_X_TICK_SIZE_PX, DEFAULT_Y_TICK_SIZE_PX, X_AXIS_TICK_PADDING, Y_AXIS_TICK_PADDING, MIN_SELECTION_WIDTH, StatusmapRenderer;
 
+  function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+  function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+  function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+  function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
   function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -317,11 +325,24 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
         }, {
           key: "addYAxis",
           value: function addYAxis() {
+            //11-20/124
+            //https://datatables.net/
             console.log('ENTRA ANTES EN EL ADD Y AXIS');
+            console.log('THIS DATA DEL ADD Y AXIS', this.data);
+            console.log('THIS DATA DEL ADD Y AXIS2', this.ctrl.ticksWhenPaginating);
+            var ticks;
+            console.log('this.ctrl.ticksWhenPaginating', this.ctrl.ticksWhenPaginating);
+            console.log('this.ctrl.usingPagination', this.ctrl.usingPagination);
 
-            var ticks = _.uniq(_.map(this.data, function (d) {
-              return d.target;
-            }));
+            if (this.ctrl.ticksWhenPaginating !== undefined) {
+              console.log('ENTRA EN EL PRIMER IF');
+              ticks = _.uniq(_.map(this.ctrl.ticksWhenPaginating));
+            } else {
+              console.log('ENTRA EN EL SEGUNDO IF');
+              ticks = _.uniq(_.map(this.data, function (d) {
+                return d.target;
+              }));
+            }
 
             console.log('LOS TICKS EN EL ADD', ticks); // Set default Y min and max if no data
 
@@ -843,6 +864,12 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
                   return;
                 }
 
+                console.log('PAGINA', this.ctrl.currentPage);
+                this.ctrl.currentPage = 1;
+                console.log('PAGINA x2', this.ctrl.currentPage);
+                console.log('DATA ORIGIAL', this.ctrl.data);
+                console.log('CARDS DATA ORIGINAL', this.ctrl.cardsData.targetIndex);
+                console.log('CARDS DATA ORIGINAL2', this.ctrl.cardsData.targetIndex[0]);
                 console.log('ENTRA PRIMERO EN EL RENDER');
                 console.log('Antes del primer parseo', this.ctrl.cardsDataComplete);
                 console.log('Antes del primer parseo', this.data);
@@ -858,33 +885,32 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
                 this.data = this.ctrl.cardsDataLabelsComplete.slice();
                 var cardsList = this.ctrl.cardsData.targets.slice(this.ctrl.panel.pageSize * this.ctrl.panel.currentPage, this.ctrl.panel.pageSize * this.ctrl.panel.currentPage + this.ctrl.panel.pageSize);
                 var cardsToShow = [];
+                var labelsToShow = [];
 
                 for (var i = 0; i < this.cardsData.cards.length; i++) {
                   var card = this.cardsData.cards[i];
+                  console.log('CARD EN BUCLE', card);
 
                   for (var j = 0; j < cardsList.length; j++) {
                     var value = cardsList[j];
-
-                    for (var z = 0; z < this.data.length; z++) {
-                      if (this.data[z].alias === value) {
-                        console.log('MENCANTA DIVIDIR MINIÑO');
-                        this.data.splice(z, 1);
-                      }
-                    }
+                    console.log('VALUE EN BUCLE', value);
 
                     if (card.y === value) {
                       console.log('DIVIDE OR DIE');
                       cardsToShow.push(card);
+                      labelsToShow.push(value);
                     }
                   }
                 }
 
+                var labelsToShowClean = _toConsumableArray(new Set(labelsToShow));
+
+                console.log('LAS TARJETICAS QUE ENSEÑO', cardsToShow);
                 this.cardsData.cards = cardsToShow;
+                this.ctrl.ticksWhenPaginating = labelsToShowClean;
+                console.log('VALUES A MOSTRAR', labelsToShowClean);
               } else {
-                /**if (!this.cardsData.targets) {
-                  return;
-                }
-                 this.cardsData.cards = this.ctrl.cardsDataComplete;*/
+                this.ctrl.ticksWhenPaginating = undefined;
               }
             } // Draw default axes and return if no data
 

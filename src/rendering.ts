@@ -220,8 +220,26 @@ export class StatusmapRenderer {
   }
 
   addYAxis() {
+    //11-20/124
+    //https://datatables.net/
     console.log('ENTRA ANTES EN EL ADD Y AXIS');
-    let ticks = _.uniq(_.map(this.data, d => d.target));
+    console.log('THIS DATA DEL ADD Y AXIS', this.data);
+    console.log('THIS DATA DEL ADD Y AXIS2', this.ctrl.ticksWhenPaginating);
+
+    let ticks;
+
+    console.log('this.ctrl.ticksWhenPaginating', this.ctrl.ticksWhenPaginating);
+    console.log('this.ctrl.usingPagination', this.ctrl.usingPagination);
+
+    if(this.ctrl.ticksWhenPaginating !== undefined) {
+      console.log('ENTRA EN EL PRIMER IF');
+      ticks = _.uniq(_.map(this.ctrl.ticksWhenPaginating));
+    } else {
+      console.log('ENTRA EN EL SEGUNDO IF');
+      ticks = _.uniq(_.map(this.data, d => d.target));
+    }
+
+    
     console.log('LOS TICKS EN EL ADD', ticks);
 
     // Set default Y min and max if no data
@@ -748,6 +766,16 @@ export class StatusmapRenderer {
           return;
         }
 
+        console.log('PAGINA', this.ctrl.currentPage)
+
+        this.ctrl.currentPage = 1;
+
+        console.log('PAGINA x2', this.ctrl.currentPage)
+
+        console.log('DATA ORIGIAL', this.ctrl.data);
+        console.log('CARDS DATA ORIGINAL', this.ctrl.cardsData.targetIndex);
+        console.log('CARDS DATA ORIGINAL2', this.ctrl.cardsData.targetIndex[0]);
+
         console.log('ENTRA PRIMERO EN EL RENDER');
         console.log('Antes del primer parseo', this.ctrl.cardsDataComplete);
         console.log('Antes del primer parseo', this.data);
@@ -769,35 +797,36 @@ export class StatusmapRenderer {
 
 
         let cardsToShow = [];
+        let labelsToShow = [];
 
         for (let i = 0; i < this.cardsData.cards.length; i++) {
           const card = this.cardsData.cards[i];
+
+          console.log('CARD EN BUCLE', card);
           
           for (let j = 0; j < cardsList.length; j++) {
             const value = cardsList[j];
 
-            for (let z = 0; z < this.data.length; z++) {
-              if (this.data[z].alias === value) {
-                console.log('MENCANTA DIVIDIR MINIÑO');
-                this.data.splice(z,1);
-              }
-            }
+            console.log('VALUE EN BUCLE', value);
 
             if (card.y === value) {
               console.log('DIVIDE OR DIE');
               cardsToShow.push(card);
+              labelsToShow.push(value);
             }
             
           }
         }
 
-        this.cardsData.cards = cardsToShow;
-      } else {
-        /**if (!this.cardsData.targets) {
-          return;
-        }
+        const labelsToShowClean = [...new Set(labelsToShow)];
 
-        this.cardsData.cards = this.ctrl.cardsDataComplete;*/
+        console.log('LAS TARJETICAS QUE ENSEÑO',cardsToShow);
+        this.cardsData.cards = cardsToShow;
+        this.ctrl.ticksWhenPaginating = labelsToShowClean;
+
+        console.log('VALUES A MOSTRAR', labelsToShowClean);
+      } else {
+        this.ctrl.ticksWhenPaginating = undefined;
       }
     }
 
