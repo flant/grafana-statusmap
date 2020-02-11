@@ -163,10 +163,7 @@ System.register([], function (_export, _context) {
 
             for (var i = 0; i < thresholds.length; i++) {
               for (var _j = 0; _j < values.length; _j++) {
-                console.log("MULTICOLOR:", _j, values[_j], thresholds[i].value);
-
                 if (values[_j] == thresholds[i].value) {
-                  console.log("ESTOY AQUI?");
                   return this.getDiscreteColor(i);
                 }
               }

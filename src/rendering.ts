@@ -220,27 +220,14 @@ export class StatusmapRenderer {
   }
 
   addYAxis() {
-    //11-20/124
-    //https://datatables.net/
-    console.log('ENTRA ANTES EN EL ADD Y AXIS');
-    console.log('THIS DATA DEL ADD Y AXIS', this.data);
-    console.log('THIS DATA DEL ADD Y AXIS2', this.ctrl.ticksWhenPaginating);
 
     let ticks;
 
-    console.log('this.ctrl.ticksWhenPaginating', this.ctrl.ticksWhenPaginating);
-    console.log('this.ctrl.usingPagination', this.ctrl.usingPagination);
-
     if(this.ctrl.ticksWhenPaginating !== undefined) {
-      console.log('ENTRA EN EL PRIMER IF');
       ticks = _.uniq(_.map(this.ctrl.ticksWhenPaginating));
     } else {
-      console.log('ENTRA EN EL SEGUNDO IF');
       ticks = _.uniq(_.map(this.data, d => d.target));
     }
-
-    
-    console.log('LOS TICKS EN EL ADD', ticks);
 
     // Set default Y min and max if no data
     if (_.isEmpty(this.data)) {
@@ -309,7 +296,6 @@ export class StatusmapRenderer {
   // Create svg element, add axes and
   // calculate sizes for cards drawing
   addHeatmapCanvas() {
-    console.log('ENTRA ANTRES EN EL ADD CANVAS');
     let heatmap_elem = this.$heatmap[0];
 
     this.width = Math.floor(this.$heatmap.width()) - this.padding.right;
@@ -372,7 +358,6 @@ export class StatusmapRenderer {
 
     let cards = this.heatmap.selectAll(".status-heatmap-card").data(this.cardsData.cards);
     cards.append("title");
-    console.log(cards);
     cards = cards.enter().append("rect")
         .attr("cardId", c => c.id)
         .attr("x", this.getCardX.bind(this))
@@ -755,8 +740,6 @@ export class StatusmapRenderer {
     if (!this.data || !this.cardsData || !this.setElementHeight()) {
       return;
     } else {
-      //this.data.splice(2,2);
-      console.log('DATITOOOSSSS', this.data);
       if (this.ctrl.cardsDataComplete != undefined) {
         this.cardsData.cards = this.ctrl.cardsDataComplete.slice();
       }
@@ -766,28 +749,13 @@ export class StatusmapRenderer {
           return;
         }
 
-        console.log('PAGINA', this.ctrl.currentPage)
-
         this.ctrl.currentPage = 1;
-
-        console.log('PAGINA x2', this.ctrl.currentPage)
-
-        console.log('DATA ORIGIAL', this.ctrl.data);
-        console.log('CARDS DATA ORIGINAL', this.ctrl.cardsData.targetIndex);
-        console.log('CARDS DATA ORIGINAL2', this.ctrl.cardsData.targetIndex[0]);
-
-        console.log('ENTRA PRIMERO EN EL RENDER');
-        console.log('Antes del primer parseo', this.ctrl.cardsDataComplete);
-        console.log('Antes del primer parseo', this.data);
 
         if ((!this.ctrl.cardsDataComplete || this.ctrl.cardsDataComplete === undefined) &&
             (!this.ctrl.cardsDataLabelsComplete || this.ctrl.cardsDataLabelsComplete === undefined)) {
           this.ctrl.cardsDataComplete = this.cardsData.cards.slice();
           this.ctrl.cardsDataLabelsComplete = this.data.slice();
         }
-
-        console.log('Después del primer parseo', this.ctrl.cardsDataComplete);
-        //console.log('Después del primer parseo', this.ctrl.cardsDataLabelsComplete);
 
         this.cardsData.cards = this.ctrl.cardsDataComplete.slice();
         this.data = this.ctrl.cardsDataLabelsComplete.slice();
@@ -801,16 +769,11 @@ export class StatusmapRenderer {
 
         for (let i = 0; i < this.cardsData.cards.length; i++) {
           const card = this.cardsData.cards[i];
-
-          console.log('CARD EN BUCLE', card);
           
           for (let j = 0; j < cardsList.length; j++) {
             const value = cardsList[j];
 
-            console.log('VALUE EN BUCLE', value);
-
             if (card.y === value) {
-              console.log('DIVIDE OR DIE');
               cardsToShow.push(card);
               labelsToShow.push(value);
             }
@@ -820,11 +783,9 @@ export class StatusmapRenderer {
 
         const labelsToShowClean = [...new Set(labelsToShow)];
 
-        console.log('LAS TARJETICAS QUE ENSEÑO',cardsToShow);
         this.cardsData.cards = cardsToShow;
         this.ctrl.ticksWhenPaginating = labelsToShowClean;
 
-        console.log('VALUES A MOSTRAR', labelsToShowClean);
       } else {
         this.ctrl.ticksWhenPaginating = undefined;
       }
@@ -893,10 +854,6 @@ export class StatusmapRenderer {
         .style("opacity", 0)
     ;
 
-    console.log('ANNO: ');
-    console.log(anno);
-    console.log(annoData);
-
     let $ticks = this.$heatmap.find(".statusmap-annotation-tick");
     $ticks
       .on("mouseenter", (event) => {
@@ -905,9 +862,6 @@ export class StatusmapRenderer {
       .on("mouseleave", (event) => {
         this.annotationTooltip.mouseOverAnnotationTick = false;
       });
-
-    console.log('TICKS: ');
-    console.log($ticks);
   }
 }
 

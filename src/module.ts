@@ -365,12 +365,10 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
         this.render();
       }
     );
-    console.log('DATAAAAAA', this.data.length);
 
     if (this.cardsData.targets) {
       this.panel.numberOfPages = Math.ceil(this.cardsData.targets.length/this.panel.pageSize);
       this.panel.totalElements = this.cardsData.targets.length;
-      console.log(this.panel.numberOfPages);
     }
 
     //this.render();

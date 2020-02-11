@@ -148,8 +148,6 @@ System.register(["d3", "jquery", "lodash"], function (_export, _context) {
                 statusesHtml = "statuses:";
               }
 
-              console.log('ESTUTESE: ');
-              console.log(statuses);
               tooltipHtml += "\n      <div>\n        name: <b>".concat(y, "</b> <br>\n        ").concat(statusesHtml, "\n        <ul>\n          ").concat(_.join(_.map(statuses, function (v) {
                 return "<li style=\"background-color: ".concat(v.color, "\" class=\"discrete-item\">").concat(v.tooltip, "</li>");
               }), ""), "\n        </ul>\n      </div>");

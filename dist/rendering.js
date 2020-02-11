@@ -325,26 +325,16 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
         }, {
           key: "addYAxis",
           value: function addYAxis() {
-            //11-20/124
-            //https://datatables.net/
-            console.log('ENTRA ANTES EN EL ADD Y AXIS');
-            console.log('THIS DATA DEL ADD Y AXIS', this.data);
-            console.log('THIS DATA DEL ADD Y AXIS2', this.ctrl.ticksWhenPaginating);
             var ticks;
-            console.log('this.ctrl.ticksWhenPaginating', this.ctrl.ticksWhenPaginating);
-            console.log('this.ctrl.usingPagination', this.ctrl.usingPagination);
 
             if (this.ctrl.ticksWhenPaginating !== undefined) {
-              console.log('ENTRA EN EL PRIMER IF');
               ticks = _.uniq(_.map(this.ctrl.ticksWhenPaginating));
             } else {
-              console.log('ENTRA EN EL SEGUNDO IF');
               ticks = _.uniq(_.map(this.data, function (d) {
                 return d.target;
               }));
-            }
+            } // Set default Y min and max if no data
 
-            console.log('LOS TICKS EN EL ADD', ticks); // Set default Y min and max if no data
 
             if (_.isEmpty(this.data)) {
               ticks = [''];
@@ -418,7 +408,6 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
         }, {
           key: "addHeatmapCanvas",
           value: function addHeatmapCanvas() {
-            console.log('ENTRA ANTRES EN EL ADD CANVAS');
             var heatmap_elem = this.$heatmap[0];
             this.width = Math.floor(this.$heatmap.width()) - this.padding.right;
             this.height = Math.floor(this.$heatmap.height()) - this.padding.bottom;
@@ -472,7 +461,6 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
             this.setOpacityScale(maxValue);
             var cards = this.heatmap.selectAll(".status-heatmap-card").data(this.cardsData.cards);
             cards.append("title");
-            console.log(cards);
             cards = cards.enter().append("rect").attr("cardId", function (c) {
               return c.id;
             }).attr("x", this.getCardX.bind(this)).attr("width", this.getCardWidth.bind(this)).attr("y", this.getCardY.bind(this)).attr("height", this.getCardHeight.bind(this)).attr("rx", this.cardRound).attr("ry", this.cardRound).attr("class", "bordered status-heatmap-card").style("fill", this.getCardColor.bind(this)).style("stroke", this.getCardColor.bind(this)).style("stroke-width", 0) //.style("stroke-width", getCardStrokeWidth)
@@ -852,9 +840,6 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
             if (!this.data || !this.cardsData || !this.setElementHeight()) {
               return;
             } else {
-              //this.data.splice(2,2);
-              console.log('DATITOOOSSSS', this.data);
-
               if (this.ctrl.cardsDataComplete != undefined) {
                 this.cardsData.cards = this.ctrl.cardsDataComplete.slice();
               }
@@ -864,22 +849,12 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
                   return;
                 }
 
-                console.log('PAGINA', this.ctrl.currentPage);
                 this.ctrl.currentPage = 1;
-                console.log('PAGINA x2', this.ctrl.currentPage);
-                console.log('DATA ORIGIAL', this.ctrl.data);
-                console.log('CARDS DATA ORIGINAL', this.ctrl.cardsData.targetIndex);
-                console.log('CARDS DATA ORIGINAL2', this.ctrl.cardsData.targetIndex[0]);
-                console.log('ENTRA PRIMERO EN EL RENDER');
-                console.log('Antes del primer parseo', this.ctrl.cardsDataComplete);
-                console.log('Antes del primer parseo', this.data);
 
                 if ((!this.ctrl.cardsDataComplete || this.ctrl.cardsDataComplete === undefined) && (!this.ctrl.cardsDataLabelsComplete || this.ctrl.cardsDataLabelsComplete === undefined)) {
                   this.ctrl.cardsDataComplete = this.cardsData.cards.slice();
                   this.ctrl.cardsDataLabelsComplete = this.data.slice();
                 }
-
-                console.log('Después del primer parseo', this.ctrl.cardsDataComplete); //console.log('Después del primer parseo', this.ctrl.cardsDataLabelsComplete);
 
                 this.cardsData.cards = this.ctrl.cardsDataComplete.slice();
                 this.data = this.ctrl.cardsDataLabelsComplete.slice();
@@ -889,14 +864,11 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
 
                 for (var i = 0; i < this.cardsData.cards.length; i++) {
                   var card = this.cardsData.cards[i];
-                  console.log('CARD EN BUCLE', card);
 
                   for (var j = 0; j < cardsList.length; j++) {
                     var value = cardsList[j];
-                    console.log('VALUE EN BUCLE', value);
 
                     if (card.y === value) {
-                      console.log('DIVIDE OR DIE');
                       cardsToShow.push(card);
                       labelsToShow.push(value);
                     }
@@ -905,10 +877,8 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
 
                 var labelsToShowClean = _toConsumableArray(new Set(labelsToShow));
 
-                console.log('LAS TARJETICAS QUE ENSEÑO', cardsToShow);
                 this.cardsData.cards = cardsToShow;
                 this.ctrl.ticksWhenPaginating = labelsToShowClean;
-                console.log('VALUES A MOSTRAR', labelsToShowClean);
               } else {
                 this.ctrl.ticksWhenPaginating = undefined;
               }
@@ -969,17 +939,12 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
             }).attr("width", 10).attr("y", this.chartBottom + 1).attr("height", 5).attr("class", "statusmap-annotation-tick").attr("annoId", function (d) {
               return d.id;
             }).style("opacity", 0);
-            console.log('ANNO: ');
-            console.log(anno);
-            console.log(annoData);
             var $ticks = this.$heatmap.find(".statusmap-annotation-tick");
             $ticks.on("mouseenter", function (event) {
               _this3.annotationTooltip.mouseOverAnnotationTick = true;
             }).on("mouseleave", function (event) {
               _this3.annotationTooltip.mouseOverAnnotationTick = false;
             });
-            console.log('TICKS: ');
-            console.log($ticks);
           }
         }]);
 

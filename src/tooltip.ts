@@ -104,8 +104,6 @@ export class StatusmapTooltip {
       } else if (statuses.length > 1) {
         statusesHtml = "statuses:";
       }
-      console.log('ESTUTESE: ');
-      console.log(statuses);
       tooltipHtml += `
       <div>
         name: <b>${y}</b> <br>

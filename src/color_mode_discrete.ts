@@ -134,9 +134,7 @@ export class ColorModeDiscrete {
 
     for (let i = 0; i < thresholds.length; i++) {
       for (let j = 0; j < values.length; j++) {
-        console.log("MULTICOLOR:", j, values[j], thresholds[i].value);
         if (values[j] == thresholds[i].value) {
-          console.log("ESTOY AQUI?");
           return this.getDiscreteColor(i);
         }
       }
