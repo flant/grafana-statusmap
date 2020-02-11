@@ -54,6 +54,9 @@
   }
 }
 
+#contenedor{ height: 20px; line-height: 20px; }
+#contenedor div.formu{ float:left; }
+
 .statusmap-tooltip-extraseries {
   white-space: nowrap;
   font-size: $font-size-sm;

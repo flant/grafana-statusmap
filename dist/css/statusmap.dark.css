@@ -32,6 +32,13 @@
     font-weight: bold;
     text-shadow: 0 0 0.2em #212124, 0 0 0.2em #212124, 0 0 0.2em #212124; }
 
+#contenedor {
+  height: 20px;
+  line-height: 20px; }
+
+#contenedor div.formu {
+  float: left; }
+
 .statusmap-tooltip-extraseries {
   white-space: nowrap;
   font-size: 12px;
