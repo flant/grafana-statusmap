@@ -182,6 +182,8 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
 
           _defineProperty(_assertThisInitialized(_this), "cardsDataLabelsComplete", void 0);
 
+          _defineProperty(_assertThisInitialized(_this), "ticksWhenPaginating", void 0);
+
           _defineProperty(_assertThisInitialized(_this), "graph", void 0);
 
           _defineProperty(_assertThisInitialized(_this), "multipleValues", void 0);
@@ -264,7 +266,6 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
             pageSize: 2,
             numberOfPages: 1,
             usingPagination: false,
-            ticksWhenPaginating: [],
             totalElements: 0
           });
 
@@ -689,10 +690,10 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
             cardsData.targets = _.keys(cardsData.targetIndex); // TODO add here the logic to calculate the size
 
             cardsData.yBucketSize = cardsData.targets.length;
-            /*console.log('vale esto', this.panel.ticksWhenPaginating);
-            if (this.panel.ticksWhenPaginating != undefined || this.panel.ticksWhenPaginating != []) {
+            /*console.log('vale esto', this.ticksWhenPaginating);
+            if (this.ticksWhenPaginating.length > 0) {
               console.log('entra A');
-              cardsData.yBucketSize = this.panel.ticksWhenPaginating.length;
+              cardsData.yBucketSize = this.ticksWhenPaginating.length;
             } else {
               console.log('entra B');
               cardsData.yBucketSize = cardsData.targets.length;

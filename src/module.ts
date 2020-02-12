@@ -93,6 +93,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   cardsData: any;
   cardsDataComplete: any;
   cardsDataLabelsComplete: any;
+  ticksWhenPaginating: [];
   graph: any;
   multipleValues: boolean;
   noColorDefined: boolean;
@@ -168,7 +169,6 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     pageSize: 2,
     numberOfPages: 1,
     usingPagination: false,
-    ticksWhenPaginating: [],
     totalElements: 0
   };
 
@@ -515,10 +515,10 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     cardsData.targets = _.keys(cardsData.targetIndex);
     // TODO add here the logic to calculate the size
     cardsData.yBucketSize = cardsData.targets.length;
-    /*console.log('vale esto', this.panel.ticksWhenPaginating);
-    if (this.panel.ticksWhenPaginating != undefined || this.panel.ticksWhenPaginating != []) {
+    /*console.log('vale esto', this.ticksWhenPaginating);
+    if (this.ticksWhenPaginating.length > 0) {
       console.log('entra A');
-      cardsData.yBucketSize = this.panel.ticksWhenPaginating.length;
+      cardsData.yBucketSize = this.ticksWhenPaginating.length;
     } else {
       console.log('entra B');
       cardsData.yBucketSize = cardsData.targets.length;
