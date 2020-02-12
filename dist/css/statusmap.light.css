@@ -68,6 +68,9 @@
 .width-c-70 {
   width: 70rem !important; }
 
+.pagination-buttons {
+  text-align: right; }
+
 .status-heatmap-legend-wrapper {
   margin: 0 10px; }
   .status-heatmap-legend-wrapper svg {
