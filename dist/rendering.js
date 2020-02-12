@@ -849,7 +849,10 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
                   return;
                 }
 
-                this.ctrl.currentPage = 1;
+                this.ctrl.panel.firstPageElement = this.ctrl.panel.currentPage * this.ctrl.panel.pageSize + 1;
+                console.log('current page', this.ctrl.panel.currentPage + 1);
+                console.log('number pages', this.ctrl.panel.numberOfPages);
+                this.ctrl.panel.currentPage + 1 === this.ctrl.panel.numberOfPages ? this.ctrl.panel.lastPageElement = this.ctrl.panel.totalElements : this.ctrl.panel.lastPageElement = this.ctrl.panel.currentPage * this.ctrl.panel.pageSize + this.ctrl.panel.pageSize; //this.ctrl.currentPage = 1;
 
                 if ((!this.ctrl.cardsDataComplete || this.ctrl.cardsDataComplete === undefined) && (!this.ctrl.cardsDataLabelsComplete || this.ctrl.cardsDataLabelsComplete === undefined)) {
                   this.ctrl.cardsDataComplete = this.cardsData.cards.slice();

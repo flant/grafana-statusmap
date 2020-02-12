@@ -169,7 +169,9 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     pageSize: 2,
     numberOfPages: 1,
     usingPagination: false,
-    totalElements: 0
+    totalElements: 0,
+    firstPageElement: 1,
+    lastPageElement: 5
   };
 
   /** @ngInject */
