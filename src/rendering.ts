@@ -121,7 +121,7 @@ export class StatusmapRenderer {
         height = parseInt(height.replace('px', ''), 10);
       }
 
-      height -= this.panel.legend.show ? 32 : 10; // bottom padding and space for legend. Change margin in .status-heatmap-color-legend !
+      height -= this.panel.legend.show ? 140 : 10; // bottom padding and space for legend. Change margin in .status-heatmap-color-legend !
 
       this.$heatmap.css('height', height + 'px');
 

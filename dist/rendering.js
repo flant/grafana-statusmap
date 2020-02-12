@@ -233,7 +233,7 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
                 height = parseInt(height.replace('px', ''), 10);
               }
 
-              height -= this.panel.legend.show ? 32 : 10; // bottom padding and space for legend. Change margin in .status-heatmap-color-legend !
+              height -= this.panel.legend.show ? 140 : 10; // bottom padding and space for legend. Change margin in .status-heatmap-color-legend !
 
               this.$heatmap.css('height', height + 'px');
               return true;
