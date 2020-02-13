@@ -622,6 +622,7 @@ export class StatusmapRenderer {
   }
 
   public onMouseClick(event) {
+    console.log('HE HECHO CLICK!!!', event)
     this.tooltipExtraSeries.show(event)
     if (this.ctrl.panel.usingUrl) {
       this.tooltip.destroy();
@@ -629,6 +630,7 @@ export class StatusmapRenderer {
   }
 
   getEventPos(event, offset) {
+    console.log('ENTROOOO EN EL GET EVENNNNTTTT', offset);
     const x = this.xScale.invert(offset.x - this.yAxisWidth).valueOf();
     const y = this.yScale.invert(offset.y - this.chartTop);
     const pos = {
@@ -646,6 +648,7 @@ export class StatusmapRenderer {
   }
 
   emitGraphHoverEvent(event) {
+    console.log('entro en el hover', event);
     let x = this.xScale.invert(event.offsetX - this.yAxisWidth - this.xGridSize/2).valueOf();
     let y = this.yScale(event.offsetY);
     let pos = {
@@ -670,6 +673,7 @@ export class StatusmapRenderer {
   }
 
   drawSelection(posX1, posX2) {
+    console.log('entro en el draw')
     if (this.heatmap) {
       this.heatmap.selectAll(".status-heatmap-selection").remove();
       let selectionX = Math.min(posX1, posX2);
@@ -815,6 +819,7 @@ export class StatusmapRenderer {
   }
 
   _renderAnnotations() {
+    console.log('ENTROOOOO EN EL ANNOTATIOOOOOOOONSSSSSS');
     if (!this.ctrl.annotations || this.ctrl.annotations.length == 0) {
       return;
     }

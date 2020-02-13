@@ -727,6 +727,7 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
         }, {
           key: "onMouseClick",
           value: function onMouseClick(event) {
+            console.log('HE HECHO CLICK!!!', event);
             this.tooltipExtraSeries.show(event);
 
             if (this.ctrl.panel.usingUrl) {
@@ -736,6 +737,7 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
         }, {
           key: "getEventPos",
           value: function getEventPos(event, offset) {
+            console.log('ENTROOOO EN EL GET EVENNNNTTTT', offset);
             var x = this.xScale.invert(offset.x - this.yAxisWidth).valueOf();
             var y = this.yScale.invert(offset.y - this.chartTop);
             var pos = {
@@ -753,6 +755,7 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
         }, {
           key: "emitGraphHoverEvent",
           value: function emitGraphHoverEvent(event) {
+            console.log('entro en el hover', event);
             var x = this.xScale.invert(event.offsetX - this.yAxisWidth - this.xGridSize / 2).valueOf();
             var y = this.yScale(event.offsetY);
             var pos = {
@@ -782,6 +785,8 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
         }, {
           key: "drawSelection",
           value: function drawSelection(posX1, posX2) {
+            console.log('entro en el draw');
+
             if (this.heatmap) {
               this.heatmap.selectAll(".status-heatmap-selection").remove();
               var selectionX = Math.min(posX1, posX2);
@@ -904,6 +909,8 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
           key: "_renderAnnotations",
           value: function _renderAnnotations() {
             var _this3 = this;
+
+            console.log('ENTROOOOO EN EL ANNOTATIOOOOOOOONSSSSSS');
 
             if (!this.ctrl.annotations || this.ctrl.annotations.length == 0) {
               return;
