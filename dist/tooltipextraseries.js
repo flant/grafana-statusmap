@@ -110,7 +110,13 @@ System.register(["d3", "lodash", "jquery", "./extra_series_format"], function (_
               return;
             }
 
-            var card = this.panelCtrl.cardsDataComplete[cardId];
+            var card;
+
+            if (this.panel.usingPagination) {
+              card = this.panelCtrl.cardsDataComplete[cardId];
+            } else {
+              card = this.panelCtrl.cardsData.cards[cardId];
+            }
 
             if (!card) {
               this.destroy();

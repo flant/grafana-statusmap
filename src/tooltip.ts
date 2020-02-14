@@ -73,7 +73,14 @@ export class StatusmapTooltip {
       return;
     }
 
-    let card = this.panelCtrl.cardsDataComplete[cardId];
+    let card;
+
+    if (this.panel.usingPagination) {
+      card = this.panelCtrl.cardsDataComplete[cardId];
+    } else {
+      card = this.panelCtrl.cardsData.cards[cardId];
+    }
+
     if (!card) {
       this.destroy();
       return;

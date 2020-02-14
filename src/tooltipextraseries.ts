@@ -76,7 +76,13 @@ export class StatusHeatmapTooltipExtraSeries {
               return;
             }
             
-            let card: any = this.panelCtrl.cardsDataComplete[cardId];
+            let card: any;
+
+            if (this.panel.usingPagination) {
+                card = this.panelCtrl.cardsDataComplete[cardId];
+            } else {
+                card = this.panelCtrl.cardsData.cards[cardId];
+            }
             
             if (!card) {
               this.destroy();

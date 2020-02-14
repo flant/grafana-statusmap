@@ -117,7 +117,13 @@ System.register(["d3", "jquery", "lodash"], function (_export, _context) {
               return;
             }
 
-            var card = this.panelCtrl.cardsDataComplete[cardId];
+            var card;
+
+            if (this.panel.usingPagination) {
+              card = this.panelCtrl.cardsDataComplete[cardId];
+            } else {
+              card = this.panelCtrl.cardsData.cards[cardId];
+            }
 
             if (!card) {
               this.destroy();

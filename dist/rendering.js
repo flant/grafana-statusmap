@@ -424,7 +424,12 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
             this.cardVSpacing = this.panel.cards.cardVSpacing !== null ? this.panel.cards.cardVSpacing : CARD_V_SPACING;
             this.cardRound = this.panel.cards.cardRound !== null ? this.panel.cards.cardRound : CARD_ROUND; // calculate yOffset for YAxis
 
-            this.yGridSize = Math.floor(this.chartHeight / this.panel.pageSize);
+            if (this.panel.usingPagination) {
+              this.yGridSize = Math.floor(this.chartHeight / this.panel.pageSize);
+            } else {
+              this.yGridSize = Math.floor(this.chartHeight / this.cardsData.yBucketSize);
+            }
+
             this.cardHeight = this.yGridSize ? this.yGridSize - this.cardVSpacing : 0;
             this.yOffset = this.cardHeight / 2;
             this.addYAxis();
