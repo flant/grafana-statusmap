@@ -319,7 +319,7 @@ export class StatusmapRenderer {
     this.cardRound = this.panel.cards.cardRound !== null ? this.panel.cards.cardRound : CARD_ROUND;
 
     // calculate yOffset for YAxis
-    this.yGridSize = Math.floor(this.chartHeight / this.cardsData.yBucketSize);
+    this.yGridSize = Math.floor(this.chartHeight / this.panel.pageSize);
     this.cardHeight = this.yGridSize ? this.yGridSize - this.cardVSpacing : 0;
     this.yOffset = this.cardHeight / 2;
 

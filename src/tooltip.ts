@@ -73,7 +73,7 @@ export class StatusmapTooltip {
       return;
     }
 
-    let card = this.panelCtrl.cardsData.cards[cardId];
+    let card = this.panelCtrl.cardsDataComplete[cardId];
     if (!card) {
       this.destroy();
       return;

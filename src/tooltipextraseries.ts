@@ -76,7 +76,7 @@ export class StatusHeatmapTooltipExtraSeries {
               return;
             }
             
-            let card: any = this.panelCtrl.cardsData.cards[cardId];
+            let card: any = this.panelCtrl.cardsDataComplete[cardId];
             
             if (!card) {
               this.destroy();

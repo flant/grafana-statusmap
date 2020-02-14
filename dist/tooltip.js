@@ -117,7 +117,7 @@ System.register(["d3", "jquery", "lodash"], function (_export, _context) {
               return;
             }
 
-            var card = this.panelCtrl.cardsData.cards[cardId];
+            var card = this.panelCtrl.cardsDataComplete[cardId];
 
             if (!card) {
               this.destroy();

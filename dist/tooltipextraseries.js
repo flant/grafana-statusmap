@@ -110,7 +110,7 @@ System.register(["d3", "lodash", "jquery", "./extra_series_format"], function (_
               return;
             }
 
-            var card = this.panelCtrl.cardsData.cards[cardId];
+            var card = this.panelCtrl.cardsDataComplete[cardId];
 
             if (!card) {
               this.destroy();
