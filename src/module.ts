@@ -515,16 +515,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
     // TODO add some logic for targets heirarchy
     cardsData.targets = _.keys(cardsData.targetIndex);
-    // TODO add here the logic to calculate the size
     cardsData.yBucketSize = cardsData.targets.length;
-    /*console.log('vale esto', this.ticksWhenPaginating);
-    if (this.ticksWhenPaginating.length > 0) {
-      console.log('entra A');
-      cardsData.yBucketSize = this.ticksWhenPaginating.length;
-    } else {
-      console.log('entra B');
-      cardsData.yBucketSize = cardsData.targets.length;
-    }*/
     
     // Maximum number of buckets over x axis
     cardsData.xBucketSize = _.max(_.map(data, d => d.datapoints.length));
