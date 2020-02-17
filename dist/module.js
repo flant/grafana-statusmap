@@ -390,6 +390,10 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
         }, {
           key: "changePaginationSize",
           value: function changePaginationSize() {
+            if (this.panel.pageSize === 0) {
+              this.panel.pageSize = 1;
+            }
+
             this.panel.currentPage = 0;
             this.refresh();
           }
