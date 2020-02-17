@@ -425,7 +425,7 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
             this.cardRound = this.panel.cards.cardRound !== null ? this.panel.cards.cardRound : CARD_ROUND; // calculate yOffset for YAxis
 
             if (this.panel.usingPagination) {
-              this.yGridSize = Math.floor(this.chartHeight / this.panel.pageSize);
+              this.yGridSize = Math.floor(this.chartHeight / this.ctrl.ticksWhenPaginating.length);
             } else {
               this.yGridSize = Math.floor(this.chartHeight / this.cardsData.yBucketSize);
             }

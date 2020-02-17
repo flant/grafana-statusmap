@@ -320,7 +320,7 @@ export class StatusmapRenderer {
 
     // calculate yOffset for YAxis
     if (this.panel.usingPagination) {
-      this.yGridSize = Math.floor(this.chartHeight / this.panel.pageSize);
+      this.yGridSize = Math.floor(this.chartHeight / this.ctrl.ticksWhenPaginating.length);
     } else {
       this.yGridSize = Math.floor(this.chartHeight / this.cardsData.yBucketSize);
     }

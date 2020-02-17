@@ -268,7 +268,9 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
             usingPagination: false,
             totalElements: 0,
             firstPageElement: 1,
-            lastPageElement: 5
+            lastPageElement: 5,
+            allowAllElements: false,
+            availableValues: []
           });
 
           _defineProperty(_assertThisInitialized(_this), "onEditorAddUrl", function () {
