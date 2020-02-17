@@ -254,6 +254,12 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     }
   }
 
+  changePaginationSize(): void {
+    this.panel.currentPage = 0;
+
+    this.refresh();
+  }
+
   getChartWidth():number {
     const wndWidth = $(window).width();
     // gripPos.w is a width in grid's measurements. Grid size in Grafana is 24.

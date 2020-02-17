@@ -388,6 +388,12 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
             }
           }
         }, {
+          key: "changePaginationSize",
+          value: function changePaginationSize() {
+            this.panel.currentPage = 0;
+            this.refresh();
+          }
+        }, {
           key: "getChartWidth",
           value: function getChartWidth() {
             var wndWidth = $(window).width(); // gripPos.w is a width in grid's measurements. Grid size in Grafana is 24.

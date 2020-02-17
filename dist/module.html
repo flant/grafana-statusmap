@@ -4,7 +4,7 @@
 	<div class="gf-form" ng-if="ctrl.panel.usingPagination">
 		<label class="gf-form-label width-9">Items per page</label>
 		<input type="number" class="gf-form-input width-5" placeholder="2" data-placement="right"
-		bs-tooltip="'Number of items to show per page.'" ng-model="ctrl.panel.pageSize" ng-change="ctrl.refresh()"
+		bs-tooltip="'Number of items to show per page.'" ng-model="ctrl.panel.pageSize" ng-change="ctrl.changePaginationSize()"
 		ng-model-onblur>
 	</div>	
 
