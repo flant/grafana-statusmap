@@ -257,7 +257,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   }
 
   changePaginationSize(): void {
-    if (this.panel.pageSize === 0) {
+    if (this.panel.pageSize <= 0) {
       this.panel.pageSize = 1;
     }
 
