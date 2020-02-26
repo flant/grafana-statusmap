@@ -360,50 +360,32 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
 
   onDataReceived(dataList: any) {
-    console.log('ON DATA RECEIVED: entra en on dataReceived')
-
     this.data      = dataList;
     this.cardsData = this.convertToCards(this.data);
-
-    console.log('ON DATA RECEIVED: setea las variables de data y cardsData');
-    
 
     this.annotationsPromise.then(
       (result: { alertState: any; annotations: any }) => {
         this.loading = false;
-        console.log('ON DATA RECEIVED: entra en promesa de annotations');
         //this.alertState = result.alertState;
         if (result.annotations && result.annotations.length > 0) {
           this.annotations = result.annotations;
-          console.log('ON DATA RECEIVED: setea las anotations');
         } else {
           this.annotations = [];
-          console.log('ON DATA RECEIVED: no setea las annotations porque no hay');
         }
-        //this.refresh();
         this.render(this.data);
-        console.log('ON DATA RECEIVED: renderiza después de las annotations');
       },
       () => {
-        console.log('ON DATA RECEIVED: segunda parte del promise');
         this.loading = false;
         this.annotations = [];
-        //this.refresh();
         this.render(this.data);
-        console.log('ON DATA RECEIVED: setea las anotations a false porque no hay y hace render');
       }
     );
 
-    console.log('ON DATA RECEIVED: sale del promise');
-
     if (this.cardsData.targets) {
-      console.log('ON DATA RECEIVED: existen targets dentro del cardsData');
       this.panel.numberOfPages = Math.ceil(this.cardsData.targets.length/this.panel.pageSize);
       this.panel.totalElements = this.cardsData.targets.length;
-      console.log('ON DATA RECEIVED: setea el numero de páginas y el total de elements');
     }
-
-    //this.refresh();
+    
     //this.render();
   }
 
