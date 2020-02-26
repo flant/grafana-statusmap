@@ -862,25 +862,35 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
             this.data = this.ctrl.data;
             this.panel = this.ctrl.panel;
             this.timeRange = this.ctrl.range;
-            this.cardsData = this.ctrl.cardsData;
-            console.log('RENDER: setea las variables de data, panel, timeRange y cardsData');
+            this.cardsData = this.ctrl.cardsData; //this.ctrl.cardsDataComplete = this.ctrl.cardsData.cards;
+            //console.log('RENDER: INICIO', this.ctrl.cardsDataComplete);
 
-            if (this.ctrl.cardsDataComplete && this.ctrl.cardsDataComplete != undefined) {
+            console.log('RENDER: setea las variables de data, panel, timeRange y cardsData');
+            /*if (this.ctrl.cardsDataComplete && this.ctrl.cardsDataComplete != undefined) {
               console.log('RENDER: cardsDAtaComplete existe y no es indefinido');
               this.cardsData.cards = this.ctrl.cardsDataComplete;
               console.log('RENDER: seteo el cardsData.cards con todos los cards guardados previamente');
-            }
+              console.log('RENDER: CARDS DE AHORA - cardsdatacomplete', this.ctrl.cardsDataComplete.length);
+              console.log('RENDER: CARDS DE AHORA - cardsdata', this.ctrl.cardsData.cards.length);
+            }*/
 
             if (!this.data || !this.cardsData || !this.setElementHeight()) {
               console.log('RENDER: regreso porque data o cardsData no existe');
               return;
             } else {
+              /*if ((!this.ctrl.cardsDataComplete || this.ctrl.cardsDataComplete === undefined) &&
+                (!this.ctrl.cardsDataLabelsComplete || this.ctrl.cardsDataLabelsComplete === undefined)) {
+                console.log('RENDER: cardsDataComplete no existe o es undefined y cardsDataLabelsComplete no existe o es undefined');
+                this.ctrl.cardsDataComplete = this.cardsData.cards.slice();
+                this.ctrl.cardsDataLabelsComplete = this.data.slice();
+                console.log('RENDER: creo cardsDAtaComplete y cardsDataLabelsComplete copiando los valores de cards y data');
+              }*/
+              this.ctrl.cardsDataComplete = this.ctrl.cardsData.cards;
               console.log('RENDER: data o cardsData existe');
-
-              if (this.ctrl.cardsDataComplete != undefined) {
+              /*if (this.ctrl.cardsDataComplete != undefined) {
                 console.log('RENDER: cardsDatacomplete no es indefinido y seteo las cards con el cardsDataComplete');
                 this.cardsData.cards = this.ctrl.cardsDataComplete;
-              }
+              }*/
 
               if (this.ctrl.panel.usingPagination) {
                 console.log('RENDER: el panel usa paginación');
@@ -895,15 +905,8 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
                 this.ctrl.panel.currentPage + 1 === this.ctrl.panel.numberOfPages ? this.ctrl.panel.lastPageElement = this.ctrl.panel.totalElements : this.ctrl.panel.lastPageElement = this.ctrl.panel.currentPage * this.ctrl.panel.pageSize + this.ctrl.panel.pageSize;
                 console.log('RENDER: seteo el último elemento del panel'); //this.ctrl.currentPage = 1;
 
-                if ((!this.ctrl.cardsDataComplete || this.ctrl.cardsDataComplete === undefined) && (!this.ctrl.cardsDataLabelsComplete || this.ctrl.cardsDataLabelsComplete === undefined)) {
-                  console.log('RENDER: cardsDataComplete no existe o es undefined y cardsDataLabelsComplete no existe o es undefined');
-                  this.ctrl.cardsDataComplete = this.cardsData.cards.slice();
-                  this.ctrl.cardsDataLabelsComplete = this.data.slice();
-                  console.log('RENDER: creo cardsDAtaComplete y cardsDataLabelsComplete copiando los valores de cards y data');
-                }
                 /*this.cardsData.cards = this.ctrl.cardsDataComplete.slice();
                 this.data = this.ctrl.cardsDataLabelsComplete.slice();*/
-
 
                 var cardsList = this.ctrl.cardsData.targets.slice(this.ctrl.panel.pageSize * this.ctrl.panel.currentPage, this.ctrl.panel.pageSize * this.ctrl.panel.currentPage + this.ctrl.panel.pageSize);
                 console.log('RENDER: creo y seteo el listado de labels basado en la página');
@@ -962,8 +965,8 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
             this.scope.chartHeight = this.chartHeight;
             this.scope.chartWidth = this.chartWidth;
             this.scope.chartTop = this.chartTop;
-            console.log('RENDER: seteo variables del panel'); //this.cardsData.cards = this.ctrl.cardsDataComplete.slice();
-
+            console.log('RENDER: seteo variables del panel');
+            this.ctrl.cardsData.cards = this.ctrl.cardsDataComplete.slice();
             console.log('RENDER: seteo de nuevo cardsData.cards con cardsDataComplete para que vuelva a su estado original');
           }
         }, {
