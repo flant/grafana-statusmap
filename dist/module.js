@@ -363,6 +363,8 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
 
           _this.events.on('onChangeType', _this.onChangeType.bind(_assertThisInitialized(_this)));
 
+          _this.events.on('refresh', _this.onRender.bind(_assertThisInitialized(_this)));
+
           return _this;
         }
 
@@ -495,29 +497,44 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
           value: function onDataReceived(dataList) {
             var _this3 = this;
 
+            console.log('ON DATA RECEIVED: entra en on dataReceived');
             this.data = dataList;
             this.cardsData = this.convertToCards(this.data);
+            console.log('ON DATA RECEIVED: setea las variables de data y cardsData');
             this.annotationsPromise.then(function (result) {
-              _this3.loading = false; //this.alertState = result.alertState;
+              _this3.loading = false;
+              console.log('ON DATA RECEIVED: entra en promesa de annotations'); //this.alertState = result.alertState;
 
               if (result.annotations && result.annotations.length > 0) {
                 _this3.annotations = result.annotations;
+                console.log('ON DATA RECEIVED: setea las anotations');
               } else {
                 _this3.annotations = [];
-              }
+                console.log('ON DATA RECEIVED: no setea las annotations porque no hay');
+              } //this.refresh();
 
-              _this3.render();
+
+              _this3.render(_this3.data);
+
+              console.log('ON DATA RECEIVED: renderiza después de las annotations');
             }, function () {
+              console.log('ON DATA RECEIVED: segunda parte del promise');
               _this3.loading = false;
-              _this3.annotations = [];
+              _this3.annotations = []; //this.refresh();
 
-              _this3.render();
+              _this3.render(_this3.data);
+
+              console.log('ON DATA RECEIVED: setea las anotations a false porque no hay y hace render');
             });
+            console.log('ON DATA RECEIVED: sale del promise');
 
             if (this.cardsData.targets) {
+              console.log('ON DATA RECEIVED: existen targets dentro del cardsData');
               this.panel.numberOfPages = Math.ceil(this.cardsData.targets.length / this.panel.pageSize);
               this.panel.totalElements = this.cardsData.targets.length;
-            } //this.render();
+              console.log('ON DATA RECEIVED: setea el numero de páginas y el total de elements');
+            } //this.refresh();
+            //this.render();
 
           }
         }, {

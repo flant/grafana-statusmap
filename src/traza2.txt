@@ -1,0 +1,2477 @@
+ON DATA RECEIVED: entra en on dataReceived
+ON DATA RECEIVED: setea las variables de data y cardsData
+ON DATA RECEIVED: sale del promise
+ON DATA RECEIVED: existen targets dentro del cardsData
+ON DATA RECEIVED: setea el numero de páginas y el total de elements
+ON DATA RECEIVED: entra en promesa de annotations
+ON DATA RECEIVED: no setea las annotations porque no hay
+RENDER: entra en el render
+RENDER: setea las variables de data, panel, timeRange y cardsData
+RENDER: cardsDAtaComplete existe y no es indefinido
+RENDER: seteo el cardsData.cards con todos los cards guardados previamente
+RENDER: data o cardsData existe
+RENDER: cardsDatacomplete no es indefinido y seteo las cards con el cardsDataComplete
+RENDER: el panel usa paginación
+RENDER: seteo el primer elemento del panel
+RENDER: seteo el último elemento del panel
+RENDER: creo y seteo el listado de labels basado en la página
+RENDER: creo las variables de cards y labels a mostrar
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: empiezo a recorrer las cards
+RENDER: selecciono una card
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: empiezo a recorrer los labels
+RENDER: selecciono un label
+RENDER: el label de la card seleccionada es el mismo que el del label seleccionado
+RENDER: añado la card
+RENDER: añado el label
+RENDER: ordeno el array de labels a mostrar
+RENDER: cardsData.cards ahora vale lo mismo que todas las cards seleccionadas en el bucle
+RENDER: seteo los labels a usar con los obtenidos en el bucle
+RENDER: borro el contenido de las cards seleccionadas previamente, NO de cardsDAta.cards, ya ha sido seteado con este valor
+RENDER: cardsData.cards no está vacío
+ADDHEATMAP: entro al addHeatmap
+ADDHEATMAPCANVAS: entro al addHeatmapCanvas
+ADDHEATMAPCANVAS: obtengo el primer elemento del heatmap
+ADDHEATMAPCANVAS: seteo la altura y anchura
+ADDHEATMAPCANVAS: existe ya el heatmap y lo borro
+ADDHEATMAPCANVAS: rescato el heatmap por css y le añado atributos
+ADDHEATMAPCANVAS: seteo variables de cards y de los gráficos
+ADDHEATMAPCANVAS: creo el tamaño de y dependiendo de si se usa paginación o no
+ADDHEATMAP: salgo del addHeatmapCanvas
+ADDHEATMAP: seteo variables de las cards con el valor máximo y mínimo
+ADDHEATMAP: creo las cards:  Jt {_groups: Array(1), _parents: Array(1), _enter: Array(1), _exit: Array(1)}
+ADDHEATMAP: le añado los atributos css a las cards
+ADDHEATMAP: rescato las cards para añadirle los eventos del ratón al pasar y al salir
+ADDHEATMAP: cargo las annotations
+RENDER: llamo a la función addHeatMap
+RENDER: seteo variables del panel
+RENDER: seteo de nuevo cardsData.cards con cardsDataComplete para que vuelva a su estado original
+ON DATA RECEIVED: renderiza después de las annotations

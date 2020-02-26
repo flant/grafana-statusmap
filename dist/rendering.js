@@ -412,21 +412,29 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
         }, {
           key: "addHeatmapCanvas",
           value: function addHeatmapCanvas() {
+            console.log('ADDHEATMAPCANVAS: entro al addHeatmapCanvas');
             var heatmap_elem = this.$heatmap[0];
+            console.log('ADDHEATMAPCANVAS: obtengo el primer elemento del heatmap');
             this.width = Math.floor(this.$heatmap.width()) - this.padding.right;
             this.height = Math.floor(this.$heatmap.height()) - this.padding.bottom;
+            console.log('ADDHEATMAPCANVAS: seteo la altura y anchura');
 
             if (this.heatmap) {
+              console.log('ADDHEATMAPCANVAS: existe ya el heatmap y lo borro');
               this.heatmap.remove();
             }
 
             this.heatmap = d3.select(heatmap_elem).append("svg").attr("width", this.width).attr("height", this.height);
+            console.log('ADDHEATMAPCANVAS: rescato el heatmap por css y le añado atributos');
             this.chartHeight = this.height - this.margin.top - this.margin.bottom;
             this.chartTop = this.margin.top;
             this.chartBottom = this.chartTop + this.chartHeight;
             this.cardHSpacing = this.panel.cards.cardHSpacing !== null ? this.panel.cards.cardHSpacing : CARD_H_SPACING;
             this.cardVSpacing = this.panel.cards.cardVSpacing !== null ? this.panel.cards.cardVSpacing : CARD_V_SPACING;
-            this.cardRound = this.panel.cards.cardRound !== null ? this.panel.cards.cardRound : CARD_ROUND; // calculate yOffset for YAxis
+            this.cardRound = this.panel.cards.cardRound !== null ? this.panel.cards.cardRound : CARD_ROUND;
+            console.log('ADDHEATMAPCANVAS: seteo variables de cards y de los gráficos'); // calculate yOffset for YAxis
+
+            console.log('ADDHEATMAPCANVAS: creo el tamaño de y dependiendo de si se usa paginación o no');
 
             if (this.panel.usingPagination) {
               this.yGridSize = Math.floor(this.chartHeight / this.ctrl.ticksWhenPaginating.length);
@@ -459,22 +467,29 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
           value: function addHeatmap() {
             var _this = this;
 
+            console.log('ADDHEATMAP: entro al addHeatmap');
             this.addHeatmapCanvas();
+            console.log('ADDHEATMAP: salgo del addHeatmapCanvas');
             var maxValue = this.panel.color.max || this.cardsData.maxValue;
             var minValue = this.panel.color.min || this.cardsData.minValue;
+            console.log('ADDHEATMAP: seteo variables de las cards con el valor máximo y mínimo');
 
             if (this.panel.color.mode !== 'discrete') {
+              console.log('ADDHEATMAP: el color mode es diferente de discrete');
               this.colorScale = this.getColorScale(maxValue, minValue);
+              console.log('ADDHEATMAP: seteo la escala de color');
             }
 
             this.setOpacityScale(maxValue);
             var cards = this.heatmap.selectAll(".status-heatmap-card").data(this.cardsData.cards);
+            console.log('ADDHEATMAP: creo las cards: ', cards);
             cards.append("title");
             cards = cards.enter().append("rect").attr("cardId", function (c) {
               return c.id;
             }).attr("x", this.getCardX.bind(this)).attr("width", this.getCardWidth.bind(this)).attr("y", this.getCardY.bind(this)).attr("height", this.getCardHeight.bind(this)).attr("rx", this.cardRound).attr("ry", this.cardRound).attr("class", "bordered status-heatmap-card").style("fill", this.getCardColor.bind(this)).style("stroke", this.getCardColor.bind(this)).style("stroke-width", 0) //.style("stroke-width", getCardStrokeWidth)
             //.style("stroke-dasharray", "3,3")
             .style("opacity", this.getCardOpacity.bind(this));
+            console.log('ADDHEATMAP: le añado los atributos css a las cards');
             var $cards = this.$heatmap.find(".status-heatmap-card");
             $cards.on("mouseenter", function (event) {
               _this.tooltip.mouseOverBucket = true;
@@ -485,6 +500,8 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
 
               _this.resetCardHighLight(event);
             });
+            console.log('ADDHEATMAP: rescato las cards para añadirle los eventos del ratón al pasar y al salir');
+            console.log('ADDHEATMAP: cargo las annotations');
 
             this._renderAnnotations();
 
@@ -841,71 +858,113 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
         }, {
           key: "render",
           value: function render() {
+            console.log('RENDER: entra en el render');
             this.data = this.ctrl.data;
             this.panel = this.ctrl.panel;
             this.timeRange = this.ctrl.range;
             this.cardsData = this.ctrl.cardsData;
+            console.log('RENDER: setea las variables de data, panel, timeRange y cardsData');
+
+            if (this.ctrl.cardsDataComplete && this.ctrl.cardsDataComplete != undefined) {
+              console.log('RENDER: cardsDAtaComplete existe y no es indefinido');
+              this.cardsData.cards = this.ctrl.cardsDataComplete;
+              console.log('RENDER: seteo el cardsData.cards con todos los cards guardados previamente');
+            }
 
             if (!this.data || !this.cardsData || !this.setElementHeight()) {
+              console.log('RENDER: regreso porque data o cardsData no existe');
               return;
             } else {
+              console.log('RENDER: data o cardsData existe');
+
               if (this.ctrl.cardsDataComplete != undefined) {
-                this.cardsData.cards = this.ctrl.cardsDataComplete.slice();
+                console.log('RENDER: cardsDatacomplete no es indefinido y seteo las cards con el cardsDataComplete');
+                this.cardsData.cards = this.ctrl.cardsDataComplete;
               }
 
               if (this.ctrl.panel.usingPagination) {
+                console.log('RENDER: el panel usa paginación');
+
                 if (!this.cardsData.targets) {
+                  console.log('RENDER: regreso si los targets no existen');
                   return;
                 }
 
                 this.ctrl.panel.firstPageElement = this.ctrl.panel.currentPage * this.ctrl.panel.pageSize + 1;
-                this.ctrl.panel.currentPage + 1 === this.ctrl.panel.numberOfPages ? this.ctrl.panel.lastPageElement = this.ctrl.panel.totalElements : this.ctrl.panel.lastPageElement = this.ctrl.panel.currentPage * this.ctrl.panel.pageSize + this.ctrl.panel.pageSize; //this.ctrl.currentPage = 1;
+                console.log('RENDER: seteo el primer elemento del panel');
+                this.ctrl.panel.currentPage + 1 === this.ctrl.panel.numberOfPages ? this.ctrl.panel.lastPageElement = this.ctrl.panel.totalElements : this.ctrl.panel.lastPageElement = this.ctrl.panel.currentPage * this.ctrl.panel.pageSize + this.ctrl.panel.pageSize;
+                console.log('RENDER: seteo el último elemento del panel'); //this.ctrl.currentPage = 1;
 
                 if ((!this.ctrl.cardsDataComplete || this.ctrl.cardsDataComplete === undefined) && (!this.ctrl.cardsDataLabelsComplete || this.ctrl.cardsDataLabelsComplete === undefined)) {
+                  console.log('RENDER: cardsDataComplete no existe o es undefined y cardsDataLabelsComplete no existe o es undefined');
                   this.ctrl.cardsDataComplete = this.cardsData.cards.slice();
                   this.ctrl.cardsDataLabelsComplete = this.data.slice();
+                  console.log('RENDER: creo cardsDAtaComplete y cardsDataLabelsComplete copiando los valores de cards y data');
                 }
+                /*this.cardsData.cards = this.ctrl.cardsDataComplete.slice();
+                this.data = this.ctrl.cardsDataLabelsComplete.slice();*/
 
-                this.cardsData.cards = this.ctrl.cardsDataComplete.slice();
-                this.data = this.ctrl.cardsDataLabelsComplete.slice();
+
                 var cardsList = this.ctrl.cardsData.targets.slice(this.ctrl.panel.pageSize * this.ctrl.panel.currentPage, this.ctrl.panel.pageSize * this.ctrl.panel.currentPage + this.ctrl.panel.pageSize);
+                console.log('RENDER: creo y seteo el listado de labels basado en la página');
                 var cardsToShow = [];
                 var labelsToShow = [];
+                console.log('RENDER: creo las variables de cards y labels a mostrar');
 
                 for (var i = 0; i < this.cardsData.cards.length; i++) {
+                  console.log('RENDER: empiezo a recorrer las cards');
                   var card = this.cardsData.cards[i];
+                  console.log('RENDER: selecciono una card');
 
                   for (var j = 0; j < cardsList.length; j++) {
+                    console.log('RENDER: empiezo a recorrer los labels');
                     var value = cardsList[j];
+                    console.log('RENDER: selecciono un label');
 
                     if (card.y === value) {
+                      console.log('RENDER: el label de la card seleccionada es el mismo que el del label seleccionado');
                       cardsToShow.push(card);
+                      console.log('RENDER: añado la card');
                       labelsToShow.push(value);
+                      console.log('RENDER: añado el label');
                     }
                   }
                 }
 
                 var labelsToShowClean = _toConsumableArray(new Set(labelsToShow));
 
-                this.cardsData.cards = cardsToShow;
+                console.log('RENDER: ordeno el array de labels a mostrar');
+                this.cardsData.cards = cardsToShow.slice();
+                console.log('RENDER: cardsData.cards ahora vale lo mismo que todas las cards seleccionadas en el bucle');
                 this.ctrl.ticksWhenPaginating = labelsToShowClean;
+                console.log('RENDER: seteo los labels a usar con los obtenidos en el bucle');
+                cardsToShow = undefined;
+                console.log('RENDER: borro el contenido de las cards seleccionadas previamente, NO de cardsDAta.cards, ya ha sido seteado con este valor');
               } else {
                 this.ctrl.ticksWhenPaginating = undefined;
+                console.log('RENDER: no hay ticks porque no se pagina');
               }
             } // Draw default axes and return if no data
 
 
             if (_.isEmpty(this.cardsData.cards)) {
+              console.log('RENDER: cardsData está vacío');
               this.addHeatmapCanvas();
+              console.log('RENDER: añado HeatmapCanvas y regreso');
               return;
             }
 
+            console.log('RENDER: cardsData.cards no está vacío');
             this.addHeatmap();
+            console.log('RENDER: llamo a la función addHeatMap');
             this.scope.yAxisWidth = this.yAxisWidth;
             this.scope.xAxisHeight = this.xAxisHeight;
             this.scope.chartHeight = this.chartHeight;
             this.scope.chartWidth = this.chartWidth;
             this.scope.chartTop = this.chartTop;
+            console.log('RENDER: seteo variables del panel'); //this.cardsData.cards = this.ctrl.cardsDataComplete.slice();
+
+            console.log('RENDER: seteo de nuevo cardsData.cards con cardsDataComplete para que vuelva a su estado original');
           }
         }, {
           key: "_renderAnnotations",
