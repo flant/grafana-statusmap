@@ -166,7 +166,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     seriesFilterIndex: -1,
     usingUrl: false,
     currentPage: 1,
-    pageSize: 2,
+    pageSize: 15,
     numberOfPages: 1,
     usingPagination: false,
     totalElements: 0,
