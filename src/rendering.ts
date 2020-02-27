@@ -198,7 +198,8 @@ export class StatusmapRenderer {
   // divide chart height by ticks for cards drawing
   getYScale(ticks) {
     let range:any[] = [];
-    let step = this.chartHeight / ticks.length;
+    //let step = this.chartHeight / ticks.length;
+    let step = this.chartHeight / this.ctrl.panel.pageSize;
     // svg has y=0 on the top, so top card should have a minimal value in range
     range.push(step);
     for (let i = 1; i < ticks.length; i++) {
@@ -212,7 +213,8 @@ export class StatusmapRenderer {
   // divide chart height by ticks with offset for ticks drawing
   getYAxisScale(ticks) {
     let range:any[] = [];
-    let step = this.chartHeight / ticks.length;
+    //let step = this.chartHeight / ticks.length;
+    let step = this.chartHeight / this.ctrl.panel.pageSize;
     // svg has y=0 on the top, so top tick should have a minimal value in range
     range.push(this.yOffset);
     for (let i = 1; i < ticks.length; i++) {
@@ -324,7 +326,8 @@ export class StatusmapRenderer {
 
     // calculate yOffset for YAxis
     if (this.panel.usingPagination) {
-      this.yGridSize = Math.floor(this.chartHeight / this.ctrl.ticksWhenPaginating.length);
+      //this.yGridSize = Math.floor(this.chartHeight / this.ctrl.ticksWhenPaginating.length);
+      this.yGridSize = Math.floor(this.chartHeight / this.ctrl.panel.pageSize);
     } else {
       this.yGridSize = Math.floor(this.chartHeight / this.cardsData.yBucketSize);
     }
@@ -789,6 +792,7 @@ export class StatusmapRenderer {
 
         cardsToShow = undefined;
       } else {
+        this.ctrl.panel.pageSize = this.ctrl.cardsData.targets.length
         this.ctrl.ticksWhenPaginating = undefined;
       }
     }

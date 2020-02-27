@@ -300,8 +300,9 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
         }, {
           key: "getYScale",
           value: function getYScale(ticks) {
-            var range = [];
-            var step = this.chartHeight / ticks.length; // svg has y=0 on the top, so top card should have a minimal value in range
+            var range = []; //let step = this.chartHeight / ticks.length;
+
+            var step = this.chartHeight / this.ctrl.panel.pageSize; // svg has y=0 on the top, so top card should have a minimal value in range
 
             range.push(step);
 
@@ -315,8 +316,9 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
         }, {
           key: "getYAxisScale",
           value: function getYAxisScale(ticks) {
-            var range = [];
-            var step = this.chartHeight / ticks.length; // svg has y=0 on the top, so top tick should have a minimal value in range
+            var range = []; //let step = this.chartHeight / ticks.length;
+
+            var step = this.chartHeight / this.ctrl.panel.pageSize; // svg has y=0 on the top, so top tick should have a minimal value in range
 
             range.push(this.yOffset);
 
@@ -429,7 +431,8 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
             this.cardRound = this.panel.cards.cardRound !== null ? this.panel.cards.cardRound : CARD_ROUND; // calculate yOffset for YAxis
 
             if (this.panel.usingPagination) {
-              this.yGridSize = Math.floor(this.chartHeight / this.ctrl.ticksWhenPaginating.length);
+              //this.yGridSize = Math.floor(this.chartHeight / this.ctrl.ticksWhenPaginating.length);
+              this.yGridSize = Math.floor(this.chartHeight / this.ctrl.panel.pageSize);
             } else {
               this.yGridSize = Math.floor(this.chartHeight / this.cardsData.yBucketSize);
             }
@@ -881,6 +884,7 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
                 this.ctrl.ticksWhenPaginating = labelsToShowClean;
                 cardsToShow = undefined;
               } else {
+                this.ctrl.panel.pageSize = this.ctrl.cardsData.targets.length;
                 this.ctrl.ticksWhenPaginating = undefined;
               }
             } // Draw default axes and return if no data
