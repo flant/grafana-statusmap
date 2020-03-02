@@ -457,6 +457,7 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
           value: function issueQueries(datasource) {
             var _this2 = this;
 
+            console.log('entra en issue queries');
             this.annotationsPromise = this.annotationsSrv.getAnnotations({
               dashboard: this.dashboard,
               panel: this.panel,
@@ -484,6 +485,7 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
         }, {
           key: "issueQueriesWithInterval",
           value: function issueQueriesWithInterval(datasource, interval) {
+            console.log('entra en issue queries with interval');
             var origInterval = this.panel.interval;
             this.panel.interval = this.interval;
 
@@ -499,6 +501,12 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
 
             this.data = dataList;
             this.cardsData = this.convertToCards(this.data);
+
+            if (this.panel.usingPagination && this.cardsData.targets) {
+              this.panel.numberOfPages = Math.ceil(this.cardsData.targets.length / this.panel.pageSize);
+              this.panel.totalElements = this.cardsData.targets.length;
+            }
+
             this.annotationsPromise.then(function (result) {
               _this3.loading = false; //this.alertState = result.alertState;
 
@@ -514,19 +522,18 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
               _this3.annotations = [];
 
               _this3.render(_this3.data);
-            });
-
-            if (this.cardsData.targets) {
-              this.panel.numberOfPages = Math.ceil(this.cardsData.targets.length / this.panel.pageSize);
-              this.panel.totalElements = this.cardsData.targets.length;
-            } //this.render();
-
+            }); //this.render();
           }
         }, {
           key: "onInitEditMode",
           value: function onInitEditMode() {
             this.addEditorTab('Options', statusHeatmapOptionsEditor, 2);
             this.unitFormats = kbn.getUnitFormats();
+          }
+        }, {
+          key: "paginate",
+          value: function paginate() {
+            this.refresh();
           }
         }, {
           key: "onRender",

@@ -324,6 +324,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   }
 
   issueQueries(datasource: any) {
+    console.log('entra en issue queries');
     this.annotationsPromise = this.annotationsSrv.getAnnotations({
       dashboard: this.dashboard,
       panel: this.panel,
@@ -351,6 +352,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   // but Grafana 6.3+ is calculating interval again in queryRunner,
   // so we need to save-restore this.panel.interval.
   issueQueriesWithInterval(datasource: any, interval: any) {
+    console.log('entra en issue queries with interval');
     var origInterval = this.panel.interval;
     this.panel.interval = this.interval;
     var res = super.issueQueries(datasource);
@@ -362,6 +364,11 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   onDataReceived(dataList: any) {
     this.data      = dataList;
     this.cardsData = this.convertToCards(this.data);
+
+    if (this.panel.usingPagination && this.cardsData.targets) {
+      this.panel.numberOfPages = Math.ceil(this.cardsData.targets.length/this.panel.pageSize);
+      this.panel.totalElements = this.cardsData.targets.length;
+    }
 
     this.annotationsPromise.then(
       (result: { alertState: any; annotations: any }) => {
@@ -380,18 +387,16 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
         this.render(this.data);
       }
     );
-
-    if (this.cardsData.targets) {
-      this.panel.numberOfPages = Math.ceil(this.cardsData.targets.length/this.panel.pageSize);
-      this.panel.totalElements = this.cardsData.targets.length;
-    }
-    
     //this.render();
   }
 
   onInitEditMode() {
     this.addEditorTab('Options', statusHeatmapOptionsEditor, 2);
     this.unitFormats = kbn.getUnitFormats();
+  }
+
+  paginate() {
+    this.refresh();
   }
 
   onRender() {

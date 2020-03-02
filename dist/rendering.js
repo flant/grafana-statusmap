@@ -302,6 +302,7 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
           value: function getYScale(ticks) {
             var range = []; //let step = this.chartHeight / ticks.length;
 
+            console.log('GETYSCALE - RENDERING', this.ctrl.panel.pageSize);
             var step = this.chartHeight / this.ctrl.panel.pageSize; // svg has y=0 on the top, so top card should have a minimal value in range
 
             range.push(step);
@@ -318,6 +319,7 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
           value: function getYAxisScale(ticks) {
             var range = []; //let step = this.chartHeight / ticks.length;
 
+            console.log('GETYAXISSCALE - RENDERING', this.ctrl.panel.pageSize);
             var step = this.chartHeight / this.ctrl.panel.pageSize; // svg has y=0 on the top, so top tick should have a minimal value in range
 
             range.push(this.yOffset);
@@ -333,7 +335,7 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
           value: function addYAxis() {
             var ticks;
 
-            if (this.ctrl.ticksWhenPaginating !== undefined) {
+            if (this.ctrl.ticksWhenPaginating !== undefined && this.ctrl.panel.usingPagination) {
               ticks = _.uniq(_.map(this.ctrl.ticksWhenPaginating));
             } else {
               ticks = _.uniq(_.map(this.data, function (d) {
@@ -430,8 +432,9 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
             this.cardVSpacing = this.panel.cards.cardVSpacing !== null ? this.panel.cards.cardVSpacing : CARD_V_SPACING;
             this.cardRound = this.panel.cards.cardRound !== null ? this.panel.cards.cardRound : CARD_ROUND; // calculate yOffset for YAxis
 
-            if (this.panel.usingPagination) {
+            if (this.ctrl.panel.usingPagination) {
               //this.yGridSize = Math.floor(this.chartHeight / this.ctrl.ticksWhenPaginating.length);
+              console.log('addHeatmapCanvas - rendering', this.ctrl.panel.pageSize);
               this.yGridSize = Math.floor(this.chartHeight / this.ctrl.panel.pageSize);
             } else {
               this.yGridSize = Math.floor(this.chartHeight / this.cardsData.yBucketSize);
@@ -860,6 +863,14 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
                 }
 
                 this.ctrl.panel.firstPageElement = this.ctrl.panel.currentPage * this.ctrl.panel.pageSize + 1;
+                var elems = this.ctrl.panel.totalElements;
+                console.log('total elems in add heatmap canvas', elems);
+
+                if (elems < this.ctrl.panel.firstPageElement) {
+                  this.ctrl.panel.currentPage = 0;
+                  this.render();
+                }
+
                 this.ctrl.panel.currentPage + 1 === this.ctrl.panel.numberOfPages ? this.ctrl.panel.lastPageElement = this.ctrl.panel.totalElements : this.ctrl.panel.lastPageElement = this.ctrl.panel.currentPage * this.ctrl.panel.pageSize + this.ctrl.panel.pageSize;
                 var cardsList = this.ctrl.cardsData.targets.slice(this.ctrl.panel.pageSize * this.ctrl.panel.currentPage, this.ctrl.panel.pageSize * this.ctrl.panel.currentPage + this.ctrl.panel.pageSize);
                 var cardsToShow = [];

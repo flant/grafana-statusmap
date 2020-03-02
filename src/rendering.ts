@@ -199,6 +199,7 @@ export class StatusmapRenderer {
   getYScale(ticks) {
     let range:any[] = [];
     //let step = this.chartHeight / ticks.length;
+    console.log('GETYSCALE - RENDERING', this.ctrl.panel.pageSize);
     let step = this.chartHeight / this.ctrl.panel.pageSize;
     // svg has y=0 on the top, so top card should have a minimal value in range
     range.push(step);
@@ -214,6 +215,7 @@ export class StatusmapRenderer {
   getYAxisScale(ticks) {
     let range:any[] = [];
     //let step = this.chartHeight / ticks.length;
+    console.log('GETYAXISSCALE - RENDERING', this.ctrl.panel.pageSize);
     let step = this.chartHeight / this.ctrl.panel.pageSize;
     // svg has y=0 on the top, so top tick should have a minimal value in range
     range.push(this.yOffset);
@@ -229,7 +231,7 @@ export class StatusmapRenderer {
 
     let ticks;
 
-    if(this.ctrl.ticksWhenPaginating !== undefined) {
+    if(this.ctrl.ticksWhenPaginating !== undefined && this.ctrl.panel.usingPagination) {
       ticks = _.uniq(_.map(this.ctrl.ticksWhenPaginating));
     } else {
       ticks = _.uniq(_.map(this.data, d => d.target));
@@ -325,8 +327,9 @@ export class StatusmapRenderer {
     this.cardRound = this.panel.cards.cardRound !== null ? this.panel.cards.cardRound : CARD_ROUND;
 
     // calculate yOffset for YAxis
-    if (this.panel.usingPagination) {
+    if (this.ctrl.panel.usingPagination) {
       //this.yGridSize = Math.floor(this.chartHeight / this.ctrl.ticksWhenPaginating.length);
+      console.log('addHeatmapCanvas - rendering',this.ctrl.panel.pageSize);
       this.yGridSize = Math.floor(this.chartHeight / this.ctrl.panel.pageSize);
     } else {
       this.yGridSize = Math.floor(this.chartHeight / this.cardsData.yBucketSize);
@@ -760,6 +763,14 @@ export class StatusmapRenderer {
         }
 
         this.ctrl.panel.firstPageElement = (this.ctrl.panel.currentPage*this.ctrl.panel.pageSize)+1;
+
+        let elems = this.ctrl.panel.totalElements;
+
+        console.log('total elems in add heatmap canvas', elems);
+        if (elems < this.ctrl.panel.firstPageElement) {
+          this.ctrl.panel.currentPage = 0;
+          this.render();
+        }
 
         ((this.ctrl.panel.currentPage+1) === this.ctrl.panel.numberOfPages) ?
           this.ctrl.panel.lastPageElement = this.ctrl.panel.totalElements :
