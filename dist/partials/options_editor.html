@@ -148,8 +148,30 @@
       label="Show tooltip"
       checked="ctrl.panel.tooltip.show" on-change="ctrl.render()">
     </gf-form-switch>
-    <div class="gf-form">
-      <label class="gf-form-label width-8">Y axis sort</label>
+    <gf-form-switch class="gf-form" label-class="width-8"
+      label="Show X axis"
+      checked="ctrl.panel.xAxis.show" on-change="ctrl.render()">
+    </gf-form-switch>
+    <gf-form-switch class="gf-form" label-class="width-8"
+      label="Show Y axis"
+      checked="ctrl.panel.yAxis.show" on-change="ctrl.render()">
+    </gf-form-switch>
+
+    <div class="gf-form" ng-show="ctrl.panel.yAxis.show">
+      <label class="gf-form-label width-8">Min width</label>
+      <input type="number" ng-model="ctrl.panel.xAxis.minWidth" class="gf-form-input width-5" placeholder="auto" data-placement="right" bs-tooltip="''" ng-change="ctrl.render()" ng-model-onblur>
+    </div>
+    <div class="gf-form" ng-show="ctrl.panel.yAxis.show">
+      <label class="gf-form-label width-8">Max width</label>
+      <input type="number" ng-model="ctrl.panel.xAxis.maxWidth" class="gf-form-input width-5" placeholder="auto" data-placement="right" bs-tooltip="''" ng-change="ctrl.render()" ng-model-onblur>
+    </div>
+  </div>
+
+  <div class="section gf-form-group">
+    <h5 class="section-heading">Buckets</h5>
+
+    <div class="gf-form" ng-show="ctrl.panel.yAxis.show">
+      <label class="gf-form-label width-8">Rows sort</label>
       <div class="gf-form-select-wrapper">
         <select class="gf-form-input max-width-8"
                 ng-model="ctrl.panel.yAxisSort"
@@ -157,12 +179,8 @@
                 ng-change="ctrl.render()"></select>
       </div>
     </div>
-</div>
 
-  <div class="section gf-form-group">
-    <h5 class="section-heading">Bucket</h5>
-
-    <gf-form-switch class="gf-form" label-class="width-9"
+    <gf-form-switch class="gf-form" label-class="width-8"
                     label="Multiple values"
                     checked="ctrl.panel.useMax" on-change="ctrl.render()">
     </gf-form-switch>
@@ -171,25 +189,25 @@
     </div>
 
     <div class="gf-form">
-      <label class="gf-form-label width-9">Display nulls</label>
+      <label class="gf-form-label width-8">Display nulls</label>
       <div class="gf-form-select-wrapper">
         <select class="gf-form-input max-width-9" ng-model="ctrl.panel.nullPointMode" ng-options="f for f in ['as empty', 'as zero']" ng-change="ctrl.render()"></select>
       </div>
     </div>
     <div class="gf-form">
-      <label class="gf-form-label width-9">Min width for 1/1</label>
+      <label class="gf-form-label width-8">Min width</label>
       <input type="number" class="gf-form-input width-5" placeholder="5" data-placement="right" bs-tooltip="'Minimal card width for 1/1 resolution in pixels'" ng-model="ctrl.panel.cards.cardMinWidth" ng-change="ctrl.refresh()" ng-model-onblur>
     </div>
     <div class="gf-form">
-      <label class="gf-form-label width-9">V spacing</label>
+      <label class="gf-form-label width-8">V spacing</label>
       <input type="number" class="gf-form-input width-5" placeholder="2" data-placement="right" bs-tooltip="'Cards vertical spacing in pixels'" ng-model="ctrl.panel.cards.cardVSpacing" ng-change="ctrl.refresh()" ng-model-onblur>
     </div>
     <div class="gf-form">
-      <label class="gf-form-label width-9">H spacing</label>
+      <label class="gf-form-label width-8">H spacing</label>
       <input type="number" class="gf-form-input width-5" placeholder="2" data-placement="right" bs-tooltip="'Cards horizontal spacing in pixels'" ng-model="ctrl.panel.cards.cardHSpacing" ng-change="ctrl.refresh()" ng-model-onblur>
     </div>
     <div class="gf-form">
-      <label class="gf-form-label width-9">Rounding</label>
+      <label class="gf-form-label width-8">Rounding</label>
       <input type="number" class="gf-form-input width-5" placeholder="0" data-placement="right" bs-tooltip="'Cards rounding radius in pixels'" ng-model="ctrl.panel.cards.cardRound" ng-change="ctrl.refresh()" ng-model-onblur>
     </div>
   </div>

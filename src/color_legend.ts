@@ -5,6 +5,7 @@ import * as d3ScaleChromatic from './libs/d3-scale-chromatic/index';
 import {contextSrv} from 'app/core/core';
 import {tickStep} from 'app/core/utils/ticks';
 import coreModule from 'app/core/core_module';
+import { BucketMatrix } from './statusmap_data';
 
 const LEGEND_STEP_WIDTH = 2;
 
@@ -61,13 +62,34 @@ coreModule.directive('statusHeatmapLegend', function() {
       function render() {
         clearLegend(elem);
         if (!ctrl.panel.legend.show) {
-          return 
+          return;
         }
-        if (!_.isEmpty(ctrl.cardsData) && !_.isEmpty(ctrl.cardsData.cards)) {
-          let rangeFrom = ctrl.cardsData.minValue;
-          let rangeTo = ctrl.cardsData.maxValue;
+        if (ctrl.bucketMatrix) {
+          let rangeFrom = ctrl.bucketMatrix.minValue;
+          let rangeTo = ctrl.bucketMatrix.maxValue;
           let maxValue = panel.color.max || rangeTo;
           let minValue = panel.color.min || rangeFrom;
+
+          if (ctrl.bucketMatrix.noDatapoints) {
+            if (!panel.color.max) {
+              rangeTo = maxValue = 100;
+            } else {
+              rangeTo = 100;
+            }
+            if (!panel.color.min) {
+              rangeFrom = minValue = 0;
+            } else {
+              rangeFrom = 0;
+            }
+          }
+
+          console.log("legent state:", {
+            rangeFrom: rangeFrom,
+            rangeTo: rangeTo,
+            maxValue: maxValue,
+            minValue: minValue,
+            colorMode: panel.color.mode
+          });
 
           if (panel.color.mode === 'spectrum') {
             let colorScheme = _.find(ctrl.colorSchemes, {value: panel.color.colorScheme});
@@ -85,7 +107,7 @@ coreModule.directive('statusHeatmapLegend', function() {
   };
 });
 
-function drawColorLegend(elem, colorScheme, rangeFrom, rangeTo, maxValue, minValue) {
+function drawColorLegend(elem, colorScheme, rangeFrom: number, rangeTo:number, maxValue: number, minValue:number) {
   let legendElem = $(elem).find('svg');
   let legend = d3.select(legendElem.get(0));
   clearLegend(elem);
@@ -105,7 +127,7 @@ function drawColorLegend(elem, colorScheme, rangeFrom, rangeTo, maxValue, minVal
     .enter().append("rect")
     // translate from range space into pixels
     // and shift all rectangles to the right by 10
-    .attr("x", d => d * widthFactor+10)
+    .attr("x", d => ((d - rangeFrom) * widthFactor)+10)
     .attr("y", 0)
     // rectangles are slightly overlaped to prevent gaps
     .attr("width", LEGEND_STEP_WIDTH+1)
@@ -158,7 +180,7 @@ function drawDiscreteColorLegend(elem, colorOptions, discreteExtraSeries) {
   let valuesNumber = thresholds.length;
 
   // graph width as a fallback
-  const $heatmap = $(elem).parent().parent().parent().find('.status-heatmap-panel');
+  const $heatmap = $(elem).parent().parent().parent().find('.statusmap-panel');
   const graphWidthAttr  = $heatmap.find('svg').attr("width");
   let graphWidth = parseInt(graphWidthAttr);
 
@@ -202,7 +224,7 @@ function drawDiscreteColorLegend(elem, colorOptions, discreteExtraSeries) {
 }
 
 
-function drawLegendValues(elem, colorScale, rangeFrom, rangeTo, maxValue, minValue, legendWidth) {
+function drawLegendValues(elem, colorScale, rangeFrom: number, rangeTo: number, maxValue: number, minValue: number, legendWidth: number) {
   let legendElem = $(elem).find('svg');
   let legend = d3.select(legendElem.get(0));
 
@@ -211,10 +233,10 @@ function drawLegendValues(elem, colorScale, rangeFrom, rangeTo, maxValue, minVal
   }
 
   let legendValueScale = d3.scaleLinear()
-    .domain([0, rangeTo])
+    .domain([rangeFrom, rangeTo])
     .range([0, legendWidth]);
 
-  let ticks = buildLegendTicks(0, rangeTo, maxValue, minValue);
+  let ticks = buildLegendTicks(rangeFrom, rangeTo, maxValue, minValue);
   let xAxis = d3.axisBottom(legendValueScale)
     .tickValues(ticks)
     .tickSize(2);
@@ -401,7 +423,7 @@ function buildLegendTicks(rangeFrom, rangeTo, maxValue, minValue) {
   let ticks:any = [];
 
   for (let i = 0; i < ticksNum; i++) {
-    let current = tickStepSize * i;
+    let current = tickStepSize * i + rangeFrom;
     // Add user-defined min and max if it had been set
     if (isValueCloseTo(minValue, current, tickStepSize)) {
       ticks.push(minValue);
@@ -415,7 +437,7 @@ function buildLegendTicks(rangeFrom, rangeTo, maxValue, minValue) {
     } else if (maxValue < current) {
       ticks.push(maxValue);
     }
-    ticks.push(tickStepSize * i);
+    ticks.push(current);
   }
   if (!isValueCloseTo(maxValue, rangeTo, tickStepSize)) {
     ticks.push(maxValue);

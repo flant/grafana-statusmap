@@ -2,3 +2,4 @@ node_modules
 .jshintrc
 .idea
 .sass-cache
+.tscache

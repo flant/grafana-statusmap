@@ -9,6 +9,8 @@ import * as d3ScaleChromatic from './libs/d3-scale-chromatic/index';
 import {StatusmapTooltip} from './tooltip';
 import {StatusHeatmapTooltipExtraSeries} from './tooltipextraseries';
 import {AnnotationTooltip} from './annotations';
+import { Bucket, BucketMatrix } from './statusmap_data';
+import { StatusHeatmapCtrl } from './module';
 
 let MIN_CARD_SIZE = 5,
     CARD_H_SPACING = 2,
@@ -23,6 +25,18 @@ let MIN_CARD_SIZE = 5,
 
 export default function rendering(scope: any, elem: any, attrs: any, ctrl: any) {
   return new StatusmapRenderer(scope, elem, attrs, ctrl);
+}
+
+class Statusmap {
+  $svg: any;
+  svg: any;
+  bucketMatrix: BucketMatrix;
+
+  timeRange: {from: number, to: number} = {from:0, to:0};
+  
+  constructor() {
+
+  }
 }
 
 export class StatusmapRenderer {
@@ -46,8 +60,8 @@ export class StatusmapRenderer {
   mouseUpHandler: any;
   xGridSize: number = 0;
   yGridSize: number = 0;
-  data: any;
-  cardsData: any;
+
+  bucketMatrix: BucketMatrix;
   panel: any;
   $heatmap: any;
   tooltip: StatusmapTooltip;
@@ -62,9 +76,9 @@ export class StatusmapRenderer {
   margin: any;
   dataRangeWidingFactor: number = DATA_RANGE_WIDING_FACTOR;
 
-  constructor(private scope: any, private elem: any, attrs: any, private ctrl: any) {
+  constructor(private scope: any, private elem: any, attrs: any, private ctrl: StatusHeatmapCtrl) {
     // $heatmap is JQuery object, but heatmap is D3
-    this.$heatmap = this.elem.find('.status-heatmap-panel');
+    this.$heatmap = this.elem.find('.statusmap-panel');
     this.tooltip = new StatusmapTooltip(this.$heatmap, this.scope);
     this.tooltipExtraSeries = new StatusHeatmapTooltipExtraSeries(this.$heatmap, this.scope);
     this.annotationTooltip = new AnnotationTooltip(this.$heatmap, this.scope);
@@ -88,7 +102,8 @@ export class StatusmapRenderer {
     // Selection and crosshair //
     /////////////////////////////
 
-    // Shared crosshair and tooltip
+    // Shared crosshair and tooltip    this.empty = true;
+
     appEvents.on('graph-hover', this.onGraphHover.bind(this), this.scope);
 
     appEvents.on('graph-hover-clear', this.onGraphHoverClear.bind(this), this.scope);
@@ -114,7 +129,7 @@ export class StatusmapRenderer {
   }
 
 
-  setElementHeight() {
+  setElementHeight(): boolean {
     try {
       var height = this.ctrl.height || this.panel.height || this.ctrl.row.height;
       if (_.isString(height)) {
@@ -131,7 +146,7 @@ export class StatusmapRenderer {
     }
   }
 
-  getYAxisWidth(elem: any) {
+  getYAxisWidth(elem: any): number {
     const axisText = elem.selectAll(".axis-y text").nodes();
     const maxTextWidth = _.max(_.map(axisText, text => {
       // Use SVG getBBox method
@@ -141,7 +156,7 @@ export class StatusmapRenderer {
     return Math.ceil(maxTextWidth);
   }
 
-  getXAxisHeight(elem: any) {
+  getXAxisHeight(elem: any): number {
     let axisLine = elem.select(".axis-x line");
     if (!axisLine.empty()) {
       let axisLinePosition = parseFloat(elem.select(".axis-x line").attr("y2"));
@@ -155,6 +170,10 @@ export class StatusmapRenderer {
 
   addXAxis() {
     // Scale timestamps to cards centers
+    //this.scope.xScale = this.xScale = d3.scaleTime()
+    //    .domain([this.timeRange.from, this.timeRange.to])
+    //    .range([this.xGridSize/2, this.chartWidth-this.xGridSize/2]);
+    // Buckets without the most recent
     this.scope.xScale = this.xScale = d3.scaleTime()
         .domain([this.timeRange.from, this.timeRange.to])
         .range([this.xGridSize/2, this.chartWidth-this.xGridSize/2]);
@@ -192,7 +211,7 @@ export class StatusmapRenderer {
   }
 
   // divide chart height by ticks for cards drawing
-  getYScale(ticks) {
+  getYScale(ticks: any[]) {
     let range:any[] = [];
     let step = this.chartHeight / ticks.length;
     // svg has y=0 on the top, so top card should have a minimal value in range
@@ -206,7 +225,7 @@ export class StatusmapRenderer {
   }
 
   // divide chart height by ticks with offset for ticks drawing
-  getYAxisScale(ticks) {
+  getYAxisScale(ticks: any[]) {
     let range:any[] = [];
     let step = this.chartHeight / ticks.length;
     // svg has y=0 on the top, so top tick should have a minimal value in range
@@ -220,12 +239,7 @@ export class StatusmapRenderer {
   }
 
   addYAxis() {
-    let ticks = _.uniq(_.map(this.data, d => d.target));
-
-    // Set default Y min and max if no data
-    if (_.isEmpty(this.data)) {
-      ticks = [''];
-    }
+    let ticks = this.bucketMatrix.targets;
 
     if (this.panel.yAxisSort == 'a → z') {
       ticks.sort((a, b) => a.localeCompare(b, 'en', {ignorePunctuation: false, numeric: true}));
@@ -258,7 +272,7 @@ export class StatusmapRenderer {
   }
 
   // Wide Y values range and adjust to bucket size
-  wideYAxisRange(min, max, tickInterval) {
+  wideYAxisRange(min: number, max: number, tickInterval: number) {
     let y_widing = (max * (this.dataRangeWidingFactor - 1) - min * (this.dataRangeWidingFactor - 1)) / 2;
     let y_min, y_max;
 
@@ -288,7 +302,7 @@ export class StatusmapRenderer {
 
   // Create svg element, add axes and
   // calculate sizes for cards drawing
-  addHeatmapCanvas() {
+  addStatusmapCanvas() {
     let heatmap_elem = this.$heatmap[0];
 
     this.width = Math.floor(this.$heatmap.width()) - this.padding.right;
@@ -312,7 +326,10 @@ export class StatusmapRenderer {
     this.cardRound = this.panel.cards.cardRound !== null ? this.panel.cards.cardRound : CARD_ROUND;
 
     // calculate yOffset for YAxis
-    this.yGridSize = Math.floor(this.chartHeight / this.cardsData.yBucketSize);
+    this.yGridSize = this.chartHeight;
+    if (this.bucketMatrix.targets.length > 0) {
+      this.yGridSize = Math.floor(this.chartHeight / this.bucketMatrix.targets.length);
+    }
     this.cardHeight = this.yGridSize ? this.yGridSize - this.cardVSpacing : 0;
     this.yOffset = this.cardHeight / 2;
 
@@ -323,7 +340,7 @@ export class StatusmapRenderer {
 
     // TODO allow per-y cardWidth!
     // we need to fill chartWidth with xBucketSize cards.
-    this.xGridSize = this.chartWidth / (this.cardsData.xBucketSize+1);
+    this.xGridSize = this.chartWidth / (this.bucketMatrix.xBucketSize+1);
     this.cardWidth = this.xGridSize - this.cardHSpacing;
 
     this.addXAxis();
@@ -338,36 +355,41 @@ export class StatusmapRenderer {
     }
   }
 
-  addHeatmap() {
-    this.addHeatmapCanvas();
-
-    let maxValue = this.panel.color.max || this.cardsData.maxValue;
-    let minValue = this.panel.color.min || this.cardsData.minValue;
+  addStatusmap():void {
+    let maxValue = this.panel.color.max || this.bucketMatrix.maxValue;
+    let minValue = this.panel.color.min || this.bucketMatrix.minValue;
 
     if (this.panel.color.mode !== 'discrete') {
       this.colorScale = this.getColorScale(maxValue, minValue);
     }
     this.setOpacityScale(maxValue);
 
-    let cards = this.heatmap.selectAll(".status-heatmap-card").data(this.cardsData.cards);
-    cards.append("title");
-    cards = cards.enter().append("rect")
-        .attr("cardId", c => c.id)
-        .attr("x", this.getCardX.bind(this))
-        .attr("width", this.getCardWidth.bind(this))
-        .attr("y", this.getCardY.bind(this))
-        .attr("height", this.getCardHeight.bind(this))
-        .attr("rx", this.cardRound)
-        .attr("ry", this.cardRound)
-        .attr("class", "bordered status-heatmap-card")
-        .style("fill", this.getCardColor.bind(this))
-        .style("stroke", this.getCardColor.bind(this))
-        .style("stroke-width", 0)
-        //.style("stroke-width", getCardStrokeWidth)
-        //.style("stroke-dasharray", "3,3")
-        .style("opacity", this.getCardOpacity.bind(this));
+    // Draw cards from buckets.
+    this.heatmap.selectAll(".statusmap-cards-row").data(this.bucketMatrix.targets)
+      .enter()
+        .selectAll(".statustmap-card")
+        .data((target:string) => this.bucketMatrix.buckets[target])
+        .enter()
+          .append("rect")
+          .attr("cardId", (b:Bucket) => b.id)
+          .attr("xid", (b:Bucket) => b.xid)
+          .attr("yid", (b:Bucket) => b.yLabel)
+          .attr("x", this.getCardX.bind(this))
+          .attr("width", this.getCardWidth.bind(this))
+          .attr("y", this.getCardY.bind(this))
+          .attr("height", this.getCardHeight.bind(this))
+          .attr("rx", this.cardRound)
+          .attr("ry", this.cardRound)
+          .attr("class", (b:Bucket) => b.isEmpty() ? "empty-card" : "bordered statusmap-card")
+          .style("fill", this.getCardColor.bind(this))
+          .style("stroke", this.getCardColor.bind(this))
+          .style("stroke-width", 0)
+          //.style("stroke-width", getCardStrokeWidth)
+          //.style("stroke-dasharray", "3,3")
+          .style("opacity", this.getCardOpacity.bind(this));
 
-    let $cards = this.$heatmap.find(".status-heatmap-card");
+    // Set mouse events on cards.
+    let $cards = this.$heatmap.find(".statusmap-card + .bordered");
     $cards
       .on("mouseenter", (event) => {
         this.tooltip.mouseOverBucket = true;
@@ -434,10 +456,12 @@ export class StatusmapRenderer {
     }
   }
 
-  getCardX(d) {
+  getCardX(b: Bucket) {
     let x;
     // cx is the center of the card. Card should be placed to the left.
-    let cx = this.xScale(d.x);
+    //let cx = this.xScale(d.x);
+    let rightX = (b.relTo / this.bucketMatrix.rangeMs) * this.chartWidth;
+    let cx = rightX - this.cardWidth/2;
 
     if (cx - this.cardWidth/2 < 0) {
       x = this.yAxisWidth + this.cardHSpacing/2;
@@ -449,9 +473,13 @@ export class StatusmapRenderer {
   }
 
   // xScale returns card center. Adjust cardWidth in case of overlaping.
-  getCardWidth(d) {
+  getCardWidth(b: Bucket) {
+    //return 20;
     let w;
-    let cx = this.xScale(d.x);
+
+    let rightX = (b.relTo / this.bucketMatrix.rangeMs) * this.chartWidth;
+    let cx = rightX - this.cardWidth/2;
+    //let cx = this.xScale(d.x);
 
     if (cx < this.cardWidth/2) {
       // Center should not exceed half of card.
@@ -475,12 +503,16 @@ export class StatusmapRenderer {
     return w;
   }
 
-  getCardY(d) {
-    return this.yScale(d.y) + this.chartTop - this.cardHeight - this.cardVSpacing/2;
+  // Top y for card.
+  // yScale gives ???
+  // 
+  getCardY(b: Bucket) {
+    return this.yScale(b.yLabel) + this.chartTop - this.cardHeight - this.cardVSpacing/2;
   }
 
-  getCardHeight(d) {
-    let ys = this.yScale(d.y);
+  getCardHeight(b: Bucket) {
+    //return 20;
+    let ys = this.yScale(b.yLabel);
     let y = ys + this.chartTop - this.cardHeight - this.cardVSpacing/2;
     let h = this.cardHeight;
 
@@ -505,32 +537,32 @@ export class StatusmapRenderer {
     return h;
   }
 
-  getCardColor(d) {
+  getCardColor(b: Bucket) {
     if (this.panel.color.mode === 'opacity') {
       return this.panel.color.cardColor;
     } else if (this.panel.color.mode === 'spectrum') {
-      return this.colorScale(d.value);
+      return this.colorScale(b.value);
     } else if (this.panel.color.mode === 'discrete') {
       if (this.panel.seriesFilterIndex != -1 || this.panel.seriesFilterIndex != null) {
-        return this.ctrl.discreteExtraSeries.getBucketColorSingle(d.values[this.panel.seriesFilterIndex]);
+        return this.ctrl.discreteExtraSeries.getBucketColorSingle(b.values[this.panel.seriesFilterIndex]);
       } else {
-        return this.ctrl.discreteExtraSeries.getBucketColor(d.values);
+        return this.ctrl.discreteExtraSeries.getBucketColor(b.values);
       }
     }
   }
 
-  getCardOpacity(d) {
-    if (this.panel.nullPointMode === 'as empty' && d.value == null ) {
+  getCardOpacity(b: Bucket) {
+    if (this.panel.nullPointMode === 'as empty' && b.value == null ) {
       return 0;
     }
     if (this.panel.color.mode === 'opacity') {
-      return this.opacityScale(d.value);
+      return this.opacityScale(b.value);
     } else {
       return 1;
     }
   }
 
-  getCardStrokeWidth(d) {
+  getCardStrokeWidth(b: Bucket) {
     if (this.panel.color.mode === 'discrete') {
       return '1';
     }
@@ -609,7 +641,7 @@ export class StatusmapRenderer {
       //const pos = this.getEventPos(event, offset);
       this.emitGraphHoverEvent(event);
       this.drawCrosshair(offset.x);
-      this.tooltip.show(event); //, data); // pos, this.data
+      this.tooltip.show(event);
       this.annotationTooltip.show(event);
     }
   }
@@ -725,22 +757,21 @@ export class StatusmapRenderer {
 
 
   render() {
-    this.data = this.ctrl.data;
     this.panel = this.ctrl.panel;
     this.timeRange = this.ctrl.range;
-    this.cardsData = this.ctrl.cardsData;
+    this.bucketMatrix = this.ctrl.bucketMatrix;
 
-    if (!this.data || !this.cardsData || !this.setElementHeight()) {
+    if (!this.bucketMatrix || !this.setElementHeight()) {
       return;
     }
 
     // Draw default axes and return if no data
-    if (_.isEmpty(this.cardsData.cards)) {
-      this.addHeatmapCanvas();
+    this.addStatusmapCanvas();
+    if (this.bucketMatrix.noDatapoints) {
       return;
     }
 
-    this.addHeatmap();
+    this.addStatusmap();
     this.scope.yAxisWidth = this.yAxisWidth;
     this.scope.xAxisHeight = this.xAxisHeight;
     this.scope.chartHeight = this.chartHeight;

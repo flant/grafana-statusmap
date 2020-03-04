@@ -103,38 +103,34 @@ System.register(["d3", "jquery", "lodash"], function (_export, _context) {
           value: function show(pos) {
             if (!this.panel.tooltip.show || !this.tooltip) {
               return;
-            } // shared tooltip mode
+            } // TODO support for shared tooltip mode
 
 
             if (pos.panelRelY) {
               return;
             }
 
-            var cardId = d3.select(pos.target).attr('cardId');
+            var cardEl = d3.select(pos.target);
+            var yid = cardEl.attr('yid');
+            var xid = cardEl.attr('xid');
+            var bucket = this.panelCtrl.bucketMatrix.get(yid, xid); // TODO string-to-number conversion for xid
 
-            if (!cardId) {
+            if (!bucket || bucket.isEmpty()) {
               this.destroy();
               return;
             }
 
-            var card = this.panelCtrl.cardsData.cards[cardId];
-
-            if (!card) {
-              this.destroy();
-              return;
-            }
-
-            var x = card.x;
-            var y = card.y;
-            var value = card.value;
-            var values = card.values;
+            var timestamp = bucket.to;
+            var name = bucket.yLabel;
+            var value = bucket.value;
+            var values = bucket.values;
             var tooltipTimeFormat = 'YYYY-MM-DD HH:mm:ss';
-            var time = this.dashboard.formatDate(+x, tooltipTimeFormat);
+            var time = this.dashboard.formatDate(+timestamp, tooltipTimeFormat);
             var tooltipHtml = "<div class=\"graph-tooltip-time\">".concat(time, "</div>\n      <div class=\"statusmap-histogram\"></div>");
             var statuses;
 
             if (this.panel.color.mode === 'discrete') {
-              if (this.panel.seriesFilterIndex > 0) {
+              if (this.panel.seriesFilterIndex >= 0) {
                 statuses = this.panelCtrl.discreteExtraSeries.convertValueToTooltips(value);
               } else {
                 statuses = this.panelCtrl.discreteExtraSeries.convertValuesToTooltips(values);
@@ -148,27 +144,27 @@ System.register(["d3", "jquery", "lodash"], function (_export, _context) {
                 statusesHtml = "statuses:";
               }
 
-              tooltipHtml += "\n      <div>\n        name: <b>".concat(y, "</b> <br>\n        ").concat(statusesHtml, "\n        <ul>\n          ").concat(_.join(_.map(statuses, function (v) {
+              tooltipHtml += "\n      <div>\n        name: <b>".concat(name, "</b> <br>\n        ").concat(statusesHtml, "\n        <ul>\n          ").concat(_.join(_.map(statuses, function (v) {
                 return "<li style=\"background-color: ".concat(v.color, "\" class=\"discrete-item\">").concat(v.tooltip, "</li>");
               }), ""), "\n        </ul>\n      </div>");
             } else {
               if (values.length === 1) {
-                tooltipHtml += "<div> \n      name: <b>".concat(y, "</b> <br>\n      value: <b>").concat(value, "</b> <br>\n      </div>");
+                tooltipHtml += "<div> \n      name: <b>".concat(name, "</b> <br>\n      value: <b>").concat(value, "</b> <br>\n      </div>");
               } else {
-                tooltipHtml += "<div>\n      name: <b>".concat(y, "</b> <br>\n      values:\n      <ul>\n        ").concat(_.join(_.map(values, function (v) {
+                tooltipHtml += "<div>\n      name: <b>".concat(name, "}</b> <br>\n      values:\n      <ul>\n        ").concat(_.join(_.map(values, function (v) {
                   return "<li>".concat(v, "</li>");
                 }), ""), "\n      </ul>\n      </div>");
               }
             } //   "Ambiguous bucket state: Multiple values!";
 
 
-            if (!this.panel.useMax && card.multipleValues) {
+            if (!this.panel.useMax && bucket.multipleValues) {
               tooltipHtml += "<div><b>Error:</b> ".concat(this.panelCtrl.dataWarnings.multipleValues.title, "</div>");
             } // Discrete mode errors
 
 
             if (this.panel.color.mode === 'discrete') {
-              if (card.noColorDefined) {
+              if (bucket.noColorDefined) {
                 var badValues = this.panelCtrl.discreteExtraSeries.getNotColoredValues(values);
                 tooltipHtml += "<div><b>Error:</b> ".concat(this.panelCtrl.dataWarnings.noColorDefined.title, "\n        <br>not colored values:\n        <ul>\n          ").concat(_.join(_.map(badValues, function (v) {
                   return "<li>".concat(v, "</li>");

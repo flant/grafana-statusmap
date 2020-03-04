@@ -174,48 +174,51 @@ System.register([], function (_export, _context) {
         }, {
           key: "updateCardsValuesHasColorInfoSingle",
           value: function updateCardsValuesHasColorInfoSingle() {
-            if (!this.panelCtrl.cardsData) {
+            var _this = this;
+
+            if (!this.panelCtrl.bucketMatrix) {
               return;
             }
 
-            this.panelCtrl.cardsData.noColorDefined = false;
-            var cards = this.panelCtrl.cardsData.cards;
+            this.panelCtrl.bucketMatrix.noColorDefined = false;
+            this.panelCtrl.bucketMatrix.targets.map(function (target) {
+              _this.panelCtrl.bucketMatrix.buckets[target].map(function (bucket) {
+                bucket.noColorDefined = false;
 
-            for (var i = 0; i < cards.length; i++) {
-              cards[i].noColorDefined = false;
-              var values = cards[i].value;
-              var threshold = this.getMatchedThreshold(values);
+                var threshold = _this.getMatchedThreshold(bucket.value);
 
-              if (!threshold || !threshold.color || threshold.color == "") {
-                cards[i].noColorDefined = true;
-                this.panelCtrl.cardsData.noColorDefined = true;
-              }
-            }
+                if (!threshold || !threshold.color || threshold.color == "") {
+                  bucket.noColorDefined = true;
+                  _this.panelCtrl.bucketMatrix.noColorDefined = true;
+                }
+              });
+            });
           }
         }, {
           key: "updateCardsValuesHasColorInfo",
           value: function updateCardsValuesHasColorInfo() {
-            if (!this.panelCtrl.cardsData) {
+            var _this2 = this;
+
+            if (!this.panelCtrl.bucketMatrix) {
               return;
             }
 
-            this.panelCtrl.cardsData.noColorDefined = false;
-            var cards = this.panelCtrl.cardsData.cards;
+            this.panelCtrl.bucketMatrix.noColorDefined = false;
+            this.panelCtrl.bucketMatrix.targets.map(function (target) {
+              _this2.panelCtrl.bucketMatrix.buckets[target].map(function (bucket) {
+                bucket.noColorDefined = false;
 
-            for (var i = 0; i < cards.length; i++) {
-              cards[i].noColorDefined = false;
-              var values = cards[i].values;
+                for (var j = 0; j < bucket.values.length; j++) {
+                  var threshold = _this2.getMatchedThreshold(bucket.values[j]);
 
-              for (var j = 0; j < values.length; j++) {
-                var threshold = this.getMatchedThreshold(values[j]);
-
-                if (!threshold || !threshold.color || threshold.color == "") {
-                  cards[i].noColorDefined = true;
-                  this.panelCtrl.cardsData.noColorDefined = true;
-                  break;
+                  if (!threshold || !threshold.color || threshold.color == "") {
+                    bucket.noColorDefined = true;
+                    _this2.panelCtrl.bucketMatrix.noColorDefined = true;
+                    break;
+                  }
                 }
-              }
-            }
+              });
+            });
           }
         }, {
           key: "getMatchedThreshold",
