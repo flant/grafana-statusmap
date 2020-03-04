@@ -19,6 +19,7 @@ import rendering from './rendering';
 // import { labelFormats } from './xAxisLabelFormats';
 import {statusHeatmapOptionsEditor} from './options_editor';
 import {ColorModeDiscrete} from "./color_mode_discrete";
+import { ExtraSeriesFormat, ExtraSeriesFormatValue } from './extra_series_format';
 
 const CANVAS = 'CANVAS';
 const SVG = 'SVG';
@@ -93,8 +94,9 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   graph: any;
   multipleValues: boolean;
   noColorDefined: boolean;
-  discreteHelper: ColorModeDiscrete;
+  discreteExtraSeries: ColorModeDiscrete;
   dataWarnings: DataWarnings;
+  extraSeriesFormats: any = [];
 
   annotations: object[] = [];
   annotationsPromise: any;
@@ -145,11 +147,25 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     nullPointMode: 'as empty',
     yAxisSort: 'metrics',
     highlightCards: true,
-    useMax: true
+    useMax: true,
+    urls: [{
+      tooltip: '',
+      label: '',
+      base_url: '',
+      useExtraSeries: false,
+      useseriesname: true,
+      forcelowercase: true,
+      icon_fa: 'external-link',
+      extraSeries: {
+        index: -1
+      }
+    }],
+    seriesFilterIndex: -1,
+    usingUrl: false
   };
 
   /** @ngInject */
-  constructor($scope: any, $injector: auto.IInjectorService, private annotationsSrv: AnnotationsSrv) {
+  constructor($scope: any, $injector: auto.IInjectorService, timeSrv, private annotationsSrv: AnnotationsSrv, $window, datasourceSrv, variableSrv, templateSrv) {
     super($scope, $injector);
 
     _.defaultsDeep(this.panel, this.panelDefaults);
@@ -157,6 +173,20 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.opacityScales = opacityScales;
     this.colorModes = colorModes;
     this.colorSchemes = colorSchemes;
+    this.variableSrv = variableSrv;
+    this.extraSeriesFormats = ExtraSeriesFormat;
+
+    this.renderLink = (link, scopedVars, format) => {
+      var scoped = {}
+      for (var key in scopedVars) {
+        scoped[key] = { value: scopedVars[key] }
+      }
+      if (format) {
+        return this.templateSrv.replace(link, scoped, format)
+      } else {
+        return this.templateSrv.replace(link, scoped)
+      }
+    }
 
     // default graph width for discrete card width calculation
     this.graph = {
@@ -166,7 +196,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.multipleValues = false;
     this.noColorDefined = false;
 
-    this.discreteHelper = new ColorModeDiscrete($scope);
+    this.discreteExtraSeries = new ColorModeDiscrete($scope);
 
     this.dataWarnings = {
       "noColorDefined": {
@@ -180,6 +210,9 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     };
 
     this.annotations = [];
+    this.annotationsSrv = annotationsSrv;
+    
+    this.timeSrv = timeSrv;
 
     this.events.on('render', this.onRender.bind(this));
     this.events.on('data-received', this.onDataReceived.bind(this));
@@ -189,11 +222,26 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.events.on('refresh', this.postRefresh.bind(this));
     // custom event from rendering.js
     this.events.on('render-complete', this.onRenderComplete.bind(this));
+    this.events.on('onChangeType', this.onChangeType.bind(this));
   }
 
   onRenderComplete(data):void {
     this.graph.chartWidth = data.chartWidth;
     this.renderingCompleted();
+  }
+
+  onChangeType(url): void {
+    switch (url.type) {
+      case ExtraSeriesFormat.Date:
+        url.extraSeries.format = ExtraSeriesFormatValue.Date;
+        break;
+      case ExtraSeriesFormat.Raw:
+        url.extraSeries.format = ExtraSeriesFormatValue.Raw;
+        break;
+      default:
+        url.extraSeries.format = ExtraSeriesFormatValue.Raw;
+        break;
+    }
   }
 
   getChartWidth():number {
@@ -222,7 +270,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     let rangeMs = this.range.to.valueOf() - this.range.from.valueOf();
 
     // this is minimal interval! kbn.round_interval will lower it.
-    intervalMs = this.discreteHelper.roundIntervalCeil(rangeMs / maxCardsCount);
+    intervalMs = this.discreteExtraSeries.roundIntervalCeil(rangeMs / maxCardsCount);
 
     // Calculate low limit of interval
     let lowLimitMs = 1; // 1 millisecond default low limit
@@ -292,8 +340,6 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.data      = dataList;
     this.cardsData = this.convertToCards(this.data);
 
-    console.log("OnDataReceived");
-
     this.annotationsPromise.then(
       (result: { alertState: any; annotations: any }) => {
         this.loading = false;
@@ -303,13 +349,11 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
         } else {
           this.annotations = [];
         }
-        console.log("annotationsPromise result " + this.annotations.length + " annotations");
         this.render();
       },
       () => {
         this.loading = false;
         this.annotations = [];
-        console.log("annotationsPromise onrejected");
         this.render();
       }
     );
@@ -334,7 +378,11 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
     this.noColorDefined = false;
     if (this.panel.color.mode === 'discrete') {
-      this.discreteHelper.updateCardsValuesHasColorInfo();
+      if (this.panel.seriesFilterIndex == -1) {
+        this.discreteExtraSeries.updateCardsValuesHasColorInfo();
+      } else {
+        this.discreteExtraSeries.updateCardsValuesHasColorInfoSingle();
+      }
       if (this.cardsData) {
         this.noColorDefined = this.cardsData.noColorDefined;
       }
@@ -361,6 +409,26 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.render();
   }
 
+  onEditorAddUrl = () => {
+    this.panel.urls.push({
+      label: '',
+      base_url: '',
+      useExtraSeries: false,
+      useseriesname: true,
+      forcelowercase: true,
+      icon_fa: 'external-link',
+      extraSeries: {
+        index: -1
+      }
+    });
+    this.render();
+  }
+
+  onEditorRemoveUrl = (index) => {
+    this.panel.urls.splice(index, 1);
+    this.render();
+  }
+
   onEditorRemoveThreshold(index:number) {
     this.panel.color.thresholds.splice(index, 1);
     this.render();
@@ -368,6 +436,12 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
   onEditorRemoveThresholds() {
     this.panel.color.thresholds = [];
+    this.render();
+  }
+
+
+  onEditorRemoveUrls = () => {
+    this.panel.urls = [];
     this.render();
   }
 
@@ -393,6 +467,12 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
   link(scope, elem, attrs, ctrl) {
     rendering(scope, elem, attrs, ctrl);
+  }
+
+  retrieveTimeVar() {
+    var time = this.timeSrv.timeRangeForUrl();
+    var var_time = '&from=' + time.from + '&to=' + time.to;
+    return var_time;
   }
 
   // group values into buckets by target
@@ -433,6 +513,9 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
         let card = new Card();
         card.id = i*cardsData.xBucketSize + j;
         card.values = [];
+        card.columns = [];
+        card.multipleValues = false;
+        card.noColorDefined = false;
         card.y = target;
         card.x = -1;
 
@@ -453,7 +536,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
         if (card.values.length > 1) {
           cardsData.multipleValues = true;
           card.multipleValues = true;
-          card.value = card.maxValue; // max value by default
+          card.value = this.panel.seriesFilterIndex != -1 ? card.values[this.panel.seriesFilterIndex] : card.maxValue;
         } else {
           card.value = card.maxValue; // max value by default
         }

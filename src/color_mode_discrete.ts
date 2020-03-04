@@ -12,7 +12,7 @@ declare class DiscreteColorThreshold {
   tooltip: string;
 }
 
-// Helper methods to handle discrete color mode
+// Extra Series methods to handle discrete color mode
 export class ColorModeDiscrete {
   scope: any;
   panelCtrl: StatusHeatmapCtrl;
@@ -37,6 +37,23 @@ export class ColorModeDiscrete {
             "color": thresholds[i].color
           });
         }
+      }
+    }
+    return tooltips;
+  }
+
+  convertValueToTooltips(values) {
+    let thresholds = this.panel.color.thresholds;
+    let tooltips = [];
+
+    for (let i = 0; i < thresholds.length; i++) {
+      //for (let j = 0; j < values.length; j++) {
+        if (values == thresholds[i].value) {
+          tooltips.push({
+            "tooltip": thresholds[i].tooltip?thresholds[i].tooltip:values,
+            "color": thresholds[i].color
+          });
+        //}
       }
     }
     return tooltips;
@@ -69,6 +86,22 @@ export class ColorModeDiscrete {
       return 'rgba(0,0,0,1)';
     }
     return color;
+  }
+
+  getBucketColorSingle(value) {
+    //let thresholds = this.panel.color.thresholds;
+    if (value == null) {
+      // treat as null value
+      return 'rgba(0,0,0,1)';
+      //return this.getMatchedThreshold(null).color;
+    }
+      let threshold = this.getMatchedThreshold(value);
+
+      if (!threshold || !threshold.color || threshold.color == "") {
+        return 'rgba(0,0,0,1)';
+      } else {
+        return threshold.color;
+      }
   }
 
   // returns color from first matched thresold in order from 0 to thresholds.length
@@ -107,6 +140,24 @@ export class ColorModeDiscrete {
       }
     }
     return 'rgba(0,0,0,1)';
+  }
+
+
+  updateCardsValuesHasColorInfoSingle() {
+    if (!this.panelCtrl.cardsData) {
+      return;
+    }
+    this.panelCtrl.cardsData.noColorDefined = false;
+    var cards = this.panelCtrl.cardsData.cards;
+    for (var i = 0; i < cards.length; i++) {
+      cards[i].noColorDefined = false;
+      var values = cards[i].value;
+      var threshold = this.getMatchedThreshold(values);
+      if (!threshold || !threshold.color || threshold.color == "") {
+        cards[i].noColorDefined = true;
+        this.panelCtrl.cardsData.noColorDefined = true;
+      }
+    }
   }
 
   updateCardsValuesHasColorInfo() {

@@ -30,7 +30,7 @@
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "noImplicitUseStrict": false,
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "noEmitOnError": false,
     "downlevelIteration": true,
     "noUnusedLocals": true,

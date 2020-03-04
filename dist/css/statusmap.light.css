@@ -27,10 +27,22 @@
   background-color: #dde4ed;
   color: #52545c; }
   .statusmap-tooltip .discrete-item {
-    color: #52545c;
+    color: #ffffff;
     padding: 1px;
     font-weight: bold;
-    text-shadow: 0 0 0.2em #FFF, 0 0 0.2em #FFF, 0 0 0.2em #FFF; }
+    text-shadow: 0 0 0.2em #212124, 0 0 0.2em #212124, 0 0 0.2em #212124; }
+
+.statusmap-tooltip-extraseries {
+  white-space: nowrap;
+  font-size: 12px;
+  background-color: #dde4ed;
+  color: #52545c; }
+  .statusmap-tooltip-extraseries .discrete-item {
+    color: #ffffff;
+    padding: 1px;
+    font-weight: bold;
+    margin-bottom: 0;
+    text-shadow: 0 0 0.2em #212124, 0 0 0.2em #212124, 0 0 0.2em #212124; }
 
 .statusmap-histogram rect {
   fill: #767980; }
@@ -43,6 +55,18 @@
   stroke-width: 1;
   fill: rgba(102, 102, 102, 0.4);
   stroke: rgba(102, 102, 102, 0.8); }
+
+.width-c-40 {
+  width: 40rem !important; }
+
+.width-c-50 {
+  width: 50rem !important; }
+
+.width-c-60 {
+  width: 60rem !important; }
+
+.width-c-70 {
+  width: 70rem !important; }
 
 .status-heatmap-legend-wrapper {
   margin: 0 10px; }
