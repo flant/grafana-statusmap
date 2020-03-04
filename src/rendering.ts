@@ -543,8 +543,8 @@ export class StatusmapRenderer {
     } else if (this.panel.color.mode === 'spectrum') {
       return this.colorScale(b.value);
     } else if (this.panel.color.mode === 'discrete') {
-      if (this.panel.seriesFilterIndex != -1 || this.panel.seriesFilterIndex != null) {
-        return this.ctrl.discreteExtraSeries.getBucketColorSingle(b.values[this.panel.seriesFilterIndex]);
+      if (this.panel.seriesFilterIndex != null && this.panel.seriesFilterIndex != -1) {
+        return this.ctrl.discreteExtraSeries.getBucketColorSingle(d.values[this.panel.seriesFilterIndex]);
       } else {
         return this.ctrl.discreteExtraSeries.getBucketColor(b.values);
       }
