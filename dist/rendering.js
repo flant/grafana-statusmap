@@ -3,13 +3,13 @@
 System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/core", "d3", "./libs/d3-scale-chromatic/index", "./tooltip", "./tooltipextraseries", "./annotations"], function (_export, _context) {
   "use strict";
 
-  var _, $, moment, kbn, appEvents, contextSrv, d3, d3ScaleChromatic, StatusmapTooltip, StatusHeatmapTooltipExtraSeries, AnnotationTooltip, MIN_CARD_SIZE, CARD_H_SPACING, CARD_V_SPACING, CARD_ROUND, DATA_RANGE_WIDING_FACTOR, DEFAULT_X_TICK_SIZE_PX, DEFAULT_Y_TICK_SIZE_PX, X_AXIS_TICK_PADDING, Y_AXIS_TICK_PADDING, MIN_SELECTION_WIDTH, StatusmapRenderer;
-
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+  var _, $, moment, kbn, appEvents, contextSrv, d3, d3ScaleChromatic, StatusmapTooltip, StatusHeatmapTooltipExtraSeries, AnnotationTooltip, MIN_CARD_SIZE, CARD_H_SPACING, CARD_V_SPACING, CARD_ROUND, DATA_RANGE_WIDING_FACTOR, DEFAULT_X_TICK_SIZE_PX, DEFAULT_Y_TICK_SIZE_PX, X_AXIS_TICK_PADDING, Y_AXIS_TICK_PADDING, MIN_SELECTION_WIDTH, Statusmap, StatusmapRenderer;
 
   function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
   function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
   function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -83,6 +83,21 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
       Y_AXIS_TICK_PADDING = 5;
       MIN_SELECTION_WIDTH = 2;
 
+      Statusmap = function Statusmap() {
+        _classCallCheck(this, Statusmap);
+
+        _defineProperty(this, "$svg", void 0);
+
+        _defineProperty(this, "svg", void 0);
+
+        _defineProperty(this, "bucketMatrix", void 0);
+
+        _defineProperty(this, "timeRange", {
+          from: 0,
+          to: 0
+        });
+      };
+
       _export("StatusmapRenderer", StatusmapRenderer =
       /*#__PURE__*/
       function () {
@@ -133,9 +148,7 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
 
           _defineProperty(this, "yGridSize", 0);
 
-          _defineProperty(this, "data", void 0);
-
-          _defineProperty(this, "cardsData", void 0);
+          _defineProperty(this, "bucketMatrix", void 0);
 
           _defineProperty(this, "panel", void 0);
 
@@ -162,7 +175,7 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
           _defineProperty(this, "dataRangeWidingFactor", DATA_RANGE_WIDING_FACTOR);
 
           // $heatmap is JQuery object, but heatmap is D3
-          this.$heatmap = this.elem.find('.status-heatmap-panel');
+          this.$heatmap = this.elem.find('.statusmap-panel');
           this.tooltip = new StatusmapTooltip(this.$heatmap, this.scope);
           this.tooltipExtraSeries = new StatusHeatmapTooltipExtraSeries(this.$heatmap, this.scope);
           this.annotationTooltip = new AnnotationTooltip(this.$heatmap, this.scope);
@@ -188,7 +201,7 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
           this.ctrl.tickValueFormatter = this.tickValueFormatter.bind(this); /////////////////////////////
           // Selection and crosshair //
           /////////////////////////////
-          // Shared crosshair and tooltip
+          // Shared crosshair and tooltip    this.empty = true;
 
           appEvents.on('graph-hover', this.onGraphHover.bind(this), this.scope);
           appEvents.on('graph-hover-clear', this.onGraphHoverClear.bind(this), this.scope); // Register selection listeners
@@ -264,6 +277,10 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
           key: "addXAxis",
           value: function addXAxis() {
             // Scale timestamps to cards centers
+            //this.scope.xScale = this.xScale = d3.scaleTime()
+            //    .domain([this.timeRange.from, this.timeRange.to])
+            //    .range([this.xGridSize/2, this.chartWidth-this.xGridSize/2]);
+            // Buckets without the most recent
             this.scope.xScale = this.xScale = d3.scaleTime().domain([this.timeRange.from, this.timeRange.to]).range([this.xGridSize / 2, this.chartWidth - this.xGridSize / 2]);
             var ticks = this.chartWidth / DEFAULT_X_TICK_SIZE_PX;
             var grafanaTimeFormatter = grafanaTimeFormat(ticks, this.timeRange.from, this.timeRange.to);
@@ -317,14 +334,7 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
         }, {
           key: "addYAxis",
           value: function addYAxis() {
-            var ticks = _.uniq(_.map(this.data, function (d) {
-              return d.target;
-            })); // Set default Y min and max if no data
-
-
-            if (_.isEmpty(this.data)) {
-              ticks = [''];
-            }
+            var ticks = this.bucketMatrix.targets;
 
             if (this.panel.yAxisSort == 'a → z') {
               ticks.sort(function (a, b) {
@@ -392,8 +402,8 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
           // calculate sizes for cards drawing
 
         }, {
-          key: "addHeatmapCanvas",
-          value: function addHeatmapCanvas() {
+          key: "addStatusmapCanvas",
+          value: function addStatusmapCanvas() {
             var heatmap_elem = this.$heatmap[0];
             this.width = Math.floor(this.$heatmap.width()) - this.padding.right;
             this.height = Math.floor(this.$heatmap.height()) - this.padding.bottom;
@@ -410,7 +420,12 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
             this.cardVSpacing = this.panel.cards.cardVSpacing !== null ? this.panel.cards.cardVSpacing : CARD_V_SPACING;
             this.cardRound = this.panel.cards.cardRound !== null ? this.panel.cards.cardRound : CARD_ROUND; // calculate yOffset for YAxis
 
-            this.yGridSize = Math.floor(this.chartHeight / this.cardsData.yBucketSize);
+            this.yGridSize = this.chartHeight;
+
+            if (this.bucketMatrix.targets.length > 0) {
+              this.yGridSize = Math.floor(this.chartHeight / this.bucketMatrix.targets.length);
+            }
+
             this.cardHeight = this.yGridSize ? this.yGridSize - this.cardVSpacing : 0;
             this.yOffset = this.cardHeight / 2;
             this.addYAxis();
@@ -418,7 +433,7 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
             this.chartWidth = this.width - this.yAxisWidth - this.margin.right; // TODO allow per-y cardWidth!
             // we need to fill chartWidth with xBucketSize cards.
 
-            this.xGridSize = this.chartWidth / (this.cardsData.xBucketSize + 1);
+            this.xGridSize = this.chartWidth / (this.bucketMatrix.xBucketSize + 1);
             this.cardWidth = this.xGridSize - this.cardHSpacing;
             this.addXAxis();
             this.xAxisHeight = this.getXAxisHeight(this.heatmap);
@@ -432,27 +447,34 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
             }
           }
         }, {
-          key: "addHeatmap",
-          value: function addHeatmap() {
+          key: "addStatusmap",
+          value: function addStatusmap() {
             var _this = this;
 
-            this.addHeatmapCanvas();
-            var maxValue = this.panel.color.max || this.cardsData.maxValue;
-            var minValue = this.panel.color.min || this.cardsData.minValue;
+            var maxValue = this.panel.color.max || this.bucketMatrix.maxValue;
+            var minValue = this.panel.color.min || this.bucketMatrix.minValue;
 
             if (this.panel.color.mode !== 'discrete') {
               this.colorScale = this.getColorScale(maxValue, minValue);
             }
 
-            this.setOpacityScale(maxValue);
-            var cards = this.heatmap.selectAll(".status-heatmap-card").data(this.cardsData.cards);
-            cards.append("title");
-            cards = cards.enter().append("rect").attr("cardId", function (c) {
-              return c.id;
-            }).attr("x", this.getCardX.bind(this)).attr("width", this.getCardWidth.bind(this)).attr("y", this.getCardY.bind(this)).attr("height", this.getCardHeight.bind(this)).attr("rx", this.cardRound).attr("ry", this.cardRound).attr("class", "bordered status-heatmap-card").style("fill", this.getCardColor.bind(this)).style("stroke", this.getCardColor.bind(this)).style("stroke-width", 0) //.style("stroke-width", getCardStrokeWidth)
+            this.setOpacityScale(maxValue); // Draw cards from buckets.
+
+            this.heatmap.selectAll(".statusmap-cards-row").data(this.bucketMatrix.targets).enter().selectAll(".statustmap-card").data(function (target) {
+              return _this.bucketMatrix.buckets[target];
+            }).enter().append("rect").attr("cardId", function (b) {
+              return b.id;
+            }).attr("xid", function (b) {
+              return b.xid;
+            }).attr("yid", function (b) {
+              return b.yLabel;
+            }).attr("x", this.getCardX.bind(this)).attr("width", this.getCardWidth.bind(this)).attr("y", this.getCardY.bind(this)).attr("height", this.getCardHeight.bind(this)).attr("rx", this.cardRound).attr("ry", this.cardRound).attr("class", function (b) {
+              return b.isEmpty() ? "empty-card" : "bordered statusmap-card";
+            }).style("fill", this.getCardColor.bind(this)).style("stroke", this.getCardColor.bind(this)).style("stroke-width", 0) //.style("stroke-width", getCardStrokeWidth)
             //.style("stroke-dasharray", "3,3")
-            .style("opacity", this.getCardOpacity.bind(this));
-            var $cards = this.$heatmap.find(".status-heatmap-card");
+            .style("opacity", this.getCardOpacity.bind(this)); // Set mouse events on cards.
+
+            var $cards = this.$heatmap.find(".statusmap-card + .bordered");
             $cards.on("mouseenter", function (event) {
               _this.tooltip.mouseOverBucket = true;
 
@@ -514,10 +536,12 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
           }
         }, {
           key: "getCardX",
-          value: function getCardX(d) {
+          value: function getCardX(b) {
             var x; // cx is the center of the card. Card should be placed to the left.
+            //let cx = this.xScale(d.x);
 
-            var cx = this.xScale(d.x);
+            var rightX = b.relTo / this.bucketMatrix.rangeMs * this.chartWidth;
+            var cx = rightX - this.cardWidth / 2;
 
             if (cx - this.cardWidth / 2 < 0) {
               x = this.yAxisWidth + this.cardHSpacing / 2;
@@ -530,9 +554,11 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
 
         }, {
           key: "getCardWidth",
-          value: function getCardWidth(d) {
+          value: function getCardWidth(b) {
+            //return 20;
             var w;
-            var cx = this.xScale(d.x);
+            var rightX = b.relTo / this.bucketMatrix.rangeMs * this.chartWidth;
+            var cx = rightX - this.cardWidth / 2; //let cx = this.xScale(d.x);
 
             if (cx < this.cardWidth / 2) {
               // Center should not exceed half of card.
@@ -554,16 +580,20 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
             }
 
             return w;
-          }
+          } // Top y for card.
+          // yScale gives ???
+          // 
+
         }, {
           key: "getCardY",
-          value: function getCardY(d) {
-            return this.yScale(d.y) + this.chartTop - this.cardHeight - this.cardVSpacing / 2;
+          value: function getCardY(b) {
+            return this.yScale(b.yLabel) + this.chartTop - this.cardHeight - this.cardVSpacing / 2;
           }
         }, {
           key: "getCardHeight",
-          value: function getCardHeight(d) {
-            var ys = this.yScale(d.y);
+          value: function getCardHeight(b) {
+            //return 20;
+            var ys = this.yScale(b.yLabel);
             var y = ys + this.chartTop - this.cardHeight - this.cardVSpacing / 2;
             var h = this.cardHeight; // Cut card height to prevent overlay
 
@@ -588,35 +618,35 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
           }
         }, {
           key: "getCardColor",
-          value: function getCardColor(d) {
+          value: function getCardColor(b) {
             if (this.panel.color.mode === 'opacity') {
               return this.panel.color.cardColor;
             } else if (this.panel.color.mode === 'spectrum') {
-              return this.colorScale(d.value);
+              return this.colorScale(b.value);
             } else if (this.panel.color.mode === 'discrete') {
-              if (this.panel.seriesFilterIndex != -1 && this.panel.seriesFilterIndex != null) {
+              if (this.panel.seriesFilterIndex != null && this.panel.seriesFilterIndex != -1) {
                 return this.ctrl.discreteExtraSeries.getBucketColorSingle(d.values[this.panel.seriesFilterIndex]);
               } else {
-                return this.ctrl.discreteExtraSeries.getBucketColor(d.values);
+                return this.ctrl.discreteExtraSeries.getBucketColor(b.values);
               }
             }
           }
         }, {
           key: "getCardOpacity",
-          value: function getCardOpacity(d) {
-            if (this.panel.nullPointMode === 'as empty' && d.value == null) {
+          value: function getCardOpacity(b) {
+            if (this.panel.nullPointMode === 'as empty' && b.value == null) {
               return 0;
             }
 
             if (this.panel.color.mode === 'opacity') {
-              return this.opacityScale(d.value);
+              return this.opacityScale(b.value);
             } else {
               return 1;
             }
           }
         }, {
           key: "getCardStrokeWidth",
-          value: function getCardStrokeWidth(d) {
+          value: function getCardStrokeWidth(b) {
             if (this.panel.color.mode === 'discrete') {
               return '1';
             }
@@ -705,8 +735,7 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
               //const pos = this.getEventPos(event, offset);
               this.emitGraphHoverEvent(event);
               this.drawCrosshair(offset.x);
-              this.tooltip.show(event); //, data); // pos, this.data
-
+              this.tooltip.show(event);
               this.annotationTooltip.show(event);
             }
           }
@@ -818,22 +847,22 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
         }, {
           key: "render",
           value: function render() {
-            this.data = this.ctrl.data;
             this.panel = this.ctrl.panel;
             this.timeRange = this.ctrl.range;
-            this.cardsData = this.ctrl.cardsData;
+            this.bucketMatrix = this.ctrl.bucketMatrix;
 
-            if (!this.data || !this.cardsData || !this.setElementHeight()) {
+            if (!this.bucketMatrix || !this.setElementHeight()) {
               return;
             } // Draw default axes and return if no data
 
 
-            if (_.isEmpty(this.cardsData.cards)) {
-              this.addHeatmapCanvas();
+            this.addStatusmapCanvas();
+
+            if (this.bucketMatrix.noDatapoints) {
               return;
             }
 
-            this.addHeatmap();
+            this.addStatusmap();
             this.scope.yAxisWidth = this.yAxisWidth;
             this.scope.xAxisHeight = this.xAxisHeight;
             this.scope.chartHeight = this.chartHeight;

@@ -21,7 +21,7 @@ System.register(["lodash", "jquery", "d3", "./libs/d3-scale-chromatic/index", "a
     legend.selectAll(".status-heatmap-color-legend-rect").data(valuesRange).enter().append("rect") // translate from range space into pixels
     // and shift all rectangles to the right by 10
     .attr("x", function (d) {
-      return d * widthFactor + 10;
+      return (d - rangeFrom) * widthFactor + 10;
     }).attr("y", 0) // rectangles are slightly overlaped to prevent gaps
     .attr("width", LEGEND_STEP_WIDTH + 1).attr("height", legendHeight).attr("stroke-width", 0).attr("fill", function (d) {
       return colorScale(d);
@@ -65,7 +65,7 @@ System.register(["lodash", "jquery", "d3", "./libs/d3-scale-chromatic/index", "a
 
     var valuesNumber = thresholds.length; // graph width as a fallback
 
-    var $heatmap = $(elem).parent().parent().parent().find('.status-heatmap-panel');
+    var $heatmap = $(elem).parent().parent().parent().find('.statusmap-panel');
     var graphWidthAttr = $heatmap.find('svg').attr("width");
     var graphWidth = parseInt(graphWidthAttr); // calculate max width of tooltip and use it as width for each item
 
@@ -100,8 +100,8 @@ System.register(["lodash", "jquery", "d3", "./libs/d3-scale-chromatic/index", "a
       return;
     }
 
-    var legendValueScale = d3.scaleLinear().domain([0, rangeTo]).range([0, legendWidth]);
-    var ticks = buildLegendTicks(0, rangeTo, maxValue, minValue);
+    var legendValueScale = d3.scaleLinear().domain([rangeFrom, rangeTo]).range([0, legendWidth]);
+    var ticks = buildLegendTicks(rangeFrom, rangeTo, maxValue, minValue);
     var xAxis = d3.axisBottom(legendValueScale).tickValues(ticks).tickSize(2);
     var colorRect = legendElem.find(":first-child");
     var posY = getSvgElemHeight(legendElem) + 2;
@@ -252,7 +252,7 @@ System.register(["lodash", "jquery", "d3", "./libs/d3-scale-chromatic/index", "a
     var ticks = [];
 
     for (var i = 0; i < ticksNum; i++) {
-      var current = tickStepSize * i; // Add user-defined min and max if it had been set
+      var current = tickStepSize * i + rangeFrom; // Add user-defined min and max if it had been set
 
       if (isValueCloseTo(minValue, current, tickStepSize)) {
         ticks.push(minValue);
@@ -268,7 +268,7 @@ System.register(["lodash", "jquery", "d3", "./libs/d3-scale-chromatic/index", "a
         ticks.push(maxValue);
       }
 
-      ticks.push(tickStepSize * i);
+      ticks.push(current);
     }
 
     if (!isValueCloseTo(maxValue, rangeTo, tickStepSize)) {
@@ -361,11 +361,33 @@ System.register(["lodash", "jquery", "d3", "./libs/d3-scale-chromatic/index", "a
                 return;
               }
 
-              if (!_.isEmpty(ctrl.cardsData) && !_.isEmpty(ctrl.cardsData.cards)) {
-                var rangeFrom = ctrl.cardsData.minValue;
-                var rangeTo = ctrl.cardsData.maxValue;
+              if (ctrl.bucketMatrix) {
+                var rangeFrom = ctrl.bucketMatrix.minValue;
+                var rangeTo = ctrl.bucketMatrix.maxValue;
                 var maxValue = panel.color.max || rangeTo;
                 var minValue = panel.color.min || rangeFrom;
+
+                if (ctrl.bucketMatrix.noDatapoints) {
+                  if (!panel.color.max) {
+                    rangeTo = maxValue = 100;
+                  } else {
+                    rangeTo = 100;
+                  }
+
+                  if (!panel.color.min) {
+                    rangeFrom = minValue = 0;
+                  } else {
+                    rangeFrom = 0;
+                  }
+                }
+
+                console.log("legent state:", {
+                  rangeFrom: rangeFrom,
+                  rangeTo: rangeTo,
+                  maxValue: maxValue,
+                  minValue: minValue,
+                  colorMode: panel.color.mode
+                });
 
                 if (panel.color.mode === 'spectrum') {
                   var colorScheme = _.find(ctrl.colorSchemes, {

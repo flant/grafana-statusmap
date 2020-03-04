@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import {StatusHeatmapCtrl} from "./status_heatmap_ctrl";
+import { Bucket } from "./statusmap_data";
+import { StatusHeatmapCtrl } from "./module";
 
 interface Tooltip {
   tooltip: string;
@@ -144,40 +145,42 @@ export class ColorModeDiscrete {
 
 
   updateCardsValuesHasColorInfoSingle() {
-    if (!this.panelCtrl.cardsData) {
+    if (!this.panelCtrl.bucketMatrix) {
       return;
     }
-    this.panelCtrl.cardsData.noColorDefined = false;
-    var cards = this.panelCtrl.cardsData.cards;
-    for (var i = 0; i < cards.length; i++) {
-      cards[i].noColorDefined = false;
-      var values = cards[i].value;
-      var threshold = this.getMatchedThreshold(values);
-      if (!threshold || !threshold.color || threshold.color == "") {
-        cards[i].noColorDefined = true;
-        this.panelCtrl.cardsData.noColorDefined = true;
-      }
-    }
+    this.panelCtrl.bucketMatrix.noColorDefined = false;
+
+    this.panelCtrl.bucketMatrix.targets.map((target:string) => {
+      this.panelCtrl.bucketMatrix.buckets[target].map((bucket:Bucket) => {
+        bucket.noColorDefined = false;
+        let threshold = this.getMatchedThreshold(bucket.value);
+        if (!threshold || !threshold.color || threshold.color == "") {
+          bucket.noColorDefined = true;
+          this.panelCtrl.bucketMatrix.noColorDefined = true;
+        }
+      });
+    });
   }
 
   updateCardsValuesHasColorInfo() {
-    if (!this.panelCtrl.cardsData) {
+    if (!this.panelCtrl.bucketMatrix) {
       return
     }
-    this.panelCtrl.cardsData.noColorDefined = false;
-    let cards = this.panelCtrl.cardsData.cards;
-    for (let i=0; i<cards.length; i++) {
-      cards[i].noColorDefined = false;
-      let values = cards[i].values;
-      for (let j=0; j<values.length; j++) {
-        let threshold = this.getMatchedThreshold(values[j]);
-        if (!threshold || !threshold.color || threshold.color == "") {
-          cards[i].noColorDefined = true;
-          this.panelCtrl.cardsData.noColorDefined = true;
-          break;
+    this.panelCtrl.bucketMatrix.noColorDefined = false;
+
+    this.panelCtrl.bucketMatrix.targets.map((target:string) => {
+      this.panelCtrl.bucketMatrix.buckets[target].map((bucket:Bucket) => {
+        bucket.noColorDefined = false;
+        for (let j=0; j<bucket.values.length; j++) {
+          let threshold = this.getMatchedThreshold(bucket.values[j]);
+          if (!threshold || !threshold.color || threshold.color == "") {
+            bucket.noColorDefined = true;
+            this.panelCtrl.bucketMatrix.noColorDefined = true;
+            break;
+          }
         }
-      }
-    }
+      });
+    });
   }
 
   getMatchedThreshold(value) {

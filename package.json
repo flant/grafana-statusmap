@@ -44,7 +44,8 @@
     "grunt-contrib-watch": "^1.0.0",
     "grunt-notify": "^0.4.5",
     "load-grunt-tasks": "^3.5.2",
-    "typescript": "3.7.2"
+    "typescript": "3.7.2",
+    "tslib": "1.10.0"
   },
   "dependencies": {
     "d3": "4.13.0",
