@@ -7,18 +7,18 @@
     color: #d8d9da;
     padding: 1px; }
 
-.status-heatmap-panel {
+.statusmap-panel {
   position: relative; }
-  .status-heatmap-panel .axis .tick text {
+  .statusmap-panel .axis .tick text {
     fill: #d8d9da;
     color: #d8d9da;
     font-size: 11px; }
-  .status-heatmap-panel .axis .tick line {
+  .statusmap-panel .axis .tick line {
     opacity: 0.4;
     stroke: #8e8e8e; }
-  .status-heatmap-panel svg {
+  .statusmap-panel svg {
     pointer-events: none; }
-    .status-heatmap-panel svg rect {
+    .statusmap-panel svg rect {
       pointer-events: visiblePainted; }
 
 .statusmap-tooltip {
