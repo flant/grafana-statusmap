@@ -352,6 +352,7 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
 
           _this.events.on('onChangeType', _this.onChangeType.bind(_assertThisInitialized(_this)));
 
+          _this.onCardColorChange = _this.onCardColorChange.bind(_assertThisInitialized(_this));
           return _this;
         }
 
