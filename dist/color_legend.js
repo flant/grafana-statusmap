@@ -379,15 +379,14 @@ System.register(["lodash", "jquery", "d3", "./libs/d3-scale-chromatic/index", "a
                   } else {
                     rangeFrom = 0;
                   }
-                }
+                } // console.log("legend state:", {
+                //   rangeFrom: rangeFrom,
+                //   rangeTo: rangeTo,
+                //   maxValue: maxValue,
+                //   minValue: minValue,
+                //   colorMode: panel.color.mode
+                // });
 
-                console.log("legent state:", {
-                  rangeFrom: rangeFrom,
-                  rangeTo: rangeTo,
-                  maxValue: maxValue,
-                  minValue: minValue,
-                  colorMode: panel.color.mode
-                });
 
                 if (panel.color.mode === 'spectrum') {
                   var colorScheme = _.find(ctrl.colorSchemes, {

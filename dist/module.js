@@ -405,6 +405,16 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
             var chartWidth = _.max([panelWidth - 200, panelWidth / 2]);
 
             return chartWidth;
+          } // Quick workaround for 6.7 and 7.0+. There is no call to
+          // calculateInterval in updateTimeRange in those versions.
+
+        }, {
+          key: "updateTimeRange",
+          value: function updateTimeRange() {
+            var ret = _get(_getPrototypeOf(StatusHeatmapCtrl.prototype), "updateTimeRange", this).call(this);
+
+            this.calculateInterval();
+            return ret;
           } // calculateInterval is called on 'refresh' to calculate an interval
           // for datasource.
           // It is override of calculateInterval from MetricsPanelCtrl.
@@ -502,9 +512,11 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
           value: function onDataReceived(dataList) {
             var _this3 = this;
 
+            //console.log("data",dataList)
             this.data = dataList;
             this.bucketMatrix = this.convertDataToBuckets(dataList, this.range.from.valueOf(), this.range.to.valueOf(), this.intervalMs, true);
-            this.noDatapoints = this.bucketMatrix.noDatapoints;
+            this.noDatapoints = this.bucketMatrix.noDatapoints; //console.log("buckets",this.bucketMatrix)
+
             this.annotationsPromise.then(function (result) {
               _this3.loading = false; //this.alertState = result.alertState;
 
