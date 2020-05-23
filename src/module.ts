@@ -262,6 +262,14 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     return chartWidth!;
   }
 
+  // Quick workaround for 6.7 and 7.0+. There is no call to
+  // calculateInterval in updateTimeRange in those versions.
+  updateTimeRange() {
+    let ret = super.updateTimeRange();
+    this.calculateInterval();
+    return ret;
+  }
+
   // calculateInterval is called on 'refresh' to calculate an interval
   // for datasource.
   // It is override of calculateInterval from MetricsPanelCtrl.
@@ -356,9 +364,12 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
 
   onDataReceived(dataList: any) {
+    //console.log("data",dataList)
     this.data    = dataList;
     this.bucketMatrix = this.convertDataToBuckets(dataList, this.range.from.valueOf(), this.range.to.valueOf(), this.intervalMs, true);
     this.noDatapoints = this.bucketMatrix.noDatapoints;
+
+    //console.log("buckets",this.bucketMatrix)
 
     this.annotationsPromise.then(
       (result: { alertState: any; annotations: any }) => {

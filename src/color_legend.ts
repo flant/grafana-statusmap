@@ -83,13 +83,13 @@ coreModule.directive('statusHeatmapLegend', function() {
             }
           }
 
-          console.log("legent state:", {
-            rangeFrom: rangeFrom,
-            rangeTo: rangeTo,
-            maxValue: maxValue,
-            minValue: minValue,
-            colorMode: panel.color.mode
-          });
+          // console.log("legend state:", {
+          //   rangeFrom: rangeFrom,
+          //   rangeTo: rangeTo,
+          //   maxValue: maxValue,
+          //   minValue: minValue,
+          //   colorMode: panel.color.mode
+          // });
 
           if (panel.color.mode === 'spectrum') {
             let colorScheme = _.find(ctrl.colorSchemes, {value: panel.color.colorScheme});
