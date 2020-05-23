@@ -210,6 +210,8 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     // custom event from rendering.js
     this.events.on('render-complete', this.onRenderComplete.bind(this));
     this.events.on('onChangeType', this.onChangeType.bind(this));
+
+    this.onCardColorChange = this.onCardColorChange.bind(this);
   }
 
   onRenderComplete(data: any):void {
