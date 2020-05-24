@@ -266,8 +266,8 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
   // Quick workaround for 6.7 and 7.0+. There is no call to
   // calculateInterval in updateTimeRange in those versions.
-  updateTimeRange() {
-    let ret = super.updateTimeRange();
+  updateTimeRange(datasource?: any) {
+    let ret = super.updateTimeRange(datasource);
     this.calculateInterval();
     return ret;
   }
