@@ -411,8 +411,8 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
 
         }, {
           key: "updateTimeRange",
-          value: function updateTimeRange() {
-            var ret = _get(_getPrototypeOf(StatusHeatmapCtrl.prototype), "updateTimeRange", this).call(this);
+          value: function updateTimeRange(datasource) {
+            var ret = _get(_getPrototypeOf(StatusHeatmapCtrl.prototype), "updateTimeRange", this).call(this, datasource);
 
             this.calculateInterval();
             return ret;
