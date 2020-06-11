@@ -302,8 +302,8 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
           value: function getYScale(ticks) {
             var range = []; //let step = this.chartHeight / ticks.length;
 
-            console.log('GETYSCALE - RENDERING', this.ctrl.panel.pageSize);
-            var step = this.chartHeight / this.ctrl.panel.pageSize; // svg has y=0 on the top, so top card should have a minimal value in range
+            console.log('GETYSCALE - RENDERING', this.ctrl.getPaginationSize());
+            var step = this.chartHeight / this.ctrl.getPaginationSize(); // svg has y=0 on the top, so top card should have a minimal value in range
 
             range.push(step);
 
@@ -319,8 +319,8 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
           value: function getYAxisScale(ticks) {
             var range = []; //let step = this.chartHeight / ticks.length;
 
-            console.log('GETYAXISSCALE - RENDERING', this.ctrl.panel.pageSize);
-            var step = this.chartHeight / this.ctrl.panel.pageSize; // svg has y=0 on the top, so top tick should have a minimal value in range
+            console.log('GETYAXISSCALE - RENDERING', this.ctrl.getPaginationSize());
+            var step = this.chartHeight / this.ctrl.getPaginationSize(); // svg has y=0 on the top, so top tick should have a minimal value in range
 
             range.push(this.yOffset);
 
@@ -434,8 +434,8 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
 
             if (this.ctrl.panel.usingPagination) {
               //this.yGridSize = Math.floor(this.chartHeight / this.ctrl.ticksWhenPaginating.length);
-              console.log('addHeatmapCanvas - rendering', this.ctrl.panel.pageSize);
-              this.yGridSize = Math.floor(this.chartHeight / this.ctrl.panel.pageSize);
+              console.log('addHeatmapCanvas - rendering', this.ctrl.getPaginationSize());
+              this.yGridSize = Math.floor(this.chartHeight / this.ctrl.getPaginationSize());
             } else {
               this.yGridSize = Math.floor(this.chartHeight / this.cardsData.yBucketSize);
             }
@@ -862,17 +862,17 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
                   return;
                 }
 
-                this.ctrl.panel.firstPageElement = this.ctrl.panel.currentPage * this.ctrl.panel.pageSize + 1;
-                var elems = this.ctrl.panel.totalElements;
+                this.ctrl.setFirstPageElement(this.ctrl.getCurrentPage() * this.ctrl.getPaginationSize() + 1);
+                var elems = this.ctrl.getTotalElements();
                 console.log('total elems in add heatmap canvas', elems);
 
-                if (elems < this.ctrl.panel.firstPageElement) {
-                  this.ctrl.panel.currentPage = 0;
+                if (elems < this.ctrl.getFirstPageElement()) {
+                  this.ctrl.setCurrentPage(0);
                   this.render();
                 }
 
-                this.ctrl.panel.currentPage + 1 === this.ctrl.panel.numberOfPages ? this.ctrl.panel.lastPageElement = this.ctrl.panel.totalElements : this.ctrl.panel.lastPageElement = this.ctrl.panel.currentPage * this.ctrl.panel.pageSize + this.ctrl.panel.pageSize;
-                var cardsList = this.ctrl.cardsData.targets.slice(this.ctrl.panel.pageSize * this.ctrl.panel.currentPage, this.ctrl.panel.pageSize * this.ctrl.panel.currentPage + this.ctrl.panel.pageSize);
+                this.ctrl.getCurrentPage() + 1 === this.ctrl.getNumberOfPages() ? this.ctrl.setLastPageElement(this.ctrl.getTotalElements()) : this.ctrl.setLastPageElement(this.ctrl.getCurrentPage() * this.ctrl.getPaginationSize() + this.ctrl.getPaginationSize());
+                var cardsList = this.ctrl.cardsData.targets.slice(this.ctrl.getPaginationSize() * this.ctrl.getCurrentPage(), this.ctrl.getPaginationSize() * this.ctrl.getCurrentPage() + this.ctrl.getPaginationSize());
                 var cardsToShow = [];
                 var labelsToShow = [];
 
@@ -895,7 +895,8 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
                 this.ctrl.ticksWhenPaginating = labelsToShowClean;
                 cardsToShow = undefined;
               } else {
-                this.ctrl.panel.pageSize = this.ctrl.cardsData.targets.length;
+                var pageSize = this.ctrl.cardsData.targets.length;
+                this.ctrl.getPaginationSize(pageSize);
                 this.ctrl.ticksWhenPaginating = undefined;
               }
             } // Draw default axes and return if no data

@@ -199,8 +199,8 @@ export class StatusmapRenderer {
   getYScale(ticks) {
     let range:any[] = [];
     //let step = this.chartHeight / ticks.length;
-    console.log('GETYSCALE - RENDERING', this.ctrl.panel.pageSize);
-    let step = this.chartHeight / this.ctrl.panel.pageSize;
+    console.log('GETYSCALE - RENDERING', this.ctrl.getPaginationSize());
+    let step = this.chartHeight / this.ctrl.getPaginationSize();
     // svg has y=0 on the top, so top card should have a minimal value in range
     range.push(step);
     for (let i = 1; i < ticks.length; i++) {
@@ -215,8 +215,8 @@ export class StatusmapRenderer {
   getYAxisScale(ticks) {
     let range:any[] = [];
     //let step = this.chartHeight / ticks.length;
-    console.log('GETYAXISSCALE - RENDERING', this.ctrl.panel.pageSize);
-    let step = this.chartHeight / this.ctrl.panel.pageSize;
+    console.log('GETYAXISSCALE - RENDERING', this.ctrl.getPaginationSize());
+    let step = this.chartHeight / this.ctrl.getPaginationSize();
     // svg has y=0 on the top, so top tick should have a minimal value in range
     range.push(this.yOffset);
     for (let i = 1; i < ticks.length; i++) {
@@ -329,8 +329,8 @@ export class StatusmapRenderer {
     // calculate yOffset for YAxis
     if (this.ctrl.panel.usingPagination) {
       //this.yGridSize = Math.floor(this.chartHeight / this.ctrl.ticksWhenPaginating.length);
-      console.log('addHeatmapCanvas - rendering',this.ctrl.panel.pageSize);
-      this.yGridSize = Math.floor(this.chartHeight / this.ctrl.panel.pageSize);
+      console.log('addHeatmapCanvas - rendering',this.ctrl.getPaginationSize());
+      this.yGridSize = Math.floor(this.chartHeight / this.ctrl.getPaginationSize());
     } else {
       this.yGridSize = Math.floor(this.chartHeight / this.cardsData.yBucketSize);
     }
@@ -762,22 +762,22 @@ export class StatusmapRenderer {
           return;
         }
 
-        this.ctrl.panel.firstPageElement = (this.ctrl.panel.currentPage*this.ctrl.panel.pageSize)+1;
+        this.ctrl.setFirstPageElement((this.ctrl.getCurrentPage()*this.ctrl.getPaginationSize())+1);
 
-        let elems = this.ctrl.panel.totalElements;
+        let elems = this.ctrl.getTotalElements();
 
         console.log('total elems in add heatmap canvas', elems);
-        if (elems < this.ctrl.panel.firstPageElement) {
-          this.ctrl.panel.currentPage = 0;
+        if (elems < this.ctrl.getFirstPageElement()) {
+          this.ctrl.setCurrentPage(0);
           this.render();
         }
 
-        ((this.ctrl.panel.currentPage+1) === this.ctrl.panel.numberOfPages) ?
-          this.ctrl.panel.lastPageElement = this.ctrl.panel.totalElements :
-          this.ctrl.panel.lastPageElement = (this.ctrl.panel.currentPage * this.ctrl.panel.pageSize)+this.ctrl.panel.pageSize;
+        ((this.ctrl.getCurrentPage()+1) === this.ctrl.getNumberOfPages()) ?
+          this.ctrl.setLastPageElement(this.ctrl.getTotalElements()) :
+          this.ctrl.setLastPageElement((this.ctrl.getCurrentPage() * this.ctrl.getPaginationSize())+this.ctrl.getPaginationSize());
 
-        let cardsList = this.ctrl.cardsData.targets.slice(this.ctrl.panel.pageSize*this.ctrl.panel.currentPage, 
-          (this.ctrl.panel.pageSize*this.ctrl.panel.currentPage)+this.ctrl.panel.pageSize);
+        let cardsList = this.ctrl.cardsData.targets.slice(this.ctrl.getPaginationSize()*this.ctrl.getCurrentPage(), 
+          (this.ctrl.getPaginationSize()*this.ctrl.getCurrentPage())+this.ctrl.getPaginationSize());
 
         let cardsToShow = [];
         let labelsToShow = [];
@@ -803,7 +803,8 @@ export class StatusmapRenderer {
 
         cardsToShow = undefined;
       } else {
-        this.ctrl.panel.pageSize = this.ctrl.cardsData.targets.length
+        const pageSize = this.ctrl.cardsData.targets.length
+        this.ctrl.getPaginationSize(pageSize);
         this.ctrl.ticksWhenPaginating = undefined;
       }
     }

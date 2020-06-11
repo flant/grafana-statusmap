@@ -200,6 +200,18 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
 
           _defineProperty(_assertThisInitialized(_this), "annotationsPromise", void 0);
 
+          _defineProperty(_assertThisInitialized(_this), "pageSize", 5);
+
+          _defineProperty(_assertThisInitialized(_this), "currentPage", 0);
+
+          _defineProperty(_assertThisInitialized(_this), "numberOfPages", 1);
+
+          _defineProperty(_assertThisInitialized(_this), "totalElements", 0);
+
+          _defineProperty(_assertThisInitialized(_this), "firstPageElement", 1);
+
+          _defineProperty(_assertThisInitialized(_this), "lastPageElement", 5);
+
           _defineProperty(_assertThisInitialized(_this), "panelDefaults", {
             // datasource name, null = default datasource
             datasource: null,
@@ -262,13 +274,7 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
             }],
             seriesFilterIndex: -1,
             usingUrl: false,
-            currentPage: 1,
-            pageSize: 15,
-            numberOfPages: 1,
             usingPagination: false,
-            totalElements: 0,
-            firstPageElement: 1,
-            lastPageElement: 5,
             allowAllElements: false,
             availableValues: []
           });
@@ -302,6 +308,10 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
           });
 
           _.defaultsDeep(_this.panel, _this.panelDefaults);
+
+          _this.setPaginationSize(5);
+
+          _this.setCurrentPage(0);
 
           _this.opacityScales = opacityScales;
           _this.colorModes = colorModes;
@@ -394,12 +404,67 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
         }, {
           key: "changePaginationSize",
           value: function changePaginationSize() {
-            if (this.panel.pageSize <= 0) {
-              this.panel.pageSize = 1;
+            if (this.pageSize <= 0) {
+              this.pageSize = 1;
             }
 
-            this.panel.currentPage = 0;
+            this.currentPage = 0;
             this.refresh();
+          }
+        }, {
+          key: "getPaginationSize",
+          value: function getPaginationSize() {
+            return this.pageSize;
+          }
+        }, {
+          key: "setPaginationSize",
+          value: function setPaginationSize(pageSize) {
+            this.pageSize = pageSize;
+          }
+        }, {
+          key: "getCurrentPage",
+          value: function getCurrentPage() {
+            return this.currentPage;
+          }
+        }, {
+          key: "setCurrentPage",
+          value: function setCurrentPage(currentPage) {
+            this.currentPage = currentPage;
+          }
+        }, {
+          key: "getNumberOfPages",
+          value: function getNumberOfPages() {
+            return this.numberOfPages;
+          }
+        }, {
+          key: "getTotalElements",
+          value: function getTotalElements() {
+            return this.totalElements;
+          }
+        }, {
+          key: "setTotalElements",
+          value: function setTotalElements(totalElements) {
+            this.totalElements = totalElements;
+          }
+        }, {
+          key: "getFirstPageElement",
+          value: function getFirstPageElement() {
+            return this.firstPageElement;
+          }
+        }, {
+          key: "setFirstPageElement",
+          value: function setFirstPageElement(firstPageElement) {
+            this.firstPageElement = firstPageElement;
+          }
+        }, {
+          key: "getLastPageElement",
+          value: function getLastPageElement() {
+            return this.lastPageElement;
+          }
+        }, {
+          key: "setLastPageElement",
+          value: function setLastPageElement(lastPageElement) {
+            this.lastPageElement = lastPageElement;
           }
         }, {
           key: "getChartWidth",
@@ -503,8 +568,10 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
             this.cardsData = this.convertToCards(this.data);
 
             if (this.panel.usingPagination && this.cardsData.targets) {
-              this.panel.numberOfPages = Math.ceil(this.cardsData.targets.length / this.panel.pageSize);
-              this.panel.totalElements = this.cardsData.targets.length;
+              this.numberOfPages = Math.ceil(this.cardsData.targets.length / this.pageSize);
+              this.totalElements = this.cardsData.targets.length;
+            } else {
+              this.setPaginationSize(this.cardsData.targets.length);
             }
 
             this.annotationsPromise.then(function (result) {

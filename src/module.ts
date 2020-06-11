@@ -104,6 +104,13 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   annotations: object[] = [];
   annotationsPromise: any;
 
+  pageSize: number = 5;
+  currentPage: number = 0;
+  numberOfPages: number = 1;
+  totalElements: number = 0;
+  firstPageElement: number = 1;
+  lastPageElement: number = 5;
+
   panelDefaults: any = {
     // datasource name, null = default datasource
     datasource: null,
@@ -165,13 +172,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     }],
     seriesFilterIndex: -1,
     usingUrl: false,
-    currentPage: 1,
-    pageSize: 15,
-    numberOfPages: 1,
     usingPagination: false,
-    totalElements: 0,
-    firstPageElement: 1,
-    lastPageElement: 5,
     allowAllElements: false,
     availableValues: []
   };
@@ -181,6 +182,9 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     super($scope, $injector);
 
     _.defaultsDeep(this.panel, this.panelDefaults);
+
+    this.setPaginationSize(5);
+    this.setCurrentPage(0);
 
     this.opacityScales = opacityScales;
     this.colorModes = colorModes;
@@ -258,13 +262,57 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   }
 
   changePaginationSize(): void {
-    if (this.panel.pageSize <= 0) {
-      this.panel.pageSize = 1;
+    if (this.pageSize <= 0) {
+      this.pageSize = 1;
     }
 
-    this.panel.currentPage = 0;
+    this.currentPage = 0;
 
     this.refresh();
+  }
+
+  getPaginationSize(): number {
+    return this.pageSize;
+  }
+
+  setPaginationSize(pageSize: number): void {
+    this.pageSize = pageSize;
+  }
+
+  getCurrentPage(): number {
+    return this.currentPage;
+  }
+
+  setCurrentPage(currentPage: number): void {
+    this.currentPage = currentPage;
+  }
+
+  getNumberOfPages(): number {
+    return this.numberOfPages;
+  }
+
+  getTotalElements(): number {
+    return this.totalElements;
+  }
+
+  setTotalElements(totalElements: number): void {
+    this.totalElements = totalElements;
+  }
+
+  getFirstPageElement(): number {
+    return this.firstPageElement;
+  }
+
+  setFirstPageElement(firstPageElement: number): void {
+    this.firstPageElement = firstPageElement;
+  }
+
+  getLastPageElement(): number {
+    return this.lastPageElement;
+  }
+
+  setLastPageElement(lastPageElement: number): void {
+    this.lastPageElement = lastPageElement;
   }
 
   getChartWidth():number {
@@ -366,8 +414,10 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.cardsData = this.convertToCards(this.data);
 
     if (this.panel.usingPagination && this.cardsData.targets) {
-      this.panel.numberOfPages = Math.ceil(this.cardsData.targets.length/this.panel.pageSize);
-      this.panel.totalElements = this.cardsData.targets.length;
+      this.numberOfPages = Math.ceil(this.cardsData.targets.length/this.pageSize);
+      this.totalElements = this.cardsData.targets.length;
+    } else {
+      this.setPaginationSize(this.cardsData.targets.length);
     }
 
     this.annotationsPromise.then(
