@@ -275,6 +275,7 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
             seriesFilterIndex: -1,
             usingUrl: false,
             usingPagination: false,
+            defaultPageSize: 5,
             allowAllElements: false,
             availableValues: []
           });
@@ -309,7 +310,7 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
 
           _.defaultsDeep(_this.panel, _this.panelDefaults);
 
-          _this.setPaginationSize(5);
+          _this.setPaginationSize(_this.panel.defaultPageSize);
 
           _this.setCurrentPage(0);
 
@@ -400,6 +401,12 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
                 url.extraSeries.format = ExtraSeriesFormatValue.Raw;
                 break;
             }
+          }
+        }, {
+          key: "changeDefaultPaginationSize",
+          value: function changeDefaultPaginationSize(defaultPageSize) {
+            this.pageSize = defaultPageSize;
+            this.refresh();
           }
         }, {
           key: "changePaginationSize",

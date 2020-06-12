@@ -173,6 +173,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     seriesFilterIndex: -1,
     usingUrl: false,
     usingPagination: false,
+    defaultPageSize: 5,
     allowAllElements: false,
     availableValues: []
   };
@@ -183,7 +184,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
     _.defaultsDeep(this.panel, this.panelDefaults);
 
-    this.setPaginationSize(5);
+    this.setPaginationSize(this.panel.defaultPageSize);
     this.setCurrentPage(0);
 
     this.opacityScales = opacityScales;
@@ -259,6 +260,12 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
         url.extraSeries.format = ExtraSeriesFormatValue.Raw;
         break;
     }
+  }
+
+  changeDefaultPaginationSize(defaultPageSize: number): void {
+    this.pageSize = defaultPageSize;
+
+    this.refresh();
   }
 
   changePaginationSize(): void {
