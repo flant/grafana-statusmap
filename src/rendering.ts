@@ -772,9 +772,15 @@ export class StatusmapRenderer {
           this.render();
         }
 
-        ((this.ctrl.getCurrentPage()+1) === this.ctrl.getNumberOfPages()) ?
-          this.ctrl.setLastPageElement(this.ctrl.getTotalElements()) :
-          this.ctrl.setLastPageElement((this.ctrl.getCurrentPage() * this.ctrl.getPaginationSize())+this.ctrl.getPaginationSize());
+        if (this.ctrl.getPaginationSize() >= this.ctrl.getTotalElements()) {
+          this.ctrl.setLastPageElement(this.ctrl.getTotalElements());
+        } else {
+          if ((this.ctrl.getCurrentPage()+1) === this.ctrl.getNumberOfPages() && (this.ctrl.getCurrentPage()>0)) {
+            this.ctrl.setLastPageElement(this.ctrl.getTotalElements());
+          } else {
+            this.ctrl.setLastPageElement((this.ctrl.getCurrentPage() * this.ctrl.getPaginationSize())+this.ctrl.getPaginationSize());
+          }
+        }
 
         let cardsList = this.ctrl.cardsData.targets.slice(this.ctrl.getPaginationSize()*this.ctrl.getCurrentPage(), 
           (this.ctrl.getPaginationSize()*this.ctrl.getCurrentPage())+this.ctrl.getPaginationSize());

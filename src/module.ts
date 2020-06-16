@@ -104,7 +104,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   annotations: object[] = [];
   annotationsPromise: any;
 
-  pageSize: number = 5;
+  pageSizeViewer: number = 15;
   currentPage: number = 0;
   numberOfPages: number = 1;
   totalElements: number = 0;
@@ -173,7 +173,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     seriesFilterIndex: -1,
     usingUrl: false,
     usingPagination: false,
-    defaultPageSize: 5,
+    pageSize: 15,
     allowAllElements: false,
     availableValues: []
   };
@@ -184,8 +184,10 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
     _.defaultsDeep(this.panel, this.panelDefaults);
 
-    this.setPaginationSize(this.panel.defaultPageSize);
-    this.setCurrentPage(0);
+    if (this.panel.usingPagination) {
+      this.setPaginationSize(this.panel.pageSize);
+      this.setCurrentPage(0);
+    }
 
     this.opacityScales = opacityScales;
     this.colorModes = colorModes;
@@ -263,27 +265,29 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   }
 
   changeDefaultPaginationSize(defaultPageSize: number): void {
-    this.pageSize = defaultPageSize;
+    this.pageSizeViewer = defaultPageSize;
 
+    this.render();
     this.refresh();
   }
 
   changePaginationSize(): void {
-    if (this.pageSize <= 0) {
-      this.pageSize = 1;
+    if (this.pageSizeViewer <= 0) {
+      this.pageSizeViewer = 1;
     }
 
     this.currentPage = 0;
 
+    this.render();
     this.refresh();
   }
 
   getPaginationSize(): number {
-    return this.pageSize;
+    return this.pageSizeViewer;
   }
 
   setPaginationSize(pageSize: number): void {
-    this.pageSize = pageSize;
+    this.pageSizeViewer = pageSize;
   }
 
   getCurrentPage(): number {
@@ -421,7 +425,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.cardsData = this.convertToCards(this.data);
 
     if (this.panel.usingPagination && this.cardsData.targets) {
-      this.numberOfPages = Math.ceil(this.cardsData.targets.length/this.pageSize);
+      this.numberOfPages = Math.ceil(this.cardsData.targets.length/this.pageSizeViewer);
       this.totalElements = this.cardsData.targets.length;
     } else {
       this.setPaginationSize(this.cardsData.targets.length);

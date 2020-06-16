@@ -4,7 +4,7 @@
 	<div class="gf-form" ng-if="ctrl.panel.usingPagination">
 		<label class="gf-form-label width-9">Items per page</label>
 		<input type="number" class="gf-form-input width-5" placeholder="2" data-placement="right"
-		bs-tooltip="'Number of items to show per page.'" ng-model="ctrl.pageSize" ng-change="ctrl.changePaginationSize()"
+		bs-tooltip="'Number of items to show per page.'" ng-model="ctrl.pageSizeViewer" ng-change="ctrl.changePaginationSize()"
 		ng-model-onblur>
 	</div>	
 
@@ -23,7 +23,7 @@
 				Previous
 			</button>
 			{{ctrl.currentPage+1}}/{{ctrl.numberOfPages}}
-			<button class="btn btn-inverse" ng-disabled="ctrl.currentPage >= ctrl.cardsData.targets.length/ctrl.pageSize - 1 || ctrl.numberOfPages == 0" ng-click="ctrl.currentPage=ctrl.currentPage+1; ctrl.render()">
+			<button class="btn btn-inverse" ng-disabled="ctrl.currentPage >= ctrl.cardsData.targets.length/ctrl.pageSizeViewer - 1 || ctrl.numberOfPages == 0" ng-click="ctrl.currentPage=ctrl.currentPage+1; ctrl.render()">
 				Next
 			</button>
 		</div>
