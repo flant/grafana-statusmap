@@ -1,9 +1,9 @@
 "use strict";
 
-System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/core", "d3", "./libs/d3-scale-chromatic/index", "./tooltip", "./tooltipextraseries", "./annotations"], function (_export, _context) {
+System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/core", "d3", "./libs/d3-scale-chromatic/index", "./tooltip", "./annotations"], function (_export, _context) {
   "use strict";
 
-  var _, $, moment, kbn, appEvents, contextSrv, d3, d3ScaleChromatic, StatusmapTooltip, StatusHeatmapTooltipExtraSeries, AnnotationTooltip, MIN_CARD_SIZE, CARD_H_SPACING, CARD_V_SPACING, CARD_ROUND, DATA_RANGE_WIDING_FACTOR, DEFAULT_X_TICK_SIZE_PX, DEFAULT_Y_TICK_SIZE_PX, X_AXIS_TICK_PADDING, Y_AXIS_TICK_PADDING, MIN_SELECTION_WIDTH, Statusmap, StatusmapRenderer;
+  var _, $, moment, kbn, appEvents, contextSrv, d3, d3ScaleChromatic, StatusmapTooltip, AnnotationTooltip, MIN_CARD_SIZE, CARD_H_SPACING, CARD_V_SPACING, CARD_ROUND, DATA_RANGE_WIDING_FACTOR, DEFAULT_X_TICK_SIZE_PX, DEFAULT_Y_TICK_SIZE_PX, X_AXIS_TICK_PADDING, Y_AXIS_TICK_PADDING, MIN_SELECTION_WIDTH, Statusmap, StatusmapRenderer;
 
   function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
@@ -66,8 +66,6 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
       d3ScaleChromatic = _libsD3ScaleChromaticIndex;
     }, function (_tooltip) {
       StatusmapTooltip = _tooltip.StatusmapTooltip;
-    }, function (_tooltipextraseries) {
-      StatusHeatmapTooltipExtraSeries = _tooltipextraseries.StatusHeatmapTooltipExtraSeries;
     }, function (_annotations) {
       AnnotationTooltip = _annotations.AnnotationTooltip;
     }],
@@ -156,8 +154,6 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
 
           _defineProperty(this, "tooltip", void 0);
 
-          _defineProperty(this, "tooltipExtraSeries", void 0);
-
           _defineProperty(this, "annotationTooltip", void 0);
 
           _defineProperty(this, "heatmap", void 0);
@@ -177,7 +173,6 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
           // $heatmap is JQuery object, but heatmap is D3
           this.$heatmap = this.elem.find('.statusmap-panel');
           this.tooltip = new StatusmapTooltip(this.$heatmap, this.scope);
-          this.tooltipExtraSeries = new StatusHeatmapTooltipExtraSeries(this.$heatmap, this.scope);
           this.annotationTooltip = new AnnotationTooltip(this.$heatmap, this.scope);
           this.yOffset = 0;
           this.selection = {
@@ -410,9 +405,11 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
 
             if (this.heatmap) {
               this.heatmap.remove();
-            }
+            } // Insert svg as a first child into heatmap_elem
+            // as the frozen tooltip moving logiс assumes that tooltip is the last child.
 
-            this.heatmap = d3.select(heatmap_elem).append("svg").attr("width", this.width).attr("height", this.height);
+
+            this.heatmap = d3.select(heatmap_elem).insert("svg", ":first-child").attr("width", this.width).attr("height", this.height);
             this.chartHeight = this.height - this.margin.top - this.margin.bottom;
             this.chartTop = this.margin.top;
             this.chartBottom = this.chartTop + this.chartHeight;
@@ -513,10 +510,7 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
 
             var colorScheme = _.find(this.ctrl.colorSchemes, {
               value: this.panel.color.colorScheme
-            }); // if (!colorScheme) {
-            //
-            // }
-
+            });
 
             var colorInterpolator = d3ScaleChromatic[colorScheme.value];
             var colorScaleInverted = colorScheme.invert === 'always' || colorScheme.invert === 'dark' && !contextSrv.user.lightTheme;
@@ -618,28 +612,28 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
           }
         }, {
           key: "getCardColor",
-          value: function getCardColor(b) {
+          value: function getCardColor(bucket) {
             if (this.panel.color.mode === 'opacity') {
               return this.panel.color.cardColor;
             } else if (this.panel.color.mode === 'spectrum') {
-              return this.colorScale(b.value);
+              return this.colorScale(bucket.value);
             } else if (this.panel.color.mode === 'discrete') {
               if (this.panel.seriesFilterIndex != null && this.panel.seriesFilterIndex != -1) {
-                return this.ctrl.discreteExtraSeries.getBucketColorSingle(d.values[this.panel.seriesFilterIndex]);
+                return this.ctrl.discreteExtraSeries.getBucketColorSingle(bucket.values[this.panel.seriesFilterIndex]);
               } else {
-                return this.ctrl.discreteExtraSeries.getBucketColor(b.values);
+                return this.ctrl.discreteExtraSeries.getBucketColor(bucket.values);
               }
             }
           }
         }, {
           key: "getCardOpacity",
-          value: function getCardOpacity(b) {
-            if (this.panel.nullPointMode === 'as empty' && b.value == null) {
+          value: function getCardOpacity(bucket) {
+            if (this.panel.nullPointMode === 'as empty' && bucket.value == null) {
               return 0;
             }
 
             if (this.panel.color.mode === 'opacity') {
-              return this.opacityScale(b.value);
+              return this.opacityScale(bucket.value);
             } else {
               return 1;
             }
@@ -705,14 +699,7 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
           key: "onMouseLeave",
           value: function onMouseLeave(e) {
             appEvents.emit('graph-hover-clear');
-            this.clearCrosshair(); //annotationTooltip.destroy();
-
-            if (e.relatedTarget) {
-              if (e.relatedTarget.className == "statusmap-tooltip-extraseries graph-tooltip grafana-tooltip" || e.relatedTarget.className == "graph-tooltip-time") {} else {
-                this.tooltipExtraSeries.destroy();
-              }
-            }
-
+            this.clearCrosshair();
             this.annotationTooltip.destroy();
           }
         }, {
@@ -738,13 +725,13 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
               this.tooltip.show(event);
               this.annotationTooltip.show(event);
             }
-          }
+          } // TODO emit an event and move logic to panelCtrl
+
         }, {
           key: "onMouseClick",
-          value: function onMouseClick(event) {
-            this.tooltipExtraSeries.show(event);
-
-            if (this.ctrl.panel.usingUrl) {
+          value: function onMouseClick(e) {
+            if (this.ctrl.panel.tooltip.freezeOnClick) {
+              this.tooltip.showFrozen(e);
               this.tooltip.destroy();
             }
           }

@@ -22,6 +22,15 @@
       pointer-events: visiblePainted; }
 
 .statusmap-tooltip {
+  position: absolute;
+  padding: 10px;
+  font-weight: 200;
+  border-radius: 5px;
+  max-width: 800px;
+  max-height: 600px;
+  overflow: hidden;
+  line-height: 14px;
+  z-index: 9999;
   white-space: nowrap;
   font-size: 12px;
   background-color: #141414;
@@ -32,17 +41,9 @@
     font-weight: bold;
     text-shadow: 0 0 0.2em #212124, 0 0 0.2em #212124, 0 0 0.2em #212124; }
 
-.statusmap-tooltip-extraseries {
-  white-space: nowrap;
-  font-size: 12px;
-  background-color: #141414;
-  color: #d8d9da; }
-  .statusmap-tooltip-extraseries .discrete-item {
-    color: #ffffff;
-    padding: 1px;
-    font-weight: bold;
-    margin-bottom: 0;
-    text-shadow: 0 0 0.2em #212124, 0 0 0.2em #212124, 0 0 0.2em #212124; }
+.statusmap-tooltip-frozen {
+  position: relative;
+  z-index: 1; }
 
 .statusmap-histogram rect {
   fill: #8e8e8e; }

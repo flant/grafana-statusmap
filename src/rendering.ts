@@ -3,11 +3,9 @@ import $ from 'jquery';
 import moment from 'moment';
 import kbn from 'app/core/utils/kbn';
 import {appEvents, contextSrv} from 'app/core/core';
-import {tickStep, getScaledDecimals, getFlotTickSize} from 'app/core/utils/ticks';
 import * as d3 from 'd3';
 import * as d3ScaleChromatic from './libs/d3-scale-chromatic/index';
 import {StatusmapTooltip} from './tooltip';
-import {StatusHeatmapTooltipExtraSeries} from './tooltipextraseries';
 import {AnnotationTooltip} from './annotations';
 import { Bucket, BucketMatrix } from './statusmap_data';
 import { StatusHeatmapCtrl } from './module';
@@ -65,7 +63,6 @@ export class StatusmapRenderer {
   panel: any;
   $heatmap: any;
   tooltip: StatusmapTooltip;
-  tooltipExtraSeries:StatusHeatmapTooltipExtraSeries;
   annotationTooltip: AnnotationTooltip;
   heatmap: any;
   timeRange: any;
@@ -80,7 +77,6 @@ export class StatusmapRenderer {
     // $heatmap is JQuery object, but heatmap is D3
     this.$heatmap = this.elem.find('.statusmap-panel');
     this.tooltip = new StatusmapTooltip(this.$heatmap, this.scope);
-    this.tooltipExtraSeries = new StatusHeatmapTooltipExtraSeries(this.$heatmap, this.scope);
     this.annotationTooltip = new AnnotationTooltip(this.$heatmap, this.scope);
 
     this.yOffset = 0;
@@ -312,8 +308,10 @@ export class StatusmapRenderer {
       this.heatmap.remove();
     }
 
+    // Insert svg as a first child into heatmap_elem
+    // as the frozen tooltip moving logiс assumes that tooltip is the last child.
     this.heatmap = d3.select(heatmap_elem)
-        .append("svg")
+        .insert("svg",":first-child")
         .attr("width", this.width)
         .attr("height", this.height);
 
@@ -428,9 +426,6 @@ export class StatusmapRenderer {
 
   getColorScale(maxValue, minValue = 0) {
     let colorScheme = _.find(this.ctrl.colorSchemes, {value: this.panel.color.colorScheme});
-    // if (!colorScheme) {
-    //
-    // }
     let colorInterpolator = d3ScaleChromatic[colorScheme.value];
     let colorScaleInverted = colorScheme.invert === 'always' ||
         (colorScheme.invert === 'dark' && !contextSrv.user.lightTheme);
@@ -537,26 +532,26 @@ export class StatusmapRenderer {
     return h;
   }
 
-  getCardColor(b: Bucket) {
+  getCardColor(bucket: Bucket) {
     if (this.panel.color.mode === 'opacity') {
       return this.panel.color.cardColor;
     } else if (this.panel.color.mode === 'spectrum') {
-      return this.colorScale(b.value);
+      return this.colorScale(bucket.value);
     } else if (this.panel.color.mode === 'discrete') {
       if (this.panel.seriesFilterIndex != null && this.panel.seriesFilterIndex != -1) {
-        return this.ctrl.discreteExtraSeries.getBucketColorSingle(d.values[this.panel.seriesFilterIndex]);
+        return this.ctrl.discreteExtraSeries.getBucketColorSingle(bucket.values[this.panel.seriesFilterIndex]);
       } else {
-        return this.ctrl.discreteExtraSeries.getBucketColor(b.values);
+        return this.ctrl.discreteExtraSeries.getBucketColor(bucket.values);
       }
     }
   }
 
-  getCardOpacity(b: Bucket) {
-    if (this.panel.nullPointMode === 'as empty' && b.value == null ) {
+  getCardOpacity(bucket: Bucket) {
+    if (this.panel.nullPointMode === 'as empty' && bucket.value == null ) {
       return 0;
     }
     if (this.panel.color.mode === 'opacity') {
-      return this.opacityScale(b.value);
+      return this.opacityScale(bucket.value);
     } else {
       return 1;
     }
@@ -615,17 +610,10 @@ export class StatusmapRenderer {
   onMouseLeave(e) {
     appEvents.emit('graph-hover-clear');
     this.clearCrosshair();
-    //annotationTooltip.destroy();
-    if (e.relatedTarget) {
-      if (e.relatedTarget.className == "statusmap-tooltip-extraseries graph-tooltip grafana-tooltip" || e.relatedTarget.className == "graph-tooltip-time" ) {
-      } else {
-        this.tooltipExtraSeries.destroy();
-      }
-    }
-    this.annotationTooltip.destroy(); 
+    this.annotationTooltip.destroy();
   }
 
-  onMouseMove(event) {
+  onMouseMove(event: MouseEvent) {
     if (!this.heatmap) { return; }
 
     const offset = this.getEventOffset(event);
@@ -646,9 +634,10 @@ export class StatusmapRenderer {
     }
   }
 
-  public onMouseClick(event) {
-    this.tooltipExtraSeries.show(event)
-    if (this.ctrl.panel.usingUrl) {
+  // TODO emit an event and move logic to panelCtrl
+  public onMouseClick(e: MouseEvent) {
+    if (this.ctrl.panel.tooltip.freezeOnClick) {
+      this.tooltip.showFrozen(e);
       this.tooltip.destroy();
     }
   }

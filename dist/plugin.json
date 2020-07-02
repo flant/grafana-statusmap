@@ -17,7 +17,6 @@
     "links": [
       {"name": "Github", "url": "https://github.com/flant/grafana-statusmap"},
       {"name": "MIT Licence", "url": "https://github.com/flant/grafana-statusmap/blob/master/LICENSE"}
-
     ],
     "screenshots": [
       {"name": "Panel with light theme", "path": "img/flant-statusmap-panel.png"},
