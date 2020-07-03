@@ -366,30 +366,38 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
 
   onDataReceived(dataList: any) {
-    //console.log("data",dataList)
     this.data    = dataList;
+    // Quick workaround for 7.0+. There is no call to
+    // calculateInterval when enter Edit mode.
+    if (!this.intervalMs) {
+      this.calculateInterval();
+    }
     this.bucketMatrix = this.convertDataToBuckets(dataList, this.range.from.valueOf(), this.range.to.valueOf(), this.intervalMs, true);
     this.noDatapoints = this.bucketMatrix.noDatapoints;
 
-    //console.log("buckets",this.bucketMatrix)
-
-    this.annotationsPromise.then(
-      (result: { alertState: any; annotations: any }) => {
-        this.loading = false;
-        //this.alertState = result.alertState;
-        if (result.annotations && result.annotations.length > 0) {
-          this.annotations = result.annotations;
-        } else {
+    if (this.annotationsPromise) {
+      this.annotationsPromise.then(
+        (result: { alertState: any; annotations: any }) => {
+          this.loading = false;
+          //this.alertState = result.alertState;
+          if (result.annotations && result.annotations.length > 0) {
+            this.annotations = result.annotations;
+          } else {
+            this.annotations = [];
+          }
+          this.render();
+        },
+        () => {
+          this.loading = false;
           this.annotations = [];
+          this.render();
         }
-        this.render();
-      },
-      () => {
-        this.loading = false;
-        this.annotations = [];
-        this.render();
-      }
-    );
+      );
+    } else {
+      this.loading = false;
+      this.annotations = [];
+      this.render();
+    }
   }
 
   onInitEditMode() {
@@ -400,7 +408,6 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   // onRender will be called before StatusmapRenderer.onRender.
   // Decide if warning should be displayed over cards.
   onRender() {
-    //console.log('OnRender');
     if (!this.range || !this.data) {
       this.noDatapoints = true;
       return;
