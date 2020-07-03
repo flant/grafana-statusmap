@@ -513,27 +513,38 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
           value: function onDataReceived(dataList) {
             var _this3 = this;
 
-            //console.log("data",dataList)
-            this.data = dataList;
+            this.data = dataList; // Quick workaround for 7.0+. There is no call to
+            // calculateInterval when enter Edit mode.
+
+            if (!this.intervalMs) {
+              this.calculateInterval();
+            }
+
             this.bucketMatrix = this.convertDataToBuckets(dataList, this.range.from.valueOf(), this.range.to.valueOf(), this.intervalMs, true);
-            this.noDatapoints = this.bucketMatrix.noDatapoints; //console.log("buckets",this.bucketMatrix)
+            this.noDatapoints = this.bucketMatrix.noDatapoints;
 
-            this.annotationsPromise.then(function (result) {
-              _this3.loading = false; //this.alertState = result.alertState;
+            if (this.annotationsPromise) {
+              this.annotationsPromise.then(function (result) {
+                _this3.loading = false; //this.alertState = result.alertState;
 
-              if (result.annotations && result.annotations.length > 0) {
-                _this3.annotations = result.annotations;
-              } else {
+                if (result.annotations && result.annotations.length > 0) {
+                  _this3.annotations = result.annotations;
+                } else {
+                  _this3.annotations = [];
+                }
+
+                _this3.render();
+              }, function () {
+                _this3.loading = false;
                 _this3.annotations = [];
-              }
 
-              _this3.render();
-            }, function () {
-              _this3.loading = false;
-              _this3.annotations = [];
-
-              _this3.render();
-            });
+                _this3.render();
+              });
+            } else {
+              this.loading = false;
+              this.annotations = [];
+              this.render();
+            }
           }
         }, {
           key: "onInitEditMode",
@@ -546,7 +557,6 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
         }, {
           key: "onRender",
           value: function onRender() {
-            //console.log('OnRender');
             if (!this.range || !this.data) {
               this.noDatapoints = true;
               return;
