@@ -1,9 +1,9 @@
 "use strict";
 
-System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/sdk", "./statusmap_data", "./rendering", "./options_editor", "./color_mode_discrete", "./extra_series_format"], function (_export, _context) {
+System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_editor", "./panel_config_migration", "app/core/utils/kbn", "app/plugins/sdk", "./statusmap_data", "./rendering", "./color_mode_discrete"], function (_export, _context) {
   "use strict";
 
-  var _, kbn, loadPluginCss, MetricsPanelCtrl, Bucket, BucketMatrix, rendering, statusHeatmapOptionsEditor, ColorModeDiscrete, ExtraSeriesFormat, ExtraSeriesFormatValue, VALUE_INDEX, TIME_INDEX, colorSchemes, colorModes, opacityScales, StatusHeatmapCtrl;
+  var _, optionsEditorCtrl, tooltipEditorCtrl, migratePanelConfig, kbn, loadPluginCss, MetricsPanelCtrl, Bucket, BucketMatrix, rendering, ColorModeDiscrete, VALUE_INDEX, TIME_INDEX, colorSchemes, colorModes, opacityScales, StatusHeatmapCtrl;
 
   function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -32,7 +32,13 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
   return {
     setters: [function (_lodash) {
       _ = _lodash.default;
-    }, function (_color_legend) {}, function (_appCoreUtilsKbn) {
+    }, function (_color_legend) {}, function (_options_editor) {
+      optionsEditorCtrl = _options_editor.optionsEditorCtrl;
+    }, function (_tooltip_editor) {
+      tooltipEditorCtrl = _tooltip_editor.tooltipEditorCtrl;
+    }, function (_panel_config_migration) {
+      migratePanelConfig = _panel_config_migration.migratePanelConfig;
+    }, function (_appCoreUtilsKbn) {
       kbn = _appCoreUtilsKbn.default;
     }, function (_appPluginsSdk) {
       loadPluginCss = _appPluginsSdk.loadPluginCss;
@@ -42,13 +48,8 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
       BucketMatrix = _statusmap_data.BucketMatrix;
     }, function (_rendering) {
       rendering = _rendering.default;
-    }, function (_options_editor) {
-      statusHeatmapOptionsEditor = _options_editor.statusHeatmapOptionsEditor;
     }, function (_color_mode_discrete) {
       ColorModeDiscrete = _color_mode_discrete.ColorModeDiscrete;
-    }, function (_extra_series_format) {
-      ExtraSeriesFormat = _extra_series_format.ExtraSeriesFormat;
-      ExtraSeriesFormatValue = _extra_series_format.ExtraSeriesFormatValue;
     }],
     execute: function () {
       VALUE_INDEX = 0;
@@ -163,6 +164,7 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
 
           _this = _possibleConstructorReturn(this, _getPrototypeOf(StatusHeatmapCtrl).call(this, $scope, $injector));
           _this.annotationsSrv = annotationsSrv;
+          _this.variableSrv = variableSrv;
 
           _defineProperty(_assertThisInitialized(_this), "data", void 0);
 
@@ -189,8 +191,6 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
           _defineProperty(_assertThisInitialized(_this), "noDatapoints", void 0);
 
           _defineProperty(_assertThisInitialized(_this), "discreteExtraSeries", void 0);
-
-          _defineProperty(_assertThisInitialized(_this), "extraSeriesFormats", []);
 
           _defineProperty(_assertThisInitialized(_this), "annotations", []);
 
@@ -219,8 +219,7 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
               cardRound: null
             },
             xAxis: {
-              show: true,
-              labelFormat: '%a %m/%d'
+              show: true
             },
             yAxis: {
               show: true,
@@ -228,88 +227,30 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
               maxWidth: -1
             },
             tooltip: {
-              show: true
+              show: true,
+              freezeOnClick: true,
+              showItems: false,
+              items: [] // see tooltip_editor.ts
+
             },
             legend: {
               show: true
-            },
-            data: {
-              unitFormat: 'short',
-              decimals: null
             },
             // how null points should be handled
             nullPointMode: 'as empty',
             yAxisSort: 'metrics',
             highlightCards: true,
             useMax: true,
-            urls: [{
-              tooltip: '',
-              label: '',
-              base_url: '',
-              useExtraSeries: false,
-              useseriesname: true,
-              forcelowercase: true,
-              icon_fa: 'external-link',
-              extraSeries: {
-                index: -1
-              }
-            }],
-            seriesFilterIndex: -1,
-            usingUrl: false
+            seriesFilterIndex: -1
           });
 
-          _defineProperty(_assertThisInitialized(_this), "onEditorAddUrl", function () {
-            _this.panel.urls.push({
-              label: '',
-              base_url: '',
-              useExtraSeries: false,
-              useseriesname: true,
-              forcelowercase: true,
-              icon_fa: 'external-link',
-              extraSeries: {
-                index: -1
-              }
-            });
-
-            _this.render();
-          });
-
-          _defineProperty(_assertThisInitialized(_this), "onEditorRemoveUrl", function (index) {
-            _this.panel.urls.splice(index, 1);
-
-            _this.render();
-          });
-
-          _defineProperty(_assertThisInitialized(_this), "onEditorRemoveUrls", function () {
-            _this.panel.urls = [];
-
-            _this.render();
-          });
+          migratePanelConfig(_this.panel);
 
           _.defaultsDeep(_this.panel, _this.panelDefaults);
 
           _this.opacityScales = opacityScales;
           _this.colorModes = colorModes;
-          _this.colorSchemes = colorSchemes;
-          _this.variableSrv = variableSrv;
-          _this.extraSeriesFormats = ExtraSeriesFormat;
-
-          _this.renderLink = function (link, scopedVars, format) {
-            var scoped = {};
-
-            for (var key in scopedVars) {
-              scoped[key] = {
-                value: scopedVars[key]
-              };
-            }
-
-            if (format) {
-              return _this.templateSrv.replace(link, scoped, format);
-            } else {
-              return _this.templateSrv.replace(link, scoped);
-            }
-          }; // default graph width for discrete card width calculation
-
+          _this.colorSchemes = colorSchemes; // default graph width for discrete card width calculation
 
           _this.graph = {
             "chartWidth": -1
@@ -350,8 +291,6 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
 
           _this.events.on('render-complete', _this.onRenderComplete.bind(_assertThisInitialized(_this)));
 
-          _this.events.on('onChangeType', _this.onChangeType.bind(_assertThisInitialized(_this)));
-
           _this.onCardColorChange = _this.onCardColorChange.bind(_assertThisInitialized(_this));
           return _this;
         }
@@ -359,32 +298,8 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
         _createClass(StatusHeatmapCtrl, [{
           key: "onRenderComplete",
           value: function onRenderComplete(data) {
-            // console.log({
-            //   data: this.data,
-            //   bucketMatrix: this.bucketMatrix,
-            //   chartWidth: data.chartWidth,
-            //   from: this.range.from.valueOf(),
-            //   to: this.range.to.valueOf()
-            // })
             this.graph.chartWidth = data.chartWidth;
             this.renderingCompleted();
-          }
-        }, {
-          key: "onChangeType",
-          value: function onChangeType(url) {
-            switch (url.type) {
-              case ExtraSeriesFormat.Date:
-                url.extraSeries.format = ExtraSeriesFormatValue.Date;
-                break;
-
-              case ExtraSeriesFormat.Raw:
-                url.extraSeries.format = ExtraSeriesFormatValue.Raw;
-                break;
-
-              default:
-                url.extraSeries.format = ExtraSeriesFormatValue.Raw;
-                break;
-            }
           } // getChartWidth returns an approximation of chart canvas width or
           // a saved value calculated during a render.
 
@@ -408,6 +323,7 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
             return chartWidth;
           } // Quick workaround for 6.7 and 7.0+. There is no call to
           // calculateInterval in updateTimeRange in those versions.
+          // TODO ts type has no argument for this method.
 
         }, {
           key: "updateTimeRange",
@@ -457,16 +373,8 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
             var interval = kbn.secondsToHms(intervalMs / 1000);
             this.intervalMs = intervalMs;
             this.interval = interval; // Get final buckets count after interval is adjusted
+            // TODO is it needed?
             //this.xBucketsCount = Math.floor(rangeMs / intervalMs);
-            // console.log("calculateInterval: ", {
-            //   interval: this.interval,
-            //   intervalMs: this.intervalMs,
-            //   rangeMs: rangeMs,
-            //   from: this.range.from.valueOf(),
-            //   to: this.range.to.valueOf(),
-            //   numIntervals: rangeMs/this.intervalMs,
-            //   maxCardsCount: maxCardsCount,
-            // });
           }
         }, {
           key: "issueQueries",
@@ -484,7 +392,7 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
              * (but not wait for completion). This resolves
              * issue 11806.
              */
-            // 5.x before 5.4 doesn't have datasourcePromises. 
+            // 5.x before 5.4 doesn't have datasourcePromises.
 
             if ("undefined" !== typeof this.annotationsSrv.datasourcePromises) {
               return this.annotationsSrv.datasourcePromises.then(function (r) {
@@ -549,7 +457,8 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
         }, {
           key: "onInitEditMode",
           value: function onInitEditMode() {
-            this.addEditorTab('Options', statusHeatmapOptionsEditor, 2);
+            this.addEditorTab('Options', optionsEditorCtrl, 2);
+            this.addEditorTab('Tooltip', tooltipEditorCtrl, 3);
             this.unitFormats = kbn.getUnitFormats();
           } // onRender will be called before StatusmapRenderer.onRender.
           // Decide if warning should be displayed over cards.
@@ -588,8 +497,7 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
 
             if (this.bucketMatrix) {
               this.noDatapoints = this.bucketMatrix.noDatapoints;
-            } //console.log(this);
-
+            }
           }
         }, {
           key: "onCardColorChange",
@@ -610,103 +518,16 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
             this.noColorDefined = false;
           }
         }, {
-          key: "onEditorAddThreshold",
-          value: function onEditorAddThreshold() {
-            this.panel.color.thresholds.push({
-              color: this.panel.defaultColor
-            });
-            this.render();
-          }
-        }, {
-          key: "onEditorRemoveThreshold",
-          value: function onEditorRemoveThreshold(index) {
-            this.panel.color.thresholds.splice(index, 1);
-            this.render();
-          }
-        }, {
-          key: "onEditorRemoveThresholds",
-          value: function onEditorRemoveThresholds() {
-            this.panel.color.thresholds = [];
-            this.render();
-          }
-        }, {
-          key: "onEditorAddThreeLights",
-          value: function onEditorAddThreeLights() {
-            this.panel.color.thresholds.push({
-              color: "red",
-              value: 2,
-              tooltip: "error"
-            });
-            this.panel.color.thresholds.push({
-              color: "yellow",
-              value: 1,
-              tooltip: "warning"
-            });
-            this.panel.color.thresholds.push({
-              color: "green",
-              value: 0,
-              tooltip: "ok"
-            });
-            this.render();
-          }
-          /* https://ethanschoonover.com/solarized/ */
-
-        }, {
-          key: "onEditorAddSolarized",
-          value: function onEditorAddSolarized() {
-            this.panel.color.thresholds.push({
-              color: "#b58900",
-              value: 0,
-              tooltip: "yellow"
-            });
-            this.panel.color.thresholds.push({
-              color: "#cb4b16",
-              value: 1,
-              tooltip: "orange"
-            });
-            this.panel.color.thresholds.push({
-              color: "#dc322f",
-              value: 2,
-              tooltip: "red"
-            });
-            this.panel.color.thresholds.push({
-              color: "#d33682",
-              value: 3,
-              tooltip: "magenta"
-            });
-            this.panel.color.thresholds.push({
-              color: "#6c71c4",
-              value: 4,
-              tooltip: "violet"
-            });
-            this.panel.color.thresholds.push({
-              color: "#268bd2",
-              value: 5,
-              tooltip: "blue"
-            });
-            this.panel.color.thresholds.push({
-              color: "#2aa198",
-              value: 6,
-              tooltip: "cyan"
-            });
-            this.panel.color.thresholds.push({
-              color: "#859900",
-              value: 7,
-              tooltip: "green"
-            });
-            this.render();
-          }
-        }, {
           key: "link",
           value: function link(scope, elem, attrs, ctrl) {
             rendering(scope, elem, attrs, ctrl);
-          }
+          } // Compatible with Grafana 7.0 overrides feature.
+
         }, {
           key: "retrieveTimeVar",
           value: function retrieveTimeVar() {
             var time = this.timeSrv.timeRangeForUrl();
-            var var_time = '&from=' + time.from + '&to=' + time.to;
-            return var_time;
+            return 'from=' + time.from + '&to=' + time.to;
           } // convertToBuckets groups values in data into buckets by target and timestamp.
           //
           // data is a result from datasource. It is an array of timeseries and tables:
@@ -918,109 +739,6 @@ System.register(["lodash", "./color_legend", "app/core/utils/kbn", "app/plugins/
 
             bucketMatrix.targets = targetKeys;
             return bucketMatrix;
-            this.bucketMatrix = bucketMatrix; // Collect all values for each bucket from datapoints with similar target.
-            // TODO aggregate values into buckets over datapoint[TIME_INDEX] not over datapoint index (j).
-            // for(let i = 0; i < cardsData.targets.length; i++) {
-            //   let target = cardsData.targets[i];
-            //   for (let j = 0; j < cardsData.xBucketSize; j++) {
-            //     let card = new Card();
-            //     card.id = i*cardsData.xBucketSize + j;
-            //     card.values = [];
-            //     card.y = target;
-            //     card.x = -1;
-            //     // collect values from all timeseries with target
-            //     for (let si = 0; si < cardsData.targetIndex[target].length; si++) {
-            //       let s = data[cardsData.targetIndex[target][si]];
-            //       if (s.datapoints.length <= j) {
-            //         continue;
-            //       }
-            //       let datapoint = s.datapoints[j];
-            //       if (card.values.length === 0) {
-            //         card.x = datapoint[TIME_INDEX];
-            //       }
-            //       card.values.push(datapoint[VALUE_INDEX]);
-            //     }
-            //     card.minValue = _.min(card.values);
-            //     card.maxValue = _.max(card.values);
-            //     if (card.values.length > 1) {
-            //       cardsData.multipleValues = true;
-            //       card.multipleValues = true;
-            //       card.value = card.maxValue; // max value by default
-            //     } else {
-            //       card.value = card.maxValue; // max value by default
-            //     }
-            //     if (cardsData.maxValue < card.maxValue)
-            //       cardsData.maxValue = card.maxValue;
-            //     if (cardsData.minValue > card.minValue)
-            //       cardsData.minValue = card.minValue;
-            //     if (card.x != -1) {
-            //     cardsData.cards.push(card);
-            //     }
-            //   }
-            // }
-            // let cardsData = <CardsStorage> {
-            //   cards: [],
-            //   xBucketSize: 0,
-            //   yBucketSize: 0,
-            //   maxValue: 0,
-            //   minValue: 0,
-            //   multipleValues: false,
-            //   noColorDefined: false,
-            //   targets: [], // array of available unique targets
-            //   targetIndex: {} // indices in data array for each of available unique targets
-            // };
-            // if (!data || data.length == 0) { return cardsData;}
-            // // Collect uniq timestamps from data and spread over targets and timestamps
-            // // collect uniq targets and their indices
-            // _.map(data, (d, i) => {
-            //   cardsData.targetIndex[d.target] = _.concat(_.toArray(cardsData.targetIndex[d.target]), i)
-            // });
-            // // TODO add some logic for targets heirarchy
-            // cardsData.targets = _.keys(cardsData.targetIndex);
-            // cardsData.yBucketSize = cardsData.targets.length;
-            // // Maximum number of buckets over x axis
-            // cardsData.xBucketSize = _.max(_.map(data, d => d.datapoints.length));
-            // // Collect all values for each bucket from datapoints with similar target.
-            // // TODO aggregate values into buckets over datapoint[TIME_INDEX] not over datapoint index (j).
-            // for(let i = 0; i < cardsData.targets.length; i++) {
-            //   let target = cardsData.targets[i];
-            //   for (let j = 0; j < cardsData.xBucketSize; j++) {
-            //     let card = new Card();
-            //     card.id = i*cardsData.xBucketSize + j;
-            //     card.values = [];
-            //     card.y = target;
-            //     card.x = -1;
-            //     // collect values from all timeseries with target
-            //     for (let si = 0; si < cardsData.targetIndex[target].length; si++) {
-            //       let s = data[cardsData.targetIndex[target][si]];
-            //       if (s.datapoints.length <= j) {
-            //         continue;
-            //       }
-            //       let datapoint = s.datapoints[j];
-            //       if (card.values.length === 0) {
-            //         card.x = datapoint[TIME_INDEX];
-            //       }
-            //       card.values.push(datapoint[VALUE_INDEX]);
-            //     }
-            //     card.minValue = _.min(card.values);
-            //     card.maxValue = _.max(card.values);
-            //     if (card.values.length > 1) {
-            //       cardsData.multipleValues = true;
-            //       card.multipleValues = true;
-            //       card.value = card.maxValue; // max value by default
-            //     } else {
-            //       card.value = card.maxValue; // max value by default
-            //     }
-            //     if (cardsData.maxValue < card.maxValue)
-            //       cardsData.maxValue = card.maxValue;
-            //     if (cardsData.minValue > card.minValue)
-            //       cardsData.minValue = card.minValue;
-            //     if (card.x != -1) {
-            //     cardsData.cards.push(card);
-            //     }
-            //   }
-            // }
-            // return cardsData;
           }
         }]);
 

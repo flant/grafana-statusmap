@@ -63,10 +63,6 @@
             }
           ]
         },
-        "data": {
-          "decimals": null,
-          "unitFormat": "short"
-        },
         "datasource": "prometheus",
         "gridPos": {
           "h": 16,
@@ -130,21 +126,21 @@
         ],
         "title": "Pod Status",
         "tooltip": {
-          "show": true
+          "show": true,
+          "freezeOnClick": false,
+          "showItems": false,
+          "items": []
         },
         "transparent": true,
         "type": "flant-statusmap-panel",
         "useMax": true,
         "xAxis": {
-          "labelFormat": "%a %m/%d",
-          "minBucketWidthToShowWeekends": 4,
-          "show": true,
-          "showCrosshair": true,
-          "showWeekends": true
+          "show": true
         },
         "yAxis": {
           "show": true,
-          "showCrosshair": false
+          "minWidth": -1,
+          "maxWidth": -1
         },
         "yAxisSort": "a → z"
       },
@@ -310,21 +306,21 @@
         ],
         "title": "Container Status",
         "tooltip": {
-          "show": true
+          "show": true,
+          "freezeOnClick": true,
+          "showItems": false,
+          "items": []
         },
         "transparent": true,
         "type": "flant-statusmap-panel",
         "useMax": true,
         "xAxis": {
-          "labelFormat": "%a %m/%d",
-          "minBucketWidthToShowWeekends": 4,
-          "show": true,
-          "showCrosshair": true,
-          "showWeekends": true
+          "show": true
         },
         "yAxis": {
           "show": true,
-          "showCrosshair": false
+          "minWidth": -1,
+          "maxWidth": -1
         },
         "yAxisSort": "a → z"
       }

@@ -16,7 +16,7 @@ coreModule.directive('optionsColorLegend', function() {
   return {
     restrict: 'E',
     template: '<div class="status-heatmap-color-legend"><svg width="16.8rem" height="24px"></svg></div>',
-    link: function(scope, elem, attrs) {
+    link: function(scope: any, elem, attrs) {
       let ctrl = scope.ctrl;
       let panel = scope.ctrl.panel;
 

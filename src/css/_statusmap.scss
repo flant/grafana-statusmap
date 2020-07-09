@@ -41,6 +41,19 @@
 }
 
 .statusmap-tooltip {
+  // from .grafana-tooltip
+  // '.grafana-tooltip a' makes links not readable for tooltip items.
+  position: absolute;
+  padding: 10px;
+  font-weight: 200;
+  border-radius: 5px;
+  max-width: 800px;
+  max-height: 600px;
+  overflow: hidden;
+  line-height: 14px;
+  z-index: 9999;
+
+  // more overrides
   white-space: nowrap;
   font-size: $font-size-sm;
   background-color: $graph-tooltip-bg;
@@ -54,19 +67,9 @@
   }
 }
 
-.statusmap-tooltip-extraseries {
-  white-space: nowrap;
-  font-size: $font-size-sm;
-  background-color: $graph-tooltip-bg;
-  color: $text-color;
-
-  .discrete-item {
-    color: #ffffff;
-    padding: 1px;
-    font-weight: bold;
-    margin-bottom: 0;
-    text-shadow: 0 0 0.2em #212124, 0 0 0.2em #212124, 0 0 0.2em #212124;
-  }
+.statusmap-tooltip-frozen {
+  position: relative;
+  z-index: 1;
 }
 
 .statusmap-histogram rect {

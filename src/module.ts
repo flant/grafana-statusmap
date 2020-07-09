@@ -4,6 +4,9 @@ import { auto } from 'angular';
 
 // Components
 import './color_legend';
+import { optionsEditorCtrl } from './options_editor';
+import { tooltipEditorCtrl } from './tooltip_editor';
+import { migratePanelConfig } from './panel_config_migration';
 
 // Utils
 import kbn from 'app/core/utils/kbn';
@@ -14,12 +17,8 @@ import { MetricsPanelCtrl } from 'app/plugins/sdk';
 import { AnnotationsSrv } from 'app/features/annotations/annotations_srv';
 import { Bucket, BucketMatrix } from './statusmap_data';
 import rendering from './rendering';
-// import aggregates, { aggregatesMap } from './aggregates';
-// import fragments, { fragmentsMap } from './fragments';
-// import { labelFormats } from './xAxisLabelFormats';
-import {statusHeatmapOptionsEditor} from './options_editor';
+
 import {ColorModeDiscrete} from "./color_mode_discrete";
-import { ExtraSeriesFormat, ExtraSeriesFormatValue } from './extra_series_format';
 
 const VALUE_INDEX = 0,
       TIME_INDEX = 1;
@@ -56,7 +55,6 @@ const colorSchemes = [
 let colorModes = ['opacity', 'spectrum', 'discrete'];
 let opacityScales = ['linear', 'sqrt'];
 
-
 loadPluginCss({
   dark: 'plugins/flant-statusmap-panel/css/statusmap.dark.css',
   light: 'plugins/flant-statusmap-panel/css/statusmap.light.css'
@@ -81,7 +79,6 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   noDatapoints: boolean;
 
   discreteExtraSeries: ColorModeDiscrete;
-  extraSeriesFormats: any = [];
 
   annotations: object[] = [];
   annotationsPromise: any;
@@ -108,68 +105,41 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
       cardRound: null
     },
     xAxis: {
-      show: true,
-      labelFormat: '%a %m/%d'
+      show: true
     },
     yAxis: {
       show: true,
       minWidth: -1,
-      maxWidth: -1,
+      maxWidth: -1
     },
     tooltip: {
-      show: true
+      show: true,
+      freezeOnClick: true,
+      showItems: false,
+      items: [] // see tooltip_editor.ts
     },
     legend: {
       show: true
-    },
-    data: {
-      unitFormat: 'short',
-      decimals: null
     },
     // how null points should be handled
     nullPointMode: 'as empty',
     yAxisSort: 'metrics',
     highlightCards: true,
     useMax: true,
-    urls: [{
-      tooltip: '',
-      label: '',
-      base_url: '',
-      useExtraSeries: false,
-      useseriesname: true,
-      forcelowercase: true,
-      icon_fa: 'external-link',
-      extraSeries: {
-        index: -1
-      }
-    }],
-    seriesFilterIndex: -1,
-    usingUrl: false
+
+    seriesFilterIndex: -1
   };
 
   /** @ngInject */
-  constructor($scope: any, $injector: auto.IInjectorService, timeSrv, private annotationsSrv: AnnotationsSrv, $window, datasourceSrv, variableSrv, templateSrv) {
+  constructor($scope: any, $injector: auto.IInjectorService, timeSrv, private annotationsSrv: AnnotationsSrv, $window, datasourceSrv, public variableSrv: any, templateSrv) {
     super($scope, $injector);
 
+    migratePanelConfig(this.panel);
     _.defaultsDeep(this.panel, this.panelDefaults);
 
     this.opacityScales = opacityScales;
     this.colorModes = colorModes;
     this.colorSchemes = colorSchemes;
-    this.variableSrv = variableSrv;
-    this.extraSeriesFormats = ExtraSeriesFormat;
-
-    this.renderLink = (link, scopedVars, format) => {
-      var scoped = {}
-      for (var key in scopedVars) {
-        scoped[key] = { value: scopedVars[key] }
-      }
-      if (format) {
-        return this.templateSrv.replace(link, scoped, format)
-      } else {
-        return this.templateSrv.replace(link, scoped)
-      }
-    }
 
     // default graph width for discrete card width calculation
     this.graph = {
@@ -209,36 +179,13 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.events.on('refresh', this.postRefresh.bind(this));
     // custom event from rendering.js
     this.events.on('render-complete', this.onRenderComplete.bind(this));
-    this.events.on('onChangeType', this.onChangeType.bind(this));
 
     this.onCardColorChange = this.onCardColorChange.bind(this);
   }
 
   onRenderComplete(data: any):void {
-    // console.log({
-    //   data: this.data,
-    //   bucketMatrix: this.bucketMatrix,
-    //   chartWidth: data.chartWidth,
-    //   from: this.range.from.valueOf(),
-    //   to: this.range.to.valueOf()
-    // })
-
     this.graph.chartWidth = data.chartWidth;
     this.renderingCompleted();
-  }
-
-  onChangeType(url): void {
-    switch (url.type) {
-      case ExtraSeriesFormat.Date:
-        url.extraSeries.format = ExtraSeriesFormatValue.Date;
-        break;
-      case ExtraSeriesFormat.Raw:
-        url.extraSeries.format = ExtraSeriesFormatValue.Raw;
-        break;
-      default:
-        url.extraSeries.format = ExtraSeriesFormatValue.Raw;
-        break;
-    }
   }
 
   // getChartWidth returns an approximation of chart canvas width or
@@ -266,6 +213,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
   // Quick workaround for 6.7 and 7.0+. There is no call to
   // calculateInterval in updateTimeRange in those versions.
+  // TODO ts type has no argument for this method.
   updateTimeRange(datasource?: any) {
     let ret = super.updateTimeRange(datasource);
     this.calculateInterval();
@@ -316,17 +264,8 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.interval = interval;
 
     // Get final buckets count after interval is adjusted
+    // TODO is it needed?
     //this.xBucketsCount = Math.floor(rangeMs / intervalMs);
-
-    // console.log("calculateInterval: ", {
-    //   interval: this.interval,
-    //   intervalMs: this.intervalMs,
-    //   rangeMs: rangeMs,
-    //   from: this.range.from.valueOf(),
-    //   to: this.range.to.valueOf(),
-    //   numIntervals: rangeMs/this.intervalMs,
-    //   maxCardsCount: maxCardsCount,
-    // });
   }
 
   issueQueries(datasource: any) {
@@ -342,8 +281,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
      * (but not wait for completion). This resolves
      * issue 11806.
      */
-    // 5.x before 5.4 doesn't have datasourcePromises. 
-
+    // 5.x before 5.4 doesn't have datasourcePromises.
     if ("undefined" !== typeof(this.annotationsSrv.datasourcePromises)) {
       return this.annotationsSrv.datasourcePromises.then(r => {
         return this.issueQueriesWithInterval(datasource, this.interval);
@@ -363,7 +301,6 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.panel.interval = origInterval;
     return res;
   }
-
 
   onDataReceived(dataList: any) {
     this.data    = dataList;
@@ -401,7 +338,8 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   }
 
   onInitEditMode() {
-    this.addEditorTab('Options', statusHeatmapOptionsEditor, 2);
+    this.addEditorTab('Options', optionsEditorCtrl, 2);
+    this.addEditorTab('Tooltip', tooltipEditorCtrl, 3);
     this.unitFormats = kbn.getUnitFormats();
   }
 
@@ -436,8 +374,6 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     if (this.bucketMatrix) {
       this.noDatapoints = this.bucketMatrix.noDatapoints;
     }
-
-    //console.log(this);
   }
 
   onCardColorChange(newColor) {
@@ -455,75 +391,14 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.noColorDefined = false;
   }
 
-  onEditorAddThreshold() {
-    this.panel.color.thresholds.push({ color: this.panel.defaultColor });
-    this.render();
-  }
-
-  onEditorAddUrl = () => {
-    this.panel.urls.push({
-      label: '',
-      base_url: '',
-      useExtraSeries: false,
-      useseriesname: true,
-      forcelowercase: true,
-      icon_fa: 'external-link',
-      extraSeries: {
-        index: -1
-      }
-    });
-    this.render();
-  }
-
-  onEditorRemoveUrl = (index) => {
-    this.panel.urls.splice(index, 1);
-    this.render();
-  }
-
-  onEditorRemoveThreshold(index:number) {
-    this.panel.color.thresholds.splice(index, 1);
-    this.render();
-  }
-
-  onEditorRemoveThresholds() {
-    this.panel.color.thresholds = [];
-    this.render();
-  }
-
-
-  onEditorRemoveUrls = () => {
-    this.panel.urls = [];
-    this.render();
-  }
-
-  onEditorAddThreeLights() {
-    this.panel.color.thresholds.push({color: "red", value: 2, tooltip: "error" });
-    this.panel.color.thresholds.push({color: "yellow", value: 1, tooltip: "warning" });
-    this.panel.color.thresholds.push({color: "green", value: 0, tooltip: "ok" });
-    this.render();
-  }
-  
-  /* https://ethanschoonover.com/solarized/ */
-  onEditorAddSolarized() {
-    this.panel.color.thresholds.push({color: "#b58900", value: 0, tooltip: "yellow" });
-    this.panel.color.thresholds.push({color: "#cb4b16", value: 1, tooltip: "orange" });
-    this.panel.color.thresholds.push({color: "#dc322f", value: 2, tooltip: "red" });
-    this.panel.color.thresholds.push({color: "#d33682", value: 3, tooltip: "magenta" });
-    this.panel.color.thresholds.push({color: "#6c71c4", value: 4, tooltip: "violet" });
-    this.panel.color.thresholds.push({color: "#268bd2", value: 5, tooltip: "blue" });
-    this.panel.color.thresholds.push({color: "#2aa198", value: 6, tooltip: "cyan" });
-    this.panel.color.thresholds.push({color: "#859900", value: 7, tooltip: "green" });
-    this.render();
-  }
-
   link(scope, elem, attrs, ctrl) {
     rendering(scope, elem, attrs, ctrl);
   }
 
+  // Compatible with Grafana 7.0 overrides feature.
   retrieveTimeVar() {
     var time = this.timeSrv.timeRangeForUrl();
-    var var_time = '&from=' + time.from + '&to=' + time.to;
-    return var_time;
+    return 'from=' + time.from + '&to=' + time.to;
   }
 
   // convertToBuckets groups values in data into buckets by target and timestamp.
@@ -737,133 +612,6 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
     bucketMatrix.targets = targetKeys;
     return bucketMatrix;
-    this.bucketMatrix = bucketMatrix;
-    
-    // Collect all values for each bucket from datapoints with similar target.
-    // TODO aggregate values into buckets over datapoint[TIME_INDEX] not over datapoint index (j).
-
-
-    // for(let i = 0; i < cardsData.targets.length; i++) {
-    //   let target = cardsData.targets[i];
-
-    //   for (let j = 0; j < cardsData.xBucketSize; j++) {
-    //     let card = new Card();
-    //     card.id = i*cardsData.xBucketSize + j;
-    //     card.values = [];
-    //     card.y = target;
-    //     card.x = -1;
-
-    //     // collect values from all timeseries with target
-    //     for (let si = 0; si < cardsData.targetIndex[target].length; si++) {
-    //       let s = data[cardsData.targetIndex[target][si]];
-    //       if (s.datapoints.length <= j) {
-    //         continue;
-    //       }
-    //       let datapoint = s.datapoints[j];
-    //       if (card.values.length === 0) {
-    //         card.x = datapoint[TIME_INDEX];
-    //       }
-    //       card.values.push(datapoint[VALUE_INDEX]);
-    //     }
-    //     card.minValue = _.min(card.values);
-    //     card.maxValue = _.max(card.values);
-    //     if (card.values.length > 1) {
-    //       cardsData.multipleValues = true;
-    //       card.multipleValues = true;
-    //       card.value = card.maxValue; // max value by default
-    //     } else {
-    //       card.value = card.maxValue; // max value by default
-    //     }
-
-    //     if (cardsData.maxValue < card.maxValue)
-    //       cardsData.maxValue = card.maxValue;
-
-    //     if (cardsData.minValue > card.minValue)
-    //       cardsData.minValue = card.minValue;
-
-    //     if (card.x != -1) {
-    //     cardsData.cards.push(card);
-    //     }
-    //   }
-    // }
-
-
-
-
-    // let cardsData = <CardsStorage> {
-    //   cards: [],
-    //   xBucketSize: 0,
-    //   yBucketSize: 0,
-    //   maxValue: 0,
-    //   minValue: 0,
-    //   multipleValues: false,
-    //   noColorDefined: false,
-    //   targets: [], // array of available unique targets
-    //   targetIndex: {} // indices in data array for each of available unique targets
-    // };
-
-    // if (!data || data.length == 0) { return cardsData;}
-
-    // // Collect uniq timestamps from data and spread over targets and timestamps
-
-    // // collect uniq targets and their indices
-    // _.map(data, (d, i) => {
-    //   cardsData.targetIndex[d.target] = _.concat(_.toArray(cardsData.targetIndex[d.target]), i)
-    // });
-
-    // // TODO add some logic for targets heirarchy
-    // cardsData.targets = _.keys(cardsData.targetIndex);
-    // cardsData.yBucketSize = cardsData.targets.length;
-    // // Maximum number of buckets over x axis
-    // cardsData.xBucketSize = _.max(_.map(data, d => d.datapoints.length));
-
-    // // Collect all values for each bucket from datapoints with similar target.
-    // // TODO aggregate values into buckets over datapoint[TIME_INDEX] not over datapoint index (j).
-    // for(let i = 0; i < cardsData.targets.length; i++) {
-    //   let target = cardsData.targets[i];
-
-    //   for (let j = 0; j < cardsData.xBucketSize; j++) {
-    //     let card = new Card();
-    //     card.id = i*cardsData.xBucketSize + j;
-    //     card.values = [];
-    //     card.y = target;
-    //     card.x = -1;
-
-    //     // collect values from all timeseries with target
-    //     for (let si = 0; si < cardsData.targetIndex[target].length; si++) {
-    //       let s = data[cardsData.targetIndex[target][si]];
-    //       if (s.datapoints.length <= j) {
-    //         continue;
-    //       }
-    //       let datapoint = s.datapoints[j];
-    //       if (card.values.length === 0) {
-    //         card.x = datapoint[TIME_INDEX];
-    //       }
-    //       card.values.push(datapoint[VALUE_INDEX]);
-    //     }
-    //     card.minValue = _.min(card.values);
-    //     card.maxValue = _.max(card.values);
-    //     if (card.values.length > 1) {
-    //       cardsData.multipleValues = true;
-    //       card.multipleValues = true;
-    //       card.value = card.maxValue; // max value by default
-    //     } else {
-    //       card.value = card.maxValue; // max value by default
-    //     }
-
-    //     if (cardsData.maxValue < card.maxValue)
-    //       cardsData.maxValue = card.maxValue;
-
-    //     if (cardsData.minValue > card.minValue)
-    //       cardsData.minValue = card.minValue;
-
-    //     if (card.x != -1) {
-    //     cardsData.cards.push(card);
-    //     }
-    //   }
-    // }
-
-    // return cardsData;
   }
 }
 
