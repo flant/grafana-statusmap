@@ -35,7 +35,7 @@
     "downlevelIteration": true,
     "noUnusedLocals": true,
     "pretty": true,
-    "typeRoots": ["./node_modules/@types"] //,/* ,"src/types"*/
+    "typeRoots": ["./node_modules/@types" ] // , "./src/types" ]
     //"types": [
     //  "lodash"
     //]

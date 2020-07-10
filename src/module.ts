@@ -15,8 +15,11 @@ import {loadPluginCss} from 'app/plugins/sdk';
 // Types
 import { MetricsPanelCtrl } from 'app/plugins/sdk';
 import { AnnotationsSrv } from 'app/features/annotations/annotations_srv';
+import { CoreEvents, PanelEvents } from './libs/grafana/events/index';
 import { Bucket, BucketMatrix } from './statusmap_data';
 import rendering from './rendering';
+import { Polygrafill } from './libs/polygrafill/index';
+
 
 import {ColorModeDiscrete} from "./color_mode_discrete";
 
@@ -59,6 +62,8 @@ loadPluginCss({
   dark: 'plugins/flant-statusmap-panel/css/statusmap.dark.css',
   light: 'plugins/flant-statusmap-panel/css/statusmap.light.css'
 });
+
+export var renderComplete:any = {name:'statusmap-render-complete'}; // eventFactory('statusmap-render-complete');
 
 class StatusHeatmapCtrl extends MetricsPanelCtrl {
   static templateUrl = 'module.html';
@@ -134,6 +139,12 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   constructor($scope: any, $injector: auto.IInjectorService, timeSrv, private annotationsSrv: AnnotationsSrv, $window, datasourceSrv, public variableSrv: any, templateSrv) {
     super($scope, $injector);
 
+    if(!Polygrafill.hasAppEventCompatibleEmitter(this.events)){
+      CoreEvents.fallbackToStringEvents();
+      PanelEvents.fallbackToStringEvents();
+      renderComplete = renderComplete.name;
+    }
+
     migratePanelConfig(this.panel);
     _.defaultsDeep(this.panel, this.panelDefaults);
 
@@ -171,14 +182,14 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     
     this.timeSrv = timeSrv;
 
-    this.events.on('render', this.onRender.bind(this));
-    this.events.on('data-received', this.onDataReceived.bind(this));
-    this.events.on('data-error', this.onDataError.bind(this));
-    this.events.on('data-snapshot-load', this.onDataReceived.bind(this));
-    this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
-    this.events.on('refresh', this.postRefresh.bind(this));
+    this.events.on(PanelEvents.render, this.onRender.bind(this));
+    this.events.on(PanelEvents.dataReceived, this.onDataReceived.bind(this));
+    this.events.on(PanelEvents.dataError, this.onDataError.bind(this));
+    this.events.on(PanelEvents.dataSnapshotLoad, this.onDataReceived.bind(this));
+    this.events.on(PanelEvents.editModeInitialized, this.onInitEditMode.bind(this));
+    this.events.on(PanelEvents.refresh, this.postRefresh.bind(this));
     // custom event from rendering.js
-    this.events.on('render-complete', this.onRenderComplete.bind(this));
+    this.events.on(renderComplete, this.onRenderComplete.bind(this));
 
     this.onCardColorChange = this.onCardColorChange.bind(this);
   }
