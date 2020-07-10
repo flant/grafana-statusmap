@@ -5,7 +5,8 @@ import * as d3ScaleChromatic from './libs/d3-scale-chromatic/index';
 import {contextSrv} from 'app/core/core';
 import {tickStep} from 'app/core/utils/ticks';
 import coreModule from 'app/core/core_module';
-import { BucketMatrix } from './statusmap_data';
+import { StatusHeatmapCtrl } from "./module";
+import { PanelEvents } from './libs/grafana/events/index';
 
 const LEGEND_STEP_WIDTH = 2;
 
@@ -22,7 +23,7 @@ coreModule.directive('optionsColorLegend', function() {
 
       render();
 
-      ctrl.events.on('render', function() {
+      ctrl.events.on(PanelEvents.render, function() {
         render();
       });
 
@@ -51,11 +52,11 @@ coreModule.directive('statusHeatmapLegend', function() {
     restrict: 'E',
     template: '<div class="status-heatmap-color-legend"><svg width="100px" height="6px"></svg></div>',
     link: function(scope, elem, attrs) {
-      let ctrl = scope.ctrl;
+      let ctrl:StatusHeatmapCtrl = scope.ctrl;
       let panel = scope.ctrl.panel;
 
       render();
-      ctrl.events.on('render', function() {
+      ctrl.events.on(PanelEvents.render, function() {
         render();
       });
 
@@ -83,14 +84,6 @@ coreModule.directive('statusHeatmapLegend', function() {
             }
           }
 
-          // console.log("legend state:", {
-          //   rangeFrom: rangeFrom,
-          //   rangeTo: rangeTo,
-          //   maxValue: maxValue,
-          //   minValue: minValue,
-          //   colorMode: panel.color.mode
-          // });
-
           if (panel.color.mode === 'spectrum') {
             let colorScheme = _.find(ctrl.colorSchemes, {value: panel.color.colorScheme});
             drawColorLegend(elem, colorScheme, rangeFrom, rangeTo, maxValue, minValue);
@@ -109,7 +102,7 @@ coreModule.directive('statusHeatmapLegend', function() {
 
 function drawColorLegend(elem, colorScheme, rangeFrom: number, rangeTo:number, maxValue: number, minValue:number) {
   let legendElem = $(elem).find('svg');
-  let legend = d3.select(legendElem.get(0));
+  let legend: any = d3.select(legendElem.get(0));
   clearLegend(elem);
 
   let legendWidth = Math.floor(legendElem.outerWidth()) - 30;  // narrow legendWidth by 30px to get space for first and last tick values
@@ -265,8 +258,7 @@ function drawDiscreteLegendValues(elem, colorOptions, legendWidth) {
 
   let valuesNumber = thresholds.length;
   let rangeStep  = Math.floor(legendWidth / valuesNumber);
-  let valuesRange = d3.range(0, legendWidth, rangeStep);
-
+  //let valuesRange = d3.range(0, legendWidth, rangeStep);
 
   let legendValueScale = d3.scaleLinear()
     .domain([0, valuesNumber])
@@ -283,7 +275,7 @@ function drawDiscreteLegendValues(elem, colorOptions, legendWidth) {
     .tickValues(d3.range(0, valuesNumber, 1)) //thresholdValues)
     .tickSize(2)
     .tickFormat((t) => {
-      let i = Math.floor(t);
+      let i = Math.floor(t.valueOf());
       let v = thresholdTooltips[i];
       if (v != undefined) {
         return ""+v;

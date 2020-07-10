@@ -8,7 +8,8 @@ import * as d3ScaleChromatic from './libs/d3-scale-chromatic/index';
 import {StatusmapTooltip} from './tooltip';
 import {AnnotationTooltip} from './annotations';
 import { Bucket, BucketMatrix } from './statusmap_data';
-import { StatusHeatmapCtrl } from './module';
+import { StatusHeatmapCtrl, renderComplete } from './module';
+import { CoreEvents, PanelEvents } from './libs/grafana/events/index';
 
 let MIN_CARD_SIZE = 5,
     CARD_H_SPACING = 2,
@@ -90,7 +91,7 @@ export class StatusmapRenderer {
     this.padding = { left: 0, right: 0, top: 0, bottom: 0 };
     this.margin = { left: 25, right: 15, top: 10, bottom: 20 };
 
-    this.ctrl.events.on('render', this.onRender.bind(this));
+    this.ctrl.events.on(PanelEvents.render, this.onRender.bind(this));
 
     this.ctrl.tickValueFormatter = this.tickValueFormatter.bind(this);
 
@@ -100,9 +101,9 @@ export class StatusmapRenderer {
 
     // Shared crosshair and tooltip    this.empty = true;
 
-    appEvents.on('graph-hover', this.onGraphHover.bind(this), this.scope);
+    appEvents.on( CoreEvents.graphHover, this.onGraphHover.bind(this), this.scope);
 
-    appEvents.on('graph-hover-clear', this.onGraphHoverClear.bind(this), this.scope);
+    appEvents.on( CoreEvents.graphHoverClear, this.onGraphHoverClear.bind(this), this.scope);
 
     // Register selection listeners
     this.$heatmap.on('mousedown', this.onMouseDown.bind(this));
@@ -400,7 +401,7 @@ export class StatusmapRenderer {
 
     this._renderAnnotations();
 
-    this.ctrl.events.emit('render-complete', {
+    this.ctrl.events.emit(renderComplete, {
       "chartWidth": this.chartWidth
     });
   }
@@ -608,7 +609,7 @@ export class StatusmapRenderer {
   }
 
   onMouseLeave(e) {
-    appEvents.emit('graph-hover-clear');
+    appEvents.emit(CoreEvents.graphHoverClear);
     this.clearCrosshair();
     this.annotationTooltip.destroy();
   }
@@ -674,7 +675,7 @@ export class StatusmapRenderer {
     pos.panelRelY = Math.max(event.offsetY / this.height, 0.001);
 
     // broadcast to other graph panels that we are hovering
-    appEvents.emit('graph-hover', {pos: pos, panel: this.panel});
+    appEvents.emit(CoreEvents.graphHover, {pos: pos, panel: this.panel});
   }
 
   limitSelection(x2) {

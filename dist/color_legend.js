@@ -1,9 +1,9 @@
 "use strict";
 
-System.register(["lodash", "jquery", "d3", "./libs/d3-scale-chromatic/index", "app/core/core", "app/core/utils/ticks", "app/core/core_module"], function (_export, _context) {
+System.register(["lodash", "jquery", "d3", "./libs/d3-scale-chromatic/index", "app/core/core", "app/core/utils/ticks", "app/core/core_module", "./libs/grafana/events/index"], function (_export, _context) {
   "use strict";
 
-  var _, $, d3, d3ScaleChromatic, contextSrv, tickStep, coreModule, LEGEND_STEP_WIDTH;
+  var _, $, d3, d3ScaleChromatic, contextSrv, tickStep, coreModule, PanelEvents, LEGEND_STEP_WIDTH;
 
   function drawColorLegend(elem, colorScheme, rangeFrom, rangeTo, maxValue, minValue) {
     var legendElem = $(elem).find('svg');
@@ -120,8 +120,8 @@ System.register(["lodash", "jquery", "d3", "./libs/d3-scale-chromatic/index", "a
     }
 
     var valuesNumber = thresholds.length;
-    var rangeStep = Math.floor(legendWidth / valuesNumber);
-    var valuesRange = d3.range(0, legendWidth, rangeStep);
+    var rangeStep = Math.floor(legendWidth / valuesNumber); //let valuesRange = d3.range(0, legendWidth, rangeStep);
+
     var legendValueScale = d3.scaleLinear().domain([0, valuesNumber]).range([0, legendWidth]);
     var thresholdValues = [];
     var thresholdTooltips = [];
@@ -133,7 +133,7 @@ System.register(["lodash", "jquery", "d3", "./libs/d3-scale-chromatic/index", "a
 
     var xAxis = d3.axisBottom(legendValueScale).tickValues(d3.range(0, valuesNumber, 1)) //thresholdValues)
     .tickSize(2).tickFormat(function (t) {
-      var i = Math.floor(t);
+      var i = Math.floor(t.valueOf());
       var v = thresholdTooltips[i];
 
       if (v != undefined) {
@@ -300,6 +300,8 @@ System.register(["lodash", "jquery", "d3", "./libs/d3-scale-chromatic/index", "a
       tickStep = _appCoreUtilsTicks.tickStep;
     }, function (_appCoreCore_module) {
       coreModule = _appCoreCore_module.default;
+    }, function (_libsGrafanaEventsIndex) {
+      PanelEvents = _libsGrafanaEventsIndex.PanelEvents;
     }],
     execute: function () {
       LEGEND_STEP_WIDTH = 2;
@@ -315,7 +317,7 @@ System.register(["lodash", "jquery", "d3", "./libs/d3-scale-chromatic/index", "a
             var ctrl = scope.ctrl;
             var panel = scope.ctrl.panel;
             render();
-            ctrl.events.on('render', function () {
+            ctrl.events.on(PanelEvents.render, function () {
               render();
             });
 
@@ -350,7 +352,7 @@ System.register(["lodash", "jquery", "d3", "./libs/d3-scale-chromatic/index", "a
             var ctrl = scope.ctrl;
             var panel = scope.ctrl.panel;
             render();
-            ctrl.events.on('render', function () {
+            ctrl.events.on(PanelEvents.render, function () {
               render();
             });
 
@@ -379,14 +381,7 @@ System.register(["lodash", "jquery", "d3", "./libs/d3-scale-chromatic/index", "a
                   } else {
                     rangeFrom = 0;
                   }
-                } // console.log("legend state:", {
-                //   rangeFrom: rangeFrom,
-                //   rangeTo: rangeTo,
-                //   maxValue: maxValue,
-                //   minValue: minValue,
-                //   colorMode: panel.color.mode
-                // });
-
+                }
 
                 if (panel.color.mode === 'spectrum') {
                   var colorScheme = _.find(ctrl.colorSchemes, {

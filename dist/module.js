@@ -1,9 +1,9 @@
 "use strict";
 
-System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_editor", "./panel_config_migration", "app/core/utils/kbn", "app/plugins/sdk", "./statusmap_data", "./rendering", "./color_mode_discrete"], function (_export, _context) {
+System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_editor", "./panel_config_migration", "app/core/utils/kbn", "app/plugins/sdk", "./libs/grafana/events/index", "./statusmap_data", "./rendering", "./libs/polygrafill/index", "./color_mode_discrete"], function (_export, _context) {
   "use strict";
 
-  var _, optionsEditorCtrl, tooltipEditorCtrl, migratePanelConfig, kbn, loadPluginCss, MetricsPanelCtrl, Bucket, BucketMatrix, rendering, ColorModeDiscrete, VALUE_INDEX, TIME_INDEX, colorSchemes, colorModes, opacityScales, StatusHeatmapCtrl;
+  var _, optionsEditorCtrl, tooltipEditorCtrl, migratePanelConfig, kbn, loadPluginCss, MetricsPanelCtrl, CoreEvents, PanelEvents, Bucket, BucketMatrix, rendering, Polygrafill, ColorModeDiscrete, VALUE_INDEX, TIME_INDEX, colorSchemes, colorModes, opacityScales, renderComplete, StatusHeatmapCtrl;
 
   function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -43,11 +43,16 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
     }, function (_appPluginsSdk) {
       loadPluginCss = _appPluginsSdk.loadPluginCss;
       MetricsPanelCtrl = _appPluginsSdk.MetricsPanelCtrl;
+    }, function (_libsGrafanaEventsIndex) {
+      CoreEvents = _libsGrafanaEventsIndex.CoreEvents;
+      PanelEvents = _libsGrafanaEventsIndex.PanelEvents;
     }, function (_statusmap_data) {
       Bucket = _statusmap_data.Bucket;
       BucketMatrix = _statusmap_data.BucketMatrix;
     }, function (_rendering) {
       rendering = _rendering.default;
+    }, function (_libsPolygrafillIndex) {
+      Polygrafill = _libsPolygrafillIndex.Polygrafill;
     }, function (_color_mode_discrete) {
       ColorModeDiscrete = _color_mode_discrete.ColorModeDiscrete;
     }],
@@ -149,6 +154,11 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
         light: 'plugins/flant-statusmap-panel/css/statusmap.light.css'
       });
 
+      _export("renderComplete", renderComplete = {
+        name: 'statusmap-render-complete'
+      }); // eventFactory('statusmap-render-complete');
+
+
       _export("PanelCtrl", _export("StatusHeatmapCtrl", StatusHeatmapCtrl =
       /*#__PURE__*/
       function (_MetricsPanelCtrl) {
@@ -244,6 +254,13 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
             seriesFilterIndex: -1
           });
 
+          if (!Polygrafill.hasAppEventCompatibleEmitter(_this.events)) {
+            CoreEvents.fallbackToStringEvents();
+            PanelEvents.fallbackToStringEvents();
+
+            _export("renderComplete", renderComplete = renderComplete.name);
+          }
+
           migratePanelConfig(_this.panel);
 
           _.defaultsDeep(_this.panel, _this.panelDefaults);
@@ -276,20 +293,20 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
           _this.annotationsSrv = annotationsSrv;
           _this.timeSrv = timeSrv;
 
-          _this.events.on('render', _this.onRender.bind(_assertThisInitialized(_this)));
+          _this.events.on(PanelEvents.render, _this.onRender.bind(_assertThisInitialized(_this)));
 
-          _this.events.on('data-received', _this.onDataReceived.bind(_assertThisInitialized(_this)));
+          _this.events.on(PanelEvents.dataReceived, _this.onDataReceived.bind(_assertThisInitialized(_this)));
 
-          _this.events.on('data-error', _this.onDataError.bind(_assertThisInitialized(_this)));
+          _this.events.on(PanelEvents.dataError, _this.onDataError.bind(_assertThisInitialized(_this)));
 
-          _this.events.on('data-snapshot-load', _this.onDataReceived.bind(_assertThisInitialized(_this)));
+          _this.events.on(PanelEvents.dataSnapshotLoad, _this.onDataReceived.bind(_assertThisInitialized(_this)));
 
-          _this.events.on('init-edit-mode', _this.onInitEditMode.bind(_assertThisInitialized(_this)));
+          _this.events.on(PanelEvents.editModeInitialized, _this.onInitEditMode.bind(_assertThisInitialized(_this)));
 
-          _this.events.on('refresh', _this.postRefresh.bind(_assertThisInitialized(_this))); // custom event from rendering.js
+          _this.events.on(PanelEvents.refresh, _this.postRefresh.bind(_assertThisInitialized(_this))); // custom event from rendering.js
 
 
-          _this.events.on('render-complete', _this.onRenderComplete.bind(_assertThisInitialized(_this)));
+          _this.events.on(renderComplete, _this.onRenderComplete.bind(_assertThisInitialized(_this)));
 
           _this.onCardColorChange = _this.onCardColorChange.bind(_assertThisInitialized(_this));
           return _this;

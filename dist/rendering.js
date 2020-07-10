@@ -1,9 +1,9 @@
 "use strict";
 
-System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/core", "d3", "./libs/d3-scale-chromatic/index", "./tooltip", "./annotations"], function (_export, _context) {
+System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/core", "d3", "./libs/d3-scale-chromatic/index", "./tooltip", "./annotations", "./module", "./libs/grafana/events/index"], function (_export, _context) {
   "use strict";
 
-  var _, $, moment, kbn, appEvents, contextSrv, d3, d3ScaleChromatic, StatusmapTooltip, AnnotationTooltip, MIN_CARD_SIZE, CARD_H_SPACING, CARD_V_SPACING, CARD_ROUND, DATA_RANGE_WIDING_FACTOR, DEFAULT_X_TICK_SIZE_PX, DEFAULT_Y_TICK_SIZE_PX, X_AXIS_TICK_PADDING, Y_AXIS_TICK_PADDING, MIN_SELECTION_WIDTH, Statusmap, StatusmapRenderer;
+  var _, $, moment, kbn, appEvents, contextSrv, d3, d3ScaleChromatic, StatusmapTooltip, AnnotationTooltip, renderComplete, CoreEvents, PanelEvents, MIN_CARD_SIZE, CARD_H_SPACING, CARD_V_SPACING, CARD_ROUND, DATA_RANGE_WIDING_FACTOR, DEFAULT_X_TICK_SIZE_PX, DEFAULT_Y_TICK_SIZE_PX, X_AXIS_TICK_PADDING, Y_AXIS_TICK_PADDING, MIN_SELECTION_WIDTH, Statusmap, StatusmapRenderer;
 
   function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
@@ -68,6 +68,11 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
       StatusmapTooltip = _tooltip.StatusmapTooltip;
     }, function (_annotations) {
       AnnotationTooltip = _annotations.AnnotationTooltip;
+    }, function (_module) {
+      renderComplete = _module.renderComplete;
+    }, function (_libsGrafanaEventsIndex) {
+      CoreEvents = _libsGrafanaEventsIndex.CoreEvents;
+      PanelEvents = _libsGrafanaEventsIndex.PanelEvents;
     }],
     execute: function () {
       MIN_CARD_SIZE = 5;
@@ -192,14 +197,14 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
             top: 10,
             bottom: 20
           };
-          this.ctrl.events.on('render', this.onRender.bind(this));
+          this.ctrl.events.on(PanelEvents.render, this.onRender.bind(this));
           this.ctrl.tickValueFormatter = this.tickValueFormatter.bind(this); /////////////////////////////
           // Selection and crosshair //
           /////////////////////////////
           // Shared crosshair and tooltip    this.empty = true;
 
-          appEvents.on('graph-hover', this.onGraphHover.bind(this), this.scope);
-          appEvents.on('graph-hover-clear', this.onGraphHoverClear.bind(this), this.scope); // Register selection listeners
+          appEvents.on(CoreEvents.graphHover, this.onGraphHover.bind(this), this.scope);
+          appEvents.on(CoreEvents.graphHoverClear, this.onGraphHoverClear.bind(this), this.scope); // Register selection listeners
 
           this.$heatmap.on('mousedown', this.onMouseDown.bind(this));
           this.$heatmap.on('mousemove', this.onMouseMove.bind(this));
@@ -484,7 +489,7 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
 
             this._renderAnnotations();
 
-            this.ctrl.events.emit('render-complete', {
+            this.ctrl.events.emit(renderComplete, {
               "chartWidth": this.chartWidth
             });
           }
@@ -698,7 +703,7 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
         }, {
           key: "onMouseLeave",
           value: function onMouseLeave(e) {
-            appEvents.emit('graph-hover-clear');
+            appEvents.emit(CoreEvents.graphHoverClear);
             this.clearCrosshair();
             this.annotationTooltip.destroy();
           }
@@ -769,7 +774,7 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
 
             pos.panelRelY = Math.max(event.offsetY / this.height, 0.001); // broadcast to other graph panels that we are hovering
 
-            appEvents.emit('graph-hover', {
+            appEvents.emit(CoreEvents.graphHover, {
               pos: pos,
               panel: this.panel
             });
