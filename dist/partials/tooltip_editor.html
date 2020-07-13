@@ -38,17 +38,16 @@
               Use special variables:
               <br>
               <em>${__y_label}</em> name of the time series (alias or legend in the query editor).
-              <!-- <br>
-              <em>$(template.name)</em> name of the templated to be replaced -->
               <br>
-              <em>${__bucket_range}</em> refers to bucket range in the form of '&from=...&to=...'.
-              <br>
-              <em>${__graph_range}</em> refers to graph range in the form of '&from=...&to=...'.
+              <em>${__url_time_range}</em> refers to graph range in the form of 'from=...&to=...'.
               <br>
               <em>${__value}</em> refers to current bucket value or max value if multiple values mode is on.
               <br>
               <em>${__value_N}</em> refers to Nth value in current bucket. Value indexes are started from 0. For instance,
               <em>${__value_1}</em> refers to second value.
+              <br>
+              <em>${__value_date}</em> refers to __value formatted as date.
+              <em>${__value_N_date}</em> refers to Nth value in current bucket formatted as date.
             </span>
           </info-popover>
         </label>
