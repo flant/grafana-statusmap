@@ -7,7 +7,7 @@ import * as d3 from 'd3';
 import * as d3ScaleChromatic from './libs/d3-scale-chromatic/index';
 import {StatusmapTooltip} from './tooltip';
 import {AnnotationTooltip} from './annotations';
-import { Bucket, BucketMatrix } from './statusmap_data';
+import { Bucket, BucketMatrix, BucketMatrixPager } from './statusmap_data';
 import { StatusHeatmapCtrl, renderComplete } from './module';
 import { CoreEvents, PanelEvents } from './libs/grafana/events/index';
 
@@ -32,7 +32,7 @@ class Statusmap {
   bucketMatrix: BucketMatrix;
 
   timeRange: {from: number, to: number} = {from:0, to:0};
-  
+
   constructor() {
 
   }
@@ -61,6 +61,7 @@ export class StatusmapRenderer {
   yGridSize: number = 0;
 
   bucketMatrix: BucketMatrix;
+  bucketMatrixPager: BucketMatrixPager;
   panel: any;
   $heatmap: any;
   tooltip: StatusmapTooltip;
@@ -133,7 +134,14 @@ export class StatusmapRenderer {
         height = parseInt(height.replace('px', ''), 10);
       }
 
-      height -= this.panel.legend.show ? 32 : 10; // bottom padding and space for legend. Change margin in .status-heatmap-color-legend !
+      if (this.panel.usingPagination) {
+        // TODO  get height of pagination controls.
+        // reserve height for legend and for a row of pagination controls.
+        height -= this.panel.legend.show ? 70 : 40; // bottom padding and space for legend. Change margin in .status-heatmap-color-legend !
+      } else {
+        // reserve height for legend
+        height -= this.panel.legend.show ? 32 : 4; // bottom padding and space for legend. Change margin in .status-heatmap-color-legend !
+      }
 
       this.$heatmap.css('height', height + 'px');
 
@@ -236,8 +244,9 @@ export class StatusmapRenderer {
   }
 
   addYAxis() {
-    let ticks = this.bucketMatrix.targets;
+    let ticks = this.bucketMatrixPager.targets();
 
+    // TODO move sorting into bucketMatrixPager.
     if (this.panel.yAxisSort == 'a → z') {
       ticks.sort((a, b) => a.localeCompare(b, 'en', {ignorePunctuation: false, numeric: true}));
     } else if (this.panel.yAxisSort == 'z → a') {
@@ -326,8 +335,8 @@ export class StatusmapRenderer {
 
     // calculate yOffset for YAxis
     this.yGridSize = this.chartHeight;
-    if (this.bucketMatrix.targets.length > 0) {
-      this.yGridSize = Math.floor(this.chartHeight / this.bucketMatrix.targets.length);
+    if (this.bucketMatrixPager.targets().length > 0) {
+      this.yGridSize = Math.floor(this.chartHeight / this.bucketMatrixPager.targets().length);
     }
     this.cardHeight = this.yGridSize ? this.yGridSize - this.cardVSpacing : 0;
     this.yOffset = this.cardHeight / 2;
@@ -364,7 +373,7 @@ export class StatusmapRenderer {
     this.setOpacityScale(maxValue);
 
     // Draw cards from buckets.
-    this.heatmap.selectAll(".statusmap-cards-row").data(this.bucketMatrix.targets)
+    this.heatmap.selectAll(".statusmap-cards-row").data(this.bucketMatrixPager.targets())
       .enter()
         .selectAll(".statustmap-card")
         .data((target:string) => this.bucketMatrix.buckets[target])
@@ -501,7 +510,6 @@ export class StatusmapRenderer {
 
   // Top y for card.
   // yScale gives ???
-  // 
   getCardY(b: Bucket) {
     return this.yScale(b.yLabel) + this.chartTop - this.cardHeight - this.cardVSpacing/2;
   }
@@ -745,11 +753,11 @@ export class StatusmapRenderer {
     }
   }
 
-
   render() {
     this.panel = this.ctrl.panel;
     this.timeRange = this.ctrl.range;
     this.bucketMatrix = this.ctrl.bucketMatrix;
+    this.bucketMatrixPager = this.ctrl.bucketMatrixPager;
 
     if (!this.bucketMatrix || !this.setElementHeight()) {
       return;

@@ -216,4 +216,18 @@
     </div>
   </div>
 
+  <div class="section gf-form-group">
+    <h5 class="section-heading">Pagination</h5>
+    <div class="gf-form">
+      <gf-form-switch class="gf-form" label="Enable pagination" label-class="width-12"
+      checked="ctrl.panel.usingPagination" on-change="ctrl.render()"></gf-form-switch>
+    </div>
+    <div class="gf-form" ng-if="ctrl.panel.usingPagination">
+      <label class="gf-form-label width-10">Rows per page</label>
+      <input type="number" class="gf-form-input width-5" placeholder="2" data-placement="top"
+        bs-tooltip="'Number of rows to show by default'" ng-model="ctrl.panel.pageSize" ng-change="ctrl.changeDefaultPaginationSize(ctrl.panel.pageSize)"
+        ng-model-onblur>
+    </div>
+  </div>
+
 </div>

@@ -69,6 +69,18 @@
 .width-c-70 {
   width: 70rem !important; }
 
+.statusmap-pagination {
+  margin-top: 5px; }
+  .statusmap-pagination label {
+    margin-right: 0px; }
+  .statusmap-pagination input {
+    margin-right: 0px; }
+  .statusmap-pagination .last-in-group {
+    margin-right: 4px; }
+
+.pagination-buttons {
+  text-align: right; }
+
 .status-heatmap-legend-wrapper {
   margin: 0 10px; }
   .status-heatmap-legend-wrapper svg {

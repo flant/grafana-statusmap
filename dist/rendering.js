@@ -153,6 +153,8 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
 
           _defineProperty(this, "bucketMatrix", void 0);
 
+          _defineProperty(this, "bucketMatrixPager", void 0);
+
           _defineProperty(this, "panel", void 0);
 
           _defineProperty(this, "$heatmap", void 0);
@@ -238,7 +240,14 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
                 height = parseInt(height.replace('px', ''), 10);
               }
 
-              height -= this.panel.legend.show ? 32 : 10; // bottom padding and space for legend. Change margin in .status-heatmap-color-legend !
+              if (this.panel.usingPagination) {
+                // TODO  get height of pagination controls.
+                // reserve height for legend and for a row of pagination controls.
+                height -= this.panel.legend.show ? 70 : 40; // bottom padding and space for legend. Change margin in .status-heatmap-color-legend !
+              } else {
+                // reserve height for legend
+                height -= this.panel.legend.show ? 32 : 4; // bottom padding and space for legend. Change margin in .status-heatmap-color-legend !
+              }
 
               this.$heatmap.css('height', height + 'px');
               return true;
@@ -334,7 +343,7 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
         }, {
           key: "addYAxis",
           value: function addYAxis() {
-            var ticks = this.bucketMatrix.targets;
+            var ticks = this.bucketMatrixPager.targets(); // TODO move sorting into bucketMatrixPager.
 
             if (this.panel.yAxisSort == 'a → z') {
               ticks.sort(function (a, b) {
@@ -424,8 +433,8 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
 
             this.yGridSize = this.chartHeight;
 
-            if (this.bucketMatrix.targets.length > 0) {
-              this.yGridSize = Math.floor(this.chartHeight / this.bucketMatrix.targets.length);
+            if (this.bucketMatrixPager.targets().length > 0) {
+              this.yGridSize = Math.floor(this.chartHeight / this.bucketMatrixPager.targets().length);
             }
 
             this.cardHeight = this.yGridSize ? this.yGridSize - this.cardVSpacing : 0;
@@ -462,7 +471,7 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
 
             this.setOpacityScale(maxValue); // Draw cards from buckets.
 
-            this.heatmap.selectAll(".statusmap-cards-row").data(this.bucketMatrix.targets).enter().selectAll(".statustmap-card").data(function (target) {
+            this.heatmap.selectAll(".statusmap-cards-row").data(this.bucketMatrixPager.targets()).enter().selectAll(".statustmap-card").data(function (target) {
               return _this.bucketMatrix.buckets[target];
             }).enter().append("rect").attr("cardId", function (b) {
               return b.id;
@@ -581,7 +590,6 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
             return w;
           } // Top y for card.
           // yScale gives ???
-          // 
 
         }, {
           key: "getCardY",
@@ -842,6 +850,7 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
             this.panel = this.ctrl.panel;
             this.timeRange = this.ctrl.range;
             this.bucketMatrix = this.ctrl.bucketMatrix;
+            this.bucketMatrixPager = this.ctrl.bucketMatrixPager;
 
             if (!this.bucketMatrix || !this.setElementHeight()) {
               return;

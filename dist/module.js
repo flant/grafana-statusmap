@@ -3,7 +3,7 @@
 System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_editor", "./panel_config_migration", "app/core/utils/kbn", "app/plugins/sdk", "./libs/grafana/events/index", "./statusmap_data", "./rendering", "./libs/polygrafill/index", "./color_mode_discrete"], function (_export, _context) {
   "use strict";
 
-  var _, optionsEditorCtrl, tooltipEditorCtrl, migratePanelConfig, kbn, loadPluginCss, MetricsPanelCtrl, CoreEvents, PanelEvents, Bucket, BucketMatrix, rendering, Polygrafill, ColorModeDiscrete, VALUE_INDEX, TIME_INDEX, colorSchemes, colorModes, opacityScales, renderComplete, StatusHeatmapCtrl;
+  var _, optionsEditorCtrl, tooltipEditorCtrl, migratePanelConfig, kbn, loadPluginCss, MetricsPanelCtrl, CoreEvents, PanelEvents, Bucket, BucketMatrix, BucketMatrixPager, rendering, Polygrafill, ColorModeDiscrete, VALUE_INDEX, TIME_INDEX, colorSchemes, colorModes, opacityScales, renderComplete, StatusHeatmapCtrl;
 
   function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -49,6 +49,7 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
     }, function (_statusmap_data) {
       Bucket = _statusmap_data.Bucket;
       BucketMatrix = _statusmap_data.BucketMatrix;
+      BucketMatrixPager = _statusmap_data.BucketMatrixPager;
     }, function (_rendering) {
       rendering = _rendering.default;
     }, function (_libsPolygrafillIndex) {
@@ -166,6 +167,8 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
 
         _inherits(StatusHeatmapCtrl, _MetricsPanelCtrl);
 
+        // TODO remove this transient variable: use ng-model-options="{ getterSetter: true }"
+
         /** @ngInject */
         function StatusHeatmapCtrl($scope, $injector, timeSrv, annotationsSrv, $window, datasourceSrv, variableSrv, templateSrv) {
           var _this;
@@ -179,6 +182,8 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
           _defineProperty(_assertThisInitialized(_this), "data", void 0);
 
           _defineProperty(_assertThisInitialized(_this), "bucketMatrix", void 0);
+
+          _defineProperty(_assertThisInitialized(_this), "bucketMatrixPager", void 0);
 
           _defineProperty(_assertThisInitialized(_this), "graph", void 0);
 
@@ -205,6 +210,8 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
           _defineProperty(_assertThisInitialized(_this), "annotations", []);
 
           _defineProperty(_assertThisInitialized(_this), "annotationsPromise", void 0);
+
+          _defineProperty(_assertThisInitialized(_this), "pageSizeViewer", 15);
 
           _defineProperty(_assertThisInitialized(_this), "panelDefaults", {
             // datasource name, null = default datasource
@@ -251,7 +258,10 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
             yAxisSort: 'metrics',
             highlightCards: true,
             useMax: true,
-            seriesFilterIndex: -1
+            seriesFilterIndex: -1,
+            // Pagination options
+            usingPagination: false,
+            pageSize: 15
           });
 
           if (!Polygrafill.hasAppEventCompatibleEmitter(_this.events)) {
@@ -265,6 +275,17 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
 
           _.defaultsDeep(_this.panel, _this.panelDefaults);
 
+          _this.bucketMatrix = new BucketMatrix(); // Create pager for bucketMatrix and restore page size.
+
+          _this.bucketMatrixPager = new BucketMatrixPager();
+
+          _this.bucketMatrixPager.setEnable(_this.panel.usingPagination);
+
+          _this.bucketMatrixPager.setDefaultPageSize(_this.panel.pageSize);
+
+          _this.bucketMatrixPager.setPageSize(_this.panel.pageSize);
+
+          $scope.pager = _this.bucketMatrixPager;
           _this.opacityScales = opacityScales;
           _this.colorModes = colorModes;
           _this.colorSchemes = colorSchemes; // default graph width for discrete card width calculation
@@ -317,6 +338,39 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
           value: function onRenderComplete(data) {
             this.graph.chartWidth = data.chartWidth;
             this.renderingCompleted();
+          }
+        }, {
+          key: "changeDefaultPaginationSize",
+          value: function changeDefaultPaginationSize(defaultPageSize) {
+            this.bucketMatrixPager.setDefaultPageSize(defaultPageSize);
+            this.bucketMatrixPager.setPageSize(defaultPageSize);
+            this.pageSizeViewer = defaultPageSize;
+            this.render();
+            this.refresh();
+          }
+        }, {
+          key: "onChangePageSize",
+          value: function onChangePageSize() {
+            if (this.pageSizeViewer <= 0) {
+              this.pageSizeViewer = this.bucketMatrixPager.defaultPageSize;
+            }
+
+            this.bucketMatrixPager.setPageSize(this.pageSizeViewer);
+            this.bucketMatrixPager.setCurrent(0);
+            this.render();
+            this.refresh();
+          }
+        }, {
+          key: "onPrevPage",
+          value: function onPrevPage() {
+            this.bucketMatrixPager.switchToPrev();
+            this.render();
+          }
+        }, {
+          key: "onNextPage",
+          value: function onNextPage() {
+            this.bucketMatrixPager.switchToNext();
+            this.render();
           } // getChartWidth returns an approximation of chart canvas width or
           // a saved value calculated during a render.
 
@@ -445,7 +499,14 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
               this.calculateInterval();
             }
 
-            this.bucketMatrix = this.convertDataToBuckets(dataList, this.range.from.valueOf(), this.range.to.valueOf(), this.intervalMs, true);
+            var newBucketMatrix = this.convertDataToBuckets(dataList, this.range.from.valueOf(), this.range.to.valueOf(), this.intervalMs, true);
+            this.bucketMatrix = newBucketMatrix;
+            this.bucketMatrixPager.bucketMatrix = newBucketMatrix;
+
+            if (newBucketMatrix.targets.length !== this.bucketMatrix.targets.length) {
+              this.bucketMatrixPager.setCurrent(0);
+            }
+
             this.noDatapoints = this.bucketMatrix.noDatapoints;
 
             if (this.annotationsPromise) {

@@ -16,7 +16,7 @@ import {loadPluginCss} from 'app/plugins/sdk';
 import { MetricsPanelCtrl } from 'app/plugins/sdk';
 import { AnnotationsSrv } from 'app/features/annotations/annotations_srv';
 import { CoreEvents, PanelEvents } from './libs/grafana/events/index';
-import { Bucket, BucketMatrix } from './statusmap_data';
+import {Bucket, BucketMatrix, BucketMatrixPager } from './statusmap_data';
 import rendering from './rendering';
 import { Polygrafill } from './libs/polygrafill/index';
 
@@ -70,6 +70,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
   data: any;
   bucketMatrix: BucketMatrix;
+  bucketMatrixPager: BucketMatrixPager;
 
   graph: any;
   discreteHelper: ColorModeDiscrete;
@@ -87,6 +88,9 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
   annotations: object[] = [];
   annotationsPromise: any;
+
+  // TODO remove this transient variable: use ng-model-options="{ getterSetter: true }"
+  pageSizeViewer: number = 15;
 
   panelDefaults: any = {
     // datasource name, null = default datasource
@@ -132,7 +136,11 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     highlightCards: true,
     useMax: true,
 
-    seriesFilterIndex: -1
+    seriesFilterIndex: -1,
+
+    // Pagination options
+    usingPagination: false,
+    pageSize: 15
   };
 
   /** @ngInject */
@@ -147,6 +155,15 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
     migratePanelConfig(this.panel);
     _.defaultsDeep(this.panel, this.panelDefaults);
+
+    this.bucketMatrix = new BucketMatrix();
+
+    // Create pager for bucketMatrix and restore page size.
+    this.bucketMatrixPager = new BucketMatrixPager();
+    this.bucketMatrixPager.setEnable(this.panel.usingPagination);
+    this.bucketMatrixPager.setDefaultPageSize(this.panel.pageSize);
+    this.bucketMatrixPager.setPageSize(this.panel.pageSize);
+    $scope.pager = this.bucketMatrixPager;
 
     this.opacityScales = opacityScales;
     this.colorModes = colorModes;
@@ -179,7 +196,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
     this.annotations = [];
     this.annotationsSrv = annotationsSrv;
-    
+
     this.timeSrv = timeSrv;
 
     this.events.on(PanelEvents.render, this.onRender.bind(this));
@@ -198,6 +215,37 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.graph.chartWidth = data.chartWidth;
     this.renderingCompleted();
   }
+
+  changeDefaultPaginationSize(defaultPageSize: number): void {
+    this.bucketMatrixPager.setDefaultPageSize(defaultPageSize);
+    this.bucketMatrixPager.setPageSize(defaultPageSize);
+    this.pageSizeViewer = defaultPageSize;
+
+    this.render();
+    this.refresh();
+  }
+
+  onChangePageSize(): void {
+    if (this.pageSizeViewer <= 0) {
+      this.pageSizeViewer = this.bucketMatrixPager.defaultPageSize;
+    }
+    this.bucketMatrixPager.setPageSize(this.pageSizeViewer);
+    this.bucketMatrixPager.setCurrent(0);
+
+    this.render();
+    this.refresh();
+  }
+
+  onPrevPage(): void {
+    this.bucketMatrixPager.switchToPrev();
+    this.render();
+  }
+
+  onNextPage(): void {
+    this.bucketMatrixPager.switchToNext();
+    this.render();
+  }
+
 
   // getChartWidth returns an approximation of chart canvas width or
   // a saved value calculated during a render.
@@ -320,7 +368,15 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     if (!this.intervalMs) {
       this.calculateInterval();
     }
-    this.bucketMatrix = this.convertDataToBuckets(dataList, this.range.from.valueOf(), this.range.to.valueOf(), this.intervalMs, true);
+
+    let newBucketMatrix = this.convertDataToBuckets(dataList, this.range.from.valueOf(), this.range.to.valueOf(), this.intervalMs, true);
+
+    this.bucketMatrix = newBucketMatrix;
+    this.bucketMatrixPager.bucketMatrix = newBucketMatrix;
+    if (newBucketMatrix.targets.length !== this.bucketMatrix.targets.length) {
+      this.bucketMatrixPager.setCurrent(0);
+    }
+
     this.noDatapoints = this.bucketMatrix.noDatapoints;
 
     if (this.annotationsPromise) {
@@ -453,7 +509,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     bucketMatrix.rangeMs = to - from;
     bucketMatrix.intervalMs = intervalMs;
 
-    if (!data || data.length == 0) { 
+    if (!data || data.length == 0) {
       // Mimic heatmap and graph 'no data' labels.
       bucketMatrix.targets = [
         "1.0", "0.0", "-1.0"
@@ -469,7 +525,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     let targetIndex: {[target: string]: number[]} = {};
 
     // Group indicies of elements in data by target (y label).
-    
+
     // lodash version:
     //_.map(data, (d, i) => {
     //  targetIndex[d.target] = _.concat(_.toArray(targetIndex[d.target]), i);
@@ -577,7 +633,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     });
 
     //console.log ("bucketMatrix: ", bucketMatrix);
-    
+
     // Put values into buckets.
     bucketMatrix.minValue = Number.MAX_VALUE;
     bucketMatrix.maxValue = Number.MIN_SAFE_INTEGER;
