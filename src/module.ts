@@ -78,6 +78,10 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   colorSchemes: any = [];
   unitFormats: any;
 
+  cardsDataComplete: any;
+  cardsDataLabelsComplete: any;
+  ticksWhenPaginating: [];
+
   dataWarnings: {[warningId: string]: {title: string, tip: string}} = {};
   multipleValues: boolean;
   noColorDefined: boolean;
@@ -87,6 +91,13 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
   annotations: object[] = [];
   annotationsPromise: any;
+
+  pageSizeViewer: number = 15;
+  currentPage: number = 0;
+  numberOfPages: number = 1;
+  totalElements: number = 0;
+  firstPageElement: number = 1;
+  lastPageElement: number = 5;
 
   panelDefaults: any = {
     // datasource name, null = default datasource
@@ -132,7 +143,11 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     highlightCards: true,
     useMax: true,
 
-    seriesFilterIndex: -1
+    seriesFilterIndex: -1,
+    usingPagination: false,
+    pageSize: 15,
+    allowAllElements: false,
+    availableValues: []
   };
 
   /** @ngInject */
@@ -147,6 +162,11 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
     migratePanelConfig(this.panel);
     _.defaultsDeep(this.panel, this.panelDefaults);
+
+    if (this.panel.usingPagination) {
+      this.setPaginationSize(this.panel.pageSize);
+      this.setCurrentPage(0);
+    }
 
     this.opacityScales = opacityScales;
     this.colorModes = colorModes;
@@ -179,7 +199,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
     this.annotations = [];
     this.annotationsSrv = annotationsSrv;
-    
+
     this.timeSrv = timeSrv;
 
     this.events.on(PanelEvents.render, this.onRender.bind(this));
@@ -197,6 +217,68 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   onRenderComplete(data: any):void {
     this.graph.chartWidth = data.chartWidth;
     this.renderingCompleted();
+  }
+
+  changeDefaultPaginationSize(defaultPageSize: number): void {
+    this.pageSizeViewer = defaultPageSize;
+
+    this.render();
+    this.refresh();
+  }
+
+  changePaginationSize(): void {
+    if (this.pageSizeViewer <= 0) {
+      this.pageSizeViewer = 1;
+    }
+
+    this.currentPage = 0;
+
+    this.render();
+    this.refresh();
+  }
+
+  getPaginationSize(): number {
+    return this.pageSizeViewer;
+  }
+
+  setPaginationSize(pageSize: number): void {
+    this.pageSizeViewer = pageSize;
+  }
+
+  getCurrentPage(): number {
+    return this.currentPage;
+  }
+
+  setCurrentPage(currentPage: number): void {
+    this.currentPage = currentPage;
+  }
+
+  getNumberOfPages(): number {
+    return this.numberOfPages;
+  }
+
+  getTotalElements(): number {
+    return this.totalElements;
+  }
+
+  setTotalElements(totalElements: number): void {
+    this.totalElements = totalElements;
+  }
+
+  getFirstPageElement(): number {
+    return this.firstPageElement;
+  }
+
+  setFirstPageElement(firstPageElement: number): void {
+    this.firstPageElement = firstPageElement;
+  }
+
+  getLastPageElement(): number {
+    return this.lastPageElement;
+  }
+
+  setLastPageElement(lastPageElement: number): void {
+    this.lastPageElement = lastPageElement;
   }
 
   // getChartWidth returns an approximation of chart canvas width or
@@ -323,6 +405,13 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.bucketMatrix = this.convertDataToBuckets(dataList, this.range.from.valueOf(), this.range.to.valueOf(), this.intervalMs, true);
     this.noDatapoints = this.bucketMatrix.noDatapoints;
 
+    if (this.panel.usingPagination && this.cardsData.targets) {
+      this.numberOfPages = Math.ceil(this.cardsData.targets.length/this.pageSizeViewer);
+      this.totalElements = this.cardsData.targets.length;
+    } else {
+      this.setPaginationSize(this.cardsData.targets.length);
+    }
+
     if (this.annotationsPromise) {
       this.annotationsPromise.then(
         (result: { alertState: any; annotations: any }) => {
@@ -338,7 +427,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
         () => {
           this.loading = false;
           this.annotations = [];
-          this.render();
+          this.render(); // this.render(this.data);???
         }
       );
     } else {
@@ -352,6 +441,10 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.addEditorTab('Options', optionsEditorCtrl, 2);
     this.addEditorTab('Tooltip', tooltipEditorCtrl, 3);
     this.unitFormats = kbn.getUnitFormats();
+  }
+
+  paginate() {
+    this.refresh();
   }
 
   // onRender will be called before StatusmapRenderer.onRender.
@@ -453,7 +546,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     bucketMatrix.rangeMs = to - from;
     bucketMatrix.intervalMs = intervalMs;
 
-    if (!data || data.length == 0) { 
+    if (!data || data.length == 0) {
       // Mimic heatmap and graph 'no data' labels.
       bucketMatrix.targets = [
         "1.0", "0.0", "-1.0"
@@ -469,7 +562,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     let targetIndex: {[target: string]: number[]} = {};
 
     // Group indicies of elements in data by target (y label).
-    
+
     // lodash version:
     //_.map(data, (d, i) => {
     //  targetIndex[d.target] = _.concat(_.toArray(targetIndex[d.target]), i);
@@ -577,7 +670,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     });
 
     //console.log ("bucketMatrix: ", bucketMatrix);
-    
+
     // Put values into buckets.
     bucketMatrix.minValue = Number.MAX_VALUE;
     bucketMatrix.maxValue = Number.MIN_SAFE_INTEGER;

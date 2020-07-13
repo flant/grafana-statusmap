@@ -192,6 +192,12 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
 
           _defineProperty(_assertThisInitialized(_this), "unitFormats", void 0);
 
+          _defineProperty(_assertThisInitialized(_this), "cardsDataComplete", void 0);
+
+          _defineProperty(_assertThisInitialized(_this), "cardsDataLabelsComplete", void 0);
+
+          _defineProperty(_assertThisInitialized(_this), "ticksWhenPaginating", void 0);
+
           _defineProperty(_assertThisInitialized(_this), "dataWarnings", {});
 
           _defineProperty(_assertThisInitialized(_this), "multipleValues", void 0);
@@ -205,6 +211,18 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
           _defineProperty(_assertThisInitialized(_this), "annotations", []);
 
           _defineProperty(_assertThisInitialized(_this), "annotationsPromise", void 0);
+
+          _defineProperty(_assertThisInitialized(_this), "pageSizeViewer", 15);
+
+          _defineProperty(_assertThisInitialized(_this), "currentPage", 0);
+
+          _defineProperty(_assertThisInitialized(_this), "numberOfPages", 1);
+
+          _defineProperty(_assertThisInitialized(_this), "totalElements", 0);
+
+          _defineProperty(_assertThisInitialized(_this), "firstPageElement", 1);
+
+          _defineProperty(_assertThisInitialized(_this), "lastPageElement", 5);
 
           _defineProperty(_assertThisInitialized(_this), "panelDefaults", {
             // datasource name, null = default datasource
@@ -251,7 +269,11 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
             yAxisSort: 'metrics',
             highlightCards: true,
             useMax: true,
-            seriesFilterIndex: -1
+            seriesFilterIndex: -1,
+            usingPagination: false,
+            pageSize: 15,
+            allowAllElements: false,
+            availableValues: []
           });
 
           if (!Polygrafill.hasAppEventCompatibleEmitter(_this.events)) {
@@ -264,6 +286,12 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
           migratePanelConfig(_this.panel);
 
           _.defaultsDeep(_this.panel, _this.panelDefaults);
+
+          if (_this.panel.usingPagination) {
+            _this.setPaginationSize(_this.panel.pageSize);
+
+            _this.setCurrentPage(0);
+          }
 
           _this.opacityScales = opacityScales;
           _this.colorModes = colorModes;
@@ -317,6 +345,79 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
           value: function onRenderComplete(data) {
             this.graph.chartWidth = data.chartWidth;
             this.renderingCompleted();
+          }
+        }, {
+          key: "changeDefaultPaginationSize",
+          value: function changeDefaultPaginationSize(defaultPageSize) {
+            this.pageSizeViewer = defaultPageSize;
+            this.render();
+            this.refresh();
+          }
+        }, {
+          key: "changePaginationSize",
+          value: function changePaginationSize() {
+            if (this.pageSizeViewer <= 0) {
+              this.pageSizeViewer = 1;
+            }
+
+            this.currentPage = 0;
+            this.render();
+            this.refresh();
+          }
+        }, {
+          key: "getPaginationSize",
+          value: function getPaginationSize() {
+            return this.pageSizeViewer;
+          }
+        }, {
+          key: "setPaginationSize",
+          value: function setPaginationSize(pageSize) {
+            this.pageSizeViewer = pageSize;
+          }
+        }, {
+          key: "getCurrentPage",
+          value: function getCurrentPage() {
+            return this.currentPage;
+          }
+        }, {
+          key: "setCurrentPage",
+          value: function setCurrentPage(currentPage) {
+            this.currentPage = currentPage;
+          }
+        }, {
+          key: "getNumberOfPages",
+          value: function getNumberOfPages() {
+            return this.numberOfPages;
+          }
+        }, {
+          key: "getTotalElements",
+          value: function getTotalElements() {
+            return this.totalElements;
+          }
+        }, {
+          key: "setTotalElements",
+          value: function setTotalElements(totalElements) {
+            this.totalElements = totalElements;
+          }
+        }, {
+          key: "getFirstPageElement",
+          value: function getFirstPageElement() {
+            return this.firstPageElement;
+          }
+        }, {
+          key: "setFirstPageElement",
+          value: function setFirstPageElement(firstPageElement) {
+            this.firstPageElement = firstPageElement;
+          }
+        }, {
+          key: "getLastPageElement",
+          value: function getLastPageElement() {
+            return this.lastPageElement;
+          }
+        }, {
+          key: "setLastPageElement",
+          value: function setLastPageElement(lastPageElement) {
+            this.lastPageElement = lastPageElement;
           } // getChartWidth returns an approximation of chart canvas width or
           // a saved value calculated during a render.
 
@@ -448,6 +549,13 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
             this.bucketMatrix = this.convertDataToBuckets(dataList, this.range.from.valueOf(), this.range.to.valueOf(), this.intervalMs, true);
             this.noDatapoints = this.bucketMatrix.noDatapoints;
 
+            if (this.panel.usingPagination && this.cardsData.targets) {
+              this.numberOfPages = Math.ceil(this.cardsData.targets.length / this.pageSizeViewer);
+              this.totalElements = this.cardsData.targets.length;
+            } else {
+              this.setPaginationSize(this.cardsData.targets.length);
+            }
+
             if (this.annotationsPromise) {
               this.annotationsPromise.then(function (result) {
                 _this3.loading = false; //this.alertState = result.alertState;
@@ -463,7 +571,8 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
                 _this3.loading = false;
                 _this3.annotations = [];
 
-                _this3.render();
+                _this3.render(); // this.render(this.data);???
+
               });
             } else {
               this.loading = false;
@@ -477,6 +586,11 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
             this.addEditorTab('Options', optionsEditorCtrl, 2);
             this.addEditorTab('Tooltip', tooltipEditorCtrl, 3);
             this.unitFormats = kbn.getUnitFormats();
+          }
+        }, {
+          key: "paginate",
+          value: function paginate() {
+            this.refresh();
           } // onRender will be called before StatusmapRenderer.onRender.
           // Decide if warning should be displayed over cards.
 

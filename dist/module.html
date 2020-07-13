@@ -1,4 +1,13 @@
 <div class="status-heatmap-wrapper">
+	<div class="clearfix"></div>
+	<br>
+	<div class="gf-form" ng-if="ctrl.panel.usingPagination">
+		<label class="gf-form-label width-9">Items per page</label>
+		<input type="number" class="gf-form-input width-5" placeholder="2" data-placement="right"
+		bs-tooltip="'Number of items to show per page.'" ng-model="ctrl.pageSizeViewer" ng-change="ctrl.changePaginationSize()"
+		ng-model-onblur>
+	</div>
+
 	<div class="status-heatmap-canvas-wrapper">
 
 		<div class="datapoints-warning"  ng-if="ctrl.multipleValues || ctrl.noColorDefined || ctrl.noDatapoints">
@@ -7,8 +16,19 @@
 			<span class="small" ng-if="ctrl.noDatapoints" bs-tooltip="'{{ctrl.dataWarnings.noDatapoints.tip}}'">{{ctrl.dataWarnings.noDatapoints.title}}</span>
 		</div>
 
-
-		<div class="statusmap-panel" ng-dblclick="ctrl.zoomOut()"></div>
+		<div class="status-heatmap-panel" ng-dblclick="ctrl.zoomOut()"></div>
+	</div>
+	<div class="pagination" ng-if="ctrl.panel.usingPagination">
+		Showing {{ctrl.firstPageElement}} to {{ctrl.lastPageElement}} of {{ctrl.totalElements}} entries
+		<div class="pagination-buttons">
+			<button class="btn btn-inverse" ng-disabled="ctrl.currentPage == 0" ng-click="ctrl.currentPage=ctrl.currentPage-1; ctrl.render()">
+				Previous
+			</button>
+			{{ctrl.currentPage+1}}/{{ctrl.numberOfPages}}
+			<button class="btn btn-inverse" ng-disabled="ctrl.currentPage >= ctrl.cardsData.targets.length/ctrl.pageSizeViewer - 1 || ctrl.numberOfPages == 0" ng-click="ctrl.currentPage=ctrl.currentPage+1; ctrl.render()">
+				Next
+			</button>
+		</div>
 	</div>
 	<div class="status-heatmap-legend-wrapper" ng-if="ctrl.panel.legend.show">
 		<status-heatmap-legend></status-heatmap-legend>
