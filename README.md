@@ -161,7 +161,7 @@ __Multiple values__ checkbox specifies how they should be displayed:
 
 ![Color mapping](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/multiple-values-error.png)
 
-__Null values__ can be treated as empty buckets or displayed with the color of `0` value.
+__Display nulls__ can be treated as empty buckets or displayed with the color of `0` value.
 
 ![Color mapping](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/null-as-empty.png)
 
@@ -172,43 +172,39 @@ __Rounding__ may be used to round edges.
 
 ![Min width, spacing, rounding 2](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/min-width-spacing-rounding-02.png)
 
+__Values index__ set to positive number to display only values from specified timeseries.
+
 #### Display
 
 ![Display options](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/options-display.png)
 
 __Show legend__ checkbox toggles legend at the bottom of the panel.
 
+__Rows sort__ can be used to sort labels on Y axis. Metrics — sort y labels as they are defined on Metrics tab. a→z and z→a sort labels descending or ascending in a [natural](https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/String/localeCompare) order.
+
+#### Pagination
+
+![Pagination controls](src/img/pagination-graph.png)
+
+__Enable pagination__ toggles pagination controls on graph.
+
+__Rows per page__ a number of rows to display on graph.
+
+#### Tooltip
+
+![Tooltip in frozen state](src/img/tooltip-frozen.png)
+
 __Show tooltip__ toggles tooltip display on mouse over buckets.
 
-__Y axis sort__ can be used to sort labels on Y axis. Metrics — sort y labels as they are defined on Metrics tab. a→z and z→a sort labels descending or ascending in a [natural](https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/String/localeCompare) order.
+__Freeze on click__ toggles tooltip "freezing" on click. Frozen tooltip can be used to compare data with floating tooltip or to follow URLs.
 
-#### Tooltip with external link
-![Tooltip with external link](src/img/tooltip-url.png)
+__Show items__ toggles display of additional items in tooltip.
 
-A new tooltip that will appear when mouse click in a value showing one or more links to navigate. It can be configured in the options editor. Also it can be disabled to not appear. 
+__Items__ is a list of definitions to display URLs in tooltip.
 
-#### Tooltip editor
-![Tooltip options](src/img/tooltip-editor.png)
+Each URL has a template, icon, label and formating options: lowercase and date format for variables.
 
-__Show Extra Series Tooltip when clicking elements__ toggles tooltip with links display on mouse click.
-
-__Add new URL__ creates a new form to add a new link
-
-__Remove all URLs__ removes all the urls created before
-
-__Label__ name to show in the link instead of the URL
-
-__URL__ URL to navigate
-
-__Icon__ icon to show next to the url
-
-__Force lowercase__ forces the url to be lowercase even if it is written in capital letters
-
-__Extra Series Completer__ toggles extra series to write the URL
-
-__Extra Series Index__ fields index to use its value on URL using $series_extra. Use -1 to disable it
-
-__Extra Series Date Format__ date format to transform extra herlper when its type is Date
+![Tooltip items editor](src/img/tooltip-editor.png)
 
 ## Development
 
