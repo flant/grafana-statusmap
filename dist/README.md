@@ -182,6 +182,14 @@ __Show legend__ checkbox toggles legend at the bottom of the panel.
 
 __Rows sort__ can be used to sort labels on Y axis. Metrics — sort y labels as they are defined on Metrics tab. a→z and z→a sort labels descending or ascending in a [natural](https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/String/localeCompare) order.
 
+#### Pagination
+
+![Pagination controls](src/img/pagination-graph.png)
+
+__Enable pagination__ toggles pagination controls on graph.
+
+__Rows per page__ a number of rows to display on graph.
+
 #### Tooltip
 
 ![Tooltip in frozen state](src/img/tooltip-frozen.png)
