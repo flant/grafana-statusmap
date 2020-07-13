@@ -62,6 +62,7 @@ class BucketMatrix {
   // a flag that indicate that buckets has stub values
   noDatapoints: boolean = false;
 
+  // An array of row labels
   targets: string[] = [];
   rangeMs: number = 0;
   intervalMs: number = 0;
@@ -93,4 +94,122 @@ class BucketMatrix {
   }
 }
 
-export {Bucket, BucketMatrix };
+export var pagerChanged:any = {name:'statusmap-pager-changed'};
+
+class BucketMatrixPager {
+  bucketMatrix: BucketMatrix;
+  enable: boolean;
+  defaultPageSize: number = -1;
+  pageSize: number = -1;
+  currentPage: number = 0;
+
+  constructor() {
+    let m = new BucketMatrix();
+
+    this.bucketMatrix = m;
+  }
+
+  // An array of row labels for current page.
+  targets(): string[] {
+    if (!this.enable) {
+      return this.bucketMatrix.targets;
+    }
+
+    return this.bucketMatrix.targets.slice(this.pageSize * this.currentPage, this.pageSize * (this.currentPage+1) );
+  }
+
+  buckets(): {[yLabel: string]: Bucket[]} {
+    if (!this.enable) {
+      return this.bucketMatrix.buckets;
+    }
+
+    let buckets: {[yLabel: string]: Bucket[]} = {}
+    let me = this;
+
+    this.targets().map(function (rowLabel) {
+      buckets[rowLabel] = me.bucketMatrix.buckets[rowLabel];
+    })
+
+    return buckets;
+  }
+
+  setEnable(enable: boolean) {
+    this.enable = enable;
+  }
+
+  setCurrent(num: number): void {
+    this.currentPage = num;
+  }
+
+  setDefaultPageSize(num: number): void {
+    this.defaultPageSize = num;
+  }
+
+  setPageSize(num: number): void {
+    this.pageSize = num;
+  }
+
+  pages(): number {
+    return Math.ceil(this.totalRows() / this.pageSize);
+  }
+
+  totalRows(): number {
+    return this.bucketMatrix.targets.length;
+  }
+
+  pageStartRow(): number {
+    if (!this.enable) {
+      return 1;
+    }
+    return (this.pageSize * this.currentPage) + 1;
+  }
+
+  pageEndRow(): number {
+    if (!this.enable) {
+      return this.totalRows();
+    }
+
+    let last = this.pageSize * (this.currentPage+1);
+    if (last > this.totalRows()) {
+      return this.totalRows();
+    }
+
+    return last;
+  }
+
+  hasNext(): boolean {
+    if (!this.enable) {
+      return false;
+    }
+
+    if ((this.currentPage+1)*this.pageSize >= this.totalRows()) {
+      return false;
+    }
+
+    return true;
+    // currentPage >= ctrl.bucketMatrix.targets.length/ctrl.pageSizeViewer - 1 || ctrl.numberOfPages == 0
+  }
+
+  hasPrev(): boolean {
+    if (!this.enable) {
+      return false;
+    }
+
+    return this.currentPage > 0;
+  }
+
+  switchToNext() {
+    if (this.hasNext()) {
+      this.currentPage = this.currentPage + 1;
+    }
+  }
+
+  switchToPrev() {
+    if (this.hasPrev()) {
+      this.currentPage = this.currentPage - 1;
+    }
+  }
+
+}
+
+export {Bucket, BucketMatrix, BucketMatrixPager };

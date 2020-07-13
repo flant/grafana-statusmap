@@ -7,7 +7,7 @@ import * as d3 from 'd3';
 import * as d3ScaleChromatic from './libs/d3-scale-chromatic/index';
 import {StatusmapTooltip} from './tooltip';
 import {AnnotationTooltip} from './annotations';
-import { Bucket, BucketMatrix } from './statusmap_data';
+import { Bucket, BucketMatrix, BucketMatrixPager } from './statusmap_data';
 import { StatusHeatmapCtrl, renderComplete } from './module';
 import { CoreEvents, PanelEvents } from './libs/grafana/events/index';
 
@@ -61,6 +61,7 @@ export class StatusmapRenderer {
   yGridSize: number = 0;
 
   bucketMatrix: BucketMatrix;
+  bucketMatrixPager: BucketMatrixPager;
   panel: any;
   $heatmap: any;
   tooltip: StatusmapTooltip;
@@ -134,9 +135,12 @@ export class StatusmapRenderer {
       }
 
       if (this.panel.usingPagination) {
-        height -= this.panel.legend.show ? 140 : 10; // bottom padding and space for legend. Change margin in .status-heatmap-color-legend !
+        // TODO  get height of pagination controls.
+        // reserve height for legend and for a row of pagination controls.
+        height -= this.panel.legend.show ? 70 : 40; // bottom padding and space for legend. Change margin in .status-heatmap-color-legend !
       } else {
-        height -= this.panel.legend.show ? 50 : 10; // bottom padding and space for legend. Change margin in .status-heatmap-color-legend !
+        // reserve height for legend
+        height -= this.panel.legend.show ? 32 : 4; // bottom padding and space for legend. Change margin in .status-heatmap-color-legend !
       }
 
       this.$heatmap.css('height', height + 'px');
@@ -214,9 +218,7 @@ export class StatusmapRenderer {
   // divide chart height by ticks for cards drawing
   getYScale(ticks: any[]) {
     let range:any[] = [];
-    //let step = this.chartHeight / ticks.length;
-    console.log('GETYSCALE - RENDERING', this.ctrl.getPaginationSize());
-    let step = this.chartHeight / this.ctrl.getPaginationSize();
+    let step = this.chartHeight / ticks.length;
     // svg has y=0 on the top, so top card should have a minimal value in range
     range.push(step);
     for (let i = 1; i < ticks.length; i++) {
@@ -230,9 +232,7 @@ export class StatusmapRenderer {
   // divide chart height by ticks with offset for ticks drawing
   getYAxisScale(ticks: any[]) {
     let range:any[] = [];
-    //let step = this.chartHeight / ticks.length;
-    console.log('GETYAXISSCALE - RENDERING', this.ctrl.getPaginationSize());
-    let step = this.chartHeight / this.ctrl.getPaginationSize();
+    let step = this.chartHeight / ticks.length;
     // svg has y=0 on the top, so top tick should have a minimal value in range
     range.push(this.yOffset);
     for (let i = 1; i < ticks.length; i++) {
@@ -244,26 +244,9 @@ export class StatusmapRenderer {
   }
 
   addYAxis() {
+    let ticks = this.bucketMatrixPager.targets();
 
-    let ticks;
-
-    if(this.ctrl.ticksWhenPaginating !== undefined && this.ctrl.panel.usingPagination) {
-      ticks = _.uniq(_.map(this.ctrl.ticksWhenPaginating));
-    } else {
-      ticks = this.bucketMatrix.targets;
-      //ticks = _.uniq(_.map(this.data, d => d.target));
-    }
-
-    // // Set default Y min and max if no data
-    // if (_.isEmpty(this.data)) {
-    //   ticks = [''];
-    // }
-    //
-    // // TODO
-    // // New version!
-    // let ticks = this.bucketMatrix.targets;
-
-
+    // TODO move sorting into bucketMatrixPager.
     if (this.panel.yAxisSort == 'a → z') {
       ticks.sort((a, b) => a.localeCompare(b, 'en', {ignorePunctuation: false, numeric: true}));
     } else if (this.panel.yAxisSort == 'z → a') {
@@ -352,17 +335,9 @@ export class StatusmapRenderer {
 
     // calculate yOffset for YAxis
     this.yGridSize = this.chartHeight;
-    if (this.ctrl.panel.usingPagination) {
-      // Pagination mode overrides count of rows.
-      //this.yGridSize = Math.floor(this.chartHeight / this.ctrl.ticksWhenPaginating.length);
-      console.log('addHeatmapCanvas - rendering',this.ctrl.getPaginationSize());
-      this.yGridSize = Math.floor(this.chartHeight / this.ctrl.getPaginationSize());
-    } else {
-      if (this.bucketMatrix.targets.length > 0) {
-        this.yGridSize = Math.floor(this.chartHeight / this.bucketMatrix.targets.length);
-      }
+    if (this.bucketMatrixPager.targets().length > 0) {
+      this.yGridSize = Math.floor(this.chartHeight / this.bucketMatrixPager.targets().length);
     }
-
     this.cardHeight = this.yGridSize ? this.yGridSize - this.cardVSpacing : 0;
     this.yOffset = this.cardHeight / 2;
 
@@ -398,7 +373,7 @@ export class StatusmapRenderer {
     this.setOpacityScale(maxValue);
 
     // Draw cards from buckets.
-    this.heatmap.selectAll(".statusmap-cards-row").data(this.bucketMatrix.targets)
+    this.heatmap.selectAll(".statusmap-cards-row").data(this.bucketMatrixPager.targets())
       .enter()
         .selectAll(".statustmap-card")
         .data((target:string) => this.bucketMatrix.buckets[target])
@@ -778,75 +753,14 @@ export class StatusmapRenderer {
     }
   }
 
-
   render() {
     this.panel = this.ctrl.panel;
     this.timeRange = this.ctrl.range;
     this.bucketMatrix = this.ctrl.bucketMatrix;
+    this.bucketMatrixPager = this.ctrl.bucketMatrixPager;
 
     if (!this.bucketMatrix || !this.setElementHeight()) {
       return;
-    } else {
-      // TODO pagination!
-      this.ctrl.cardsDataComplete = this.ctrl.bucketMatrix.buckets;
-
-      if(this.ctrl.panel.usingPagination) {
-        if (!this.bucketMatrix.targets) {
-          return;
-        }
-
-        this.ctrl.setFirstPageElement((this.ctrl.getCurrentPage()*this.ctrl.getPaginationSize())+1);
-
-        let elems = this.ctrl.getTotalElements();
-
-        console.log('total elems in add heatmap canvas', elems);
-        if (elems < this.ctrl.getFirstPageElement()) {
-          this.ctrl.setCurrentPage(0);
-          this.render();
-        }
-
-        if (this.ctrl.getPaginationSize() >= this.ctrl.getTotalElements()) {
-          this.ctrl.setLastPageElement(this.ctrl.getTotalElements());
-        } else {
-          if ((this.ctrl.getCurrentPage()+1) === this.ctrl.getNumberOfPages() && (this.ctrl.getCurrentPage()>0)) {
-            this.ctrl.setLastPageElement(this.ctrl.getTotalElements());
-          } else {
-            this.ctrl.setLastPageElement((this.ctrl.getCurrentPage() * this.ctrl.getPaginationSize())+this.ctrl.getPaginationSize());
-          }
-        }
-
-        let cardsList = this.ctrl.bucketMatrix.targets.slice(this.ctrl.getPaginationSize()*this.ctrl.getCurrentPage(),
-          (this.ctrl.getPaginationSize()*this.ctrl.getCurrentPage())+this.ctrl.getPaginationSize());
-
-        let cardsToShow = [];
-        let labelsToShow = [];
-
-        // Rewrite for bucket matrix.
-        for (let i = 0; i < this.cardsData.cards.length; i++) {
-          const card = this.cardsData.cards[i];
-
-          for (let j = 0; j < cardsList.length; j++) {
-            const value = cardsList[j];
-
-            if (card.y === value) {
-              cardsToShow.push(card);
-              labelsToShow.push(value);
-            }
-
-          }
-        }
-
-        const labelsToShowClean = [...new Set(labelsToShow)];
-
-        this.cardsData.cards = cardsToShow.slice();
-        this.ctrl.ticksWhenPaginating = labelsToShowClean;
-
-        cardsToShow = undefined;
-      } else {
-        const pageSize = this.ctrl.bucketMatrix.targets.length
-        this.ctrl.getPaginationSize(pageSize);
-        this.ctrl.ticksWhenPaginating = undefined;
-      }
     }
 
     // Draw default axes and return if no data
@@ -861,9 +775,6 @@ export class StatusmapRenderer {
     this.scope.chartHeight = this.chartHeight;
     this.scope.chartWidth = this.chartWidth;
     this.scope.chartTop = this.chartTop;
-
-    // TODO pagination. Why this needed?
-    //this.ctrl.cardsData.cards = this.ctrl.cardsDataComplete.slice();
   }
 
   _renderAnnotations() {

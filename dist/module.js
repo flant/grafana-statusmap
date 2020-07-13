@@ -3,7 +3,7 @@
 System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_editor", "./panel_config_migration", "app/core/utils/kbn", "app/plugins/sdk", "./libs/grafana/events/index", "./statusmap_data", "./rendering", "./libs/polygrafill/index", "./color_mode_discrete"], function (_export, _context) {
   "use strict";
 
-  var _, optionsEditorCtrl, tooltipEditorCtrl, migratePanelConfig, kbn, loadPluginCss, MetricsPanelCtrl, CoreEvents, PanelEvents, Bucket, BucketMatrix, rendering, Polygrafill, ColorModeDiscrete, VALUE_INDEX, TIME_INDEX, colorSchemes, colorModes, opacityScales, renderComplete, StatusHeatmapCtrl;
+  var _, optionsEditorCtrl, tooltipEditorCtrl, migratePanelConfig, kbn, loadPluginCss, MetricsPanelCtrl, CoreEvents, PanelEvents, Bucket, BucketMatrix, BucketMatrixPager, rendering, Polygrafill, ColorModeDiscrete, VALUE_INDEX, TIME_INDEX, colorSchemes, colorModes, opacityScales, renderComplete, StatusHeatmapCtrl;
 
   function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -49,6 +49,7 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
     }, function (_statusmap_data) {
       Bucket = _statusmap_data.Bucket;
       BucketMatrix = _statusmap_data.BucketMatrix;
+      BucketMatrixPager = _statusmap_data.BucketMatrixPager;
     }, function (_rendering) {
       rendering = _rendering.default;
     }, function (_libsPolygrafillIndex) {
@@ -166,6 +167,8 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
 
         _inherits(StatusHeatmapCtrl, _MetricsPanelCtrl);
 
+        // TODO remove this transient variable: use ng-model-options="{ getterSetter: true }"
+
         /** @ngInject */
         function StatusHeatmapCtrl($scope, $injector, timeSrv, annotationsSrv, $window, datasourceSrv, variableSrv, templateSrv) {
           var _this;
@@ -180,6 +183,8 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
 
           _defineProperty(_assertThisInitialized(_this), "bucketMatrix", void 0);
 
+          _defineProperty(_assertThisInitialized(_this), "bucketMatrixPager", void 0);
+
           _defineProperty(_assertThisInitialized(_this), "graph", void 0);
 
           _defineProperty(_assertThisInitialized(_this), "discreteHelper", void 0);
@@ -191,12 +196,6 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
           _defineProperty(_assertThisInitialized(_this), "colorSchemes", []);
 
           _defineProperty(_assertThisInitialized(_this), "unitFormats", void 0);
-
-          _defineProperty(_assertThisInitialized(_this), "cardsDataComplete", void 0);
-
-          _defineProperty(_assertThisInitialized(_this), "cardsDataLabelsComplete", void 0);
-
-          _defineProperty(_assertThisInitialized(_this), "ticksWhenPaginating", void 0);
 
           _defineProperty(_assertThisInitialized(_this), "dataWarnings", {});
 
@@ -213,16 +212,6 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
           _defineProperty(_assertThisInitialized(_this), "annotationsPromise", void 0);
 
           _defineProperty(_assertThisInitialized(_this), "pageSizeViewer", 15);
-
-          _defineProperty(_assertThisInitialized(_this), "currentPage", 0);
-
-          _defineProperty(_assertThisInitialized(_this), "numberOfPages", 1);
-
-          _defineProperty(_assertThisInitialized(_this), "totalElements", 0);
-
-          _defineProperty(_assertThisInitialized(_this), "firstPageElement", 1);
-
-          _defineProperty(_assertThisInitialized(_this), "lastPageElement", 5);
 
           _defineProperty(_assertThisInitialized(_this), "panelDefaults", {
             // datasource name, null = default datasource
@@ -270,10 +259,9 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
             highlightCards: true,
             useMax: true,
             seriesFilterIndex: -1,
+            // Pagination options
             usingPagination: false,
-            pageSize: 15,
-            allowAllElements: false,
-            availableValues: []
+            pageSize: 15
           });
 
           if (!Polygrafill.hasAppEventCompatibleEmitter(_this.events)) {
@@ -287,12 +275,17 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
 
           _.defaultsDeep(_this.panel, _this.panelDefaults);
 
-          if (_this.panel.usingPagination) {
-            _this.setPaginationSize(_this.panel.pageSize);
+          _this.bucketMatrix = new BucketMatrix(); // Create pager for bucketMatrix and restore page size.
 
-            _this.setCurrentPage(0);
-          }
+          _this.bucketMatrixPager = new BucketMatrixPager();
 
+          _this.bucketMatrixPager.setEnable(_this.panel.usingPagination);
+
+          _this.bucketMatrixPager.setDefaultPageSize(_this.panel.pageSize);
+
+          _this.bucketMatrixPager.setPageSize(_this.panel.pageSize);
+
+          $scope.pager = _this.bucketMatrixPager;
           _this.opacityScales = opacityScales;
           _this.colorModes = colorModes;
           _this.colorSchemes = colorSchemes; // default graph width for discrete card width calculation
@@ -349,75 +342,35 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
         }, {
           key: "changeDefaultPaginationSize",
           value: function changeDefaultPaginationSize(defaultPageSize) {
+            this.bucketMatrixPager.setDefaultPageSize(defaultPageSize);
+            this.bucketMatrixPager.setPageSize(defaultPageSize);
             this.pageSizeViewer = defaultPageSize;
             this.render();
             this.refresh();
           }
         }, {
-          key: "changePaginationSize",
-          value: function changePaginationSize() {
+          key: "onChangePageSize",
+          value: function onChangePageSize() {
             if (this.pageSizeViewer <= 0) {
-              this.pageSizeViewer = 1;
+              this.pageSizeViewer = this.bucketMatrixPager.defaultPageSize;
             }
 
-            this.currentPage = 0;
+            this.bucketMatrixPager.setPageSize(this.pageSizeViewer);
+            this.bucketMatrixPager.setCurrent(0);
             this.render();
             this.refresh();
           }
         }, {
-          key: "getPaginationSize",
-          value: function getPaginationSize() {
-            return this.pageSizeViewer;
+          key: "onPrevPage",
+          value: function onPrevPage() {
+            this.bucketMatrixPager.switchToPrev();
+            this.render();
           }
         }, {
-          key: "setPaginationSize",
-          value: function setPaginationSize(pageSize) {
-            this.pageSizeViewer = pageSize;
-          }
-        }, {
-          key: "getCurrentPage",
-          value: function getCurrentPage() {
-            return this.currentPage;
-          }
-        }, {
-          key: "setCurrentPage",
-          value: function setCurrentPage(currentPage) {
-            this.currentPage = currentPage;
-          }
-        }, {
-          key: "getNumberOfPages",
-          value: function getNumberOfPages() {
-            return this.numberOfPages;
-          }
-        }, {
-          key: "getTotalElements",
-          value: function getTotalElements() {
-            return this.totalElements;
-          }
-        }, {
-          key: "setTotalElements",
-          value: function setTotalElements(totalElements) {
-            this.totalElements = totalElements;
-          }
-        }, {
-          key: "getFirstPageElement",
-          value: function getFirstPageElement() {
-            return this.firstPageElement;
-          }
-        }, {
-          key: "setFirstPageElement",
-          value: function setFirstPageElement(firstPageElement) {
-            this.firstPageElement = firstPageElement;
-          }
-        }, {
-          key: "getLastPageElement",
-          value: function getLastPageElement() {
-            return this.lastPageElement;
-          }
-        }, {
-          key: "setLastPageElement",
-          value: function setLastPageElement(lastPageElement) {
-            this.lastPageElement = lastPageElement;
+          key: "onNextPage",
+          value: function onNextPage() {
+            this.bucketMatrixPager.switchToNext();
+            this.render();
           } // getChartWidth returns an approximation of chart canvas width or
           // a saved value calculated during a render.
 
@@ -546,15 +499,15 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
               this.calculateInterval();
             }
 
-            this.bucketMatrix = this.convertDataToBuckets(dataList, this.range.from.valueOf(), this.range.to.valueOf(), this.intervalMs, true);
-            this.noDatapoints = this.bucketMatrix.noDatapoints;
+            var newBucketMatrix = this.convertDataToBuckets(dataList, this.range.from.valueOf(), this.range.to.valueOf(), this.intervalMs, true);
+            this.bucketMatrix = newBucketMatrix;
+            this.bucketMatrixPager.bucketMatrix = newBucketMatrix;
 
-            if (this.panel.usingPagination && this.cardsData.targets) {
-              this.numberOfPages = Math.ceil(this.cardsData.targets.length / this.pageSizeViewer);
-              this.totalElements = this.cardsData.targets.length;
-            } else {
-              this.setPaginationSize(this.cardsData.targets.length);
+            if (newBucketMatrix.targets.length !== this.bucketMatrix.targets.length) {
+              this.bucketMatrixPager.setCurrent(0);
             }
+
+            this.noDatapoints = this.bucketMatrix.noDatapoints;
 
             if (this.annotationsPromise) {
               this.annotationsPromise.then(function (result) {
@@ -571,8 +524,7 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
                 _this3.loading = false;
                 _this3.annotations = [];
 
-                _this3.render(); // this.render(this.data);???
-
+                _this3.render();
               });
             } else {
               this.loading = false;
@@ -586,11 +538,6 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
             this.addEditorTab('Options', optionsEditorCtrl, 2);
             this.addEditorTab('Tooltip', tooltipEditorCtrl, 3);
             this.unitFormats = kbn.getUnitFormats();
-          }
-        }, {
-          key: "paginate",
-          value: function paginate() {
-            this.refresh();
           } // onRender will be called before StatusmapRenderer.onRender.
           // Decide if warning should be displayed over cards.
 

@@ -3,7 +3,7 @@
 System.register([], function (_export, _context) {
   "use strict";
 
-  var Bucket, BucketMatrix;
+  var Bucket, BucketMatrix, pagerChanged, BucketMatrixPager;
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -98,6 +98,7 @@ System.register([], function (_export, _context) {
       function () {
         // buckets for each y label
         // a flag that indicate that buckets has stub values
+        // An array of row labels
         // TODO remove: a transition from CardsData
         function BucketMatrix() {
           _classCallCheck(this, BucketMatrix);
@@ -154,6 +155,149 @@ System.register([], function (_export, _context) {
         }]);
 
         return BucketMatrix;
+      }());
+
+      _export("pagerChanged", pagerChanged = {
+        name: 'statusmap-pager-changed'
+      });
+
+      _export("BucketMatrixPager", BucketMatrixPager =
+      /*#__PURE__*/
+      function () {
+        function BucketMatrixPager() {
+          _classCallCheck(this, BucketMatrixPager);
+
+          _defineProperty(this, "bucketMatrix", void 0);
+
+          _defineProperty(this, "enable", void 0);
+
+          _defineProperty(this, "defaultPageSize", -1);
+
+          _defineProperty(this, "pageSize", -1);
+
+          _defineProperty(this, "currentPage", 0);
+
+          var m = new BucketMatrix();
+          this.bucketMatrix = m;
+        } // An array of row labels for current page.
+
+
+        _createClass(BucketMatrixPager, [{
+          key: "targets",
+          value: function targets() {
+            if (!this.enable) {
+              return this.bucketMatrix.targets;
+            }
+
+            return this.bucketMatrix.targets.slice(this.pageSize * this.currentPage, this.pageSize * (this.currentPage + 1));
+          }
+        }, {
+          key: "buckets",
+          value: function buckets() {
+            if (!this.enable) {
+              return this.bucketMatrix.buckets;
+            }
+
+            var buckets = {};
+            var me = this;
+            this.targets().map(function (rowLabel) {
+              buckets[rowLabel] = me.bucketMatrix.buckets[rowLabel];
+            });
+            return buckets;
+          }
+        }, {
+          key: "setEnable",
+          value: function setEnable(enable) {
+            this.enable = enable;
+          }
+        }, {
+          key: "setCurrent",
+          value: function setCurrent(num) {
+            this.currentPage = num;
+          }
+        }, {
+          key: "setDefaultPageSize",
+          value: function setDefaultPageSize(num) {
+            this.defaultPageSize = num;
+          }
+        }, {
+          key: "setPageSize",
+          value: function setPageSize(num) {
+            this.pageSize = num;
+          }
+        }, {
+          key: "pages",
+          value: function pages() {
+            return Math.ceil(this.totalRows() / this.pageSize);
+          }
+        }, {
+          key: "totalRows",
+          value: function totalRows() {
+            return this.bucketMatrix.targets.length;
+          }
+        }, {
+          key: "pageStartRow",
+          value: function pageStartRow() {
+            if (!this.enable) {
+              return 1;
+            }
+
+            return this.pageSize * this.currentPage + 1;
+          }
+        }, {
+          key: "pageEndRow",
+          value: function pageEndRow() {
+            if (!this.enable) {
+              return this.totalRows();
+            }
+
+            var last = this.pageSize * (this.currentPage + 1);
+
+            if (last > this.totalRows()) {
+              return this.totalRows();
+            }
+
+            return last;
+          }
+        }, {
+          key: "hasNext",
+          value: function hasNext() {
+            if (!this.enable) {
+              return false;
+            }
+
+            if ((this.currentPage + 1) * this.pageSize >= this.totalRows()) {
+              return false;
+            }
+
+            return true; // currentPage >= ctrl.bucketMatrix.targets.length/ctrl.pageSizeViewer - 1 || ctrl.numberOfPages == 0
+          }
+        }, {
+          key: "hasPrev",
+          value: function hasPrev() {
+            if (!this.enable) {
+              return false;
+            }
+
+            return this.currentPage > 0;
+          }
+        }, {
+          key: "switchToNext",
+          value: function switchToNext() {
+            if (this.hasNext()) {
+              this.currentPage = this.currentPage + 1;
+            }
+          }
+        }, {
+          key: "switchToPrev",
+          value: function switchToPrev() {
+            if (this.hasPrev()) {
+              this.currentPage = this.currentPage - 1;
+            }
+          }
+        }]);
+
+        return BucketMatrixPager;
       }());
     }
   };

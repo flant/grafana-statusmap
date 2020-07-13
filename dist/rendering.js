@@ -5,14 +5,6 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
 
   var _, $, moment, kbn, appEvents, contextSrv, d3, d3ScaleChromatic, StatusmapTooltip, AnnotationTooltip, renderComplete, CoreEvents, PanelEvents, MIN_CARD_SIZE, CARD_H_SPACING, CARD_V_SPACING, CARD_ROUND, DATA_RANGE_WIDING_FACTOR, DEFAULT_X_TICK_SIZE_PX, DEFAULT_Y_TICK_SIZE_PX, X_AXIS_TICK_PADDING, Y_AXIS_TICK_PADDING, MIN_SELECTION_WIDTH, Statusmap, StatusmapRenderer;
 
-  function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
-
-  function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
-
-  function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
-
-  function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
-
   function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
   function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
@@ -161,6 +153,8 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
 
           _defineProperty(this, "bucketMatrix", void 0);
 
+          _defineProperty(this, "bucketMatrixPager", void 0);
+
           _defineProperty(this, "panel", void 0);
 
           _defineProperty(this, "$heatmap", void 0);
@@ -247,9 +241,12 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
               }
 
               if (this.panel.usingPagination) {
-                height -= this.panel.legend.show ? 140 : 10; // bottom padding and space for legend. Change margin in .status-heatmap-color-legend !
+                // TODO  get height of pagination controls.
+                // reserve height for legend and for a row of pagination controls.
+                height -= this.panel.legend.show ? 70 : 40; // bottom padding and space for legend. Change margin in .status-heatmap-color-legend !
               } else {
-                height -= this.panel.legend.show ? 50 : 10; // bottom padding and space for legend. Change margin in .status-heatmap-color-legend !
+                // reserve height for legend
+                height -= this.panel.legend.show ? 32 : 4; // bottom padding and space for legend. Change margin in .status-heatmap-color-legend !
               }
 
               this.$heatmap.css('height', height + 'px');
@@ -317,10 +314,8 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
         }, {
           key: "getYScale",
           value: function getYScale(ticks) {
-            var range = []; //let step = this.chartHeight / ticks.length;
-
-            console.log('GETYSCALE - RENDERING', this.ctrl.getPaginationSize());
-            var step = this.chartHeight / this.ctrl.getPaginationSize(); // svg has y=0 on the top, so top card should have a minimal value in range
+            var range = [];
+            var step = this.chartHeight / ticks.length; // svg has y=0 on the top, so top card should have a minimal value in range
 
             range.push(step);
 
@@ -334,10 +329,8 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
         }, {
           key: "getYAxisScale",
           value: function getYAxisScale(ticks) {
-            var range = []; //let step = this.chartHeight / ticks.length;
-
-            console.log('GETYAXISSCALE - RENDERING', this.ctrl.getPaginationSize());
-            var step = this.chartHeight / this.ctrl.getPaginationSize(); // svg has y=0 on the top, so top tick should have a minimal value in range
+            var range = [];
+            var step = this.chartHeight / ticks.length; // svg has y=0 on the top, so top tick should have a minimal value in range
 
             range.push(this.yOffset);
 
@@ -350,21 +343,7 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
         }, {
           key: "addYAxis",
           value: function addYAxis() {
-            var ticks;
-
-            if (this.ctrl.ticksWhenPaginating !== undefined && this.ctrl.panel.usingPagination) {
-              ticks = _.uniq(_.map(this.ctrl.ticksWhenPaginating));
-            } else {
-              ticks = this.bucketMatrix.targets; //ticks = _.uniq(_.map(this.data, d => d.target));
-            } // // Set default Y min and max if no data
-            // if (_.isEmpty(this.data)) {
-            //   ticks = [''];
-            // }
-            //
-            // // TODO
-            // // New version!
-            // let ticks = this.bucketMatrix.targets;
-
+            var ticks = this.bucketMatrixPager.targets(); // TODO move sorting into bucketMatrixPager.
 
             if (this.panel.yAxisSort == 'a → z') {
               ticks.sort(function (a, b) {
@@ -454,15 +433,8 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
 
             this.yGridSize = this.chartHeight;
 
-            if (this.ctrl.panel.usingPagination) {
-              // Pagination mode overrides count of rows.
-              //this.yGridSize = Math.floor(this.chartHeight / this.ctrl.ticksWhenPaginating.length);
-              console.log('addHeatmapCanvas - rendering', this.ctrl.getPaginationSize());
-              this.yGridSize = Math.floor(this.chartHeight / this.ctrl.getPaginationSize());
-            } else {
-              if (this.bucketMatrix.targets.length > 0) {
-                this.yGridSize = Math.floor(this.chartHeight / this.bucketMatrix.targets.length);
-              }
+            if (this.bucketMatrixPager.targets().length > 0) {
+              this.yGridSize = Math.floor(this.chartHeight / this.bucketMatrixPager.targets().length);
             }
 
             this.cardHeight = this.yGridSize ? this.yGridSize - this.cardVSpacing : 0;
@@ -499,7 +471,7 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
 
             this.setOpacityScale(maxValue); // Draw cards from buckets.
 
-            this.heatmap.selectAll(".statusmap-cards-row").data(this.bucketMatrix.targets).enter().selectAll(".statustmap-card").data(function (target) {
+            this.heatmap.selectAll(".statusmap-cards-row").data(this.bucketMatrixPager.targets()).enter().selectAll(".statustmap-card").data(function (target) {
               return _this.bucketMatrix.buckets[target];
             }).enter().append("rect").attr("cardId", function (b) {
               return b.id;
@@ -878,64 +850,10 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
             this.panel = this.ctrl.panel;
             this.timeRange = this.ctrl.range;
             this.bucketMatrix = this.ctrl.bucketMatrix;
+            this.bucketMatrixPager = this.ctrl.bucketMatrixPager;
 
             if (!this.bucketMatrix || !this.setElementHeight()) {
               return;
-            } else {
-              // TODO pagination!
-              this.ctrl.cardsDataComplete = this.ctrl.bucketMatrix.buckets;
-
-              if (this.ctrl.panel.usingPagination) {
-                if (!this.bucketMatrix.targets) {
-                  return;
-                }
-
-                this.ctrl.setFirstPageElement(this.ctrl.getCurrentPage() * this.ctrl.getPaginationSize() + 1);
-                var elems = this.ctrl.getTotalElements();
-                console.log('total elems in add heatmap canvas', elems);
-
-                if (elems < this.ctrl.getFirstPageElement()) {
-                  this.ctrl.setCurrentPage(0);
-                  this.render();
-                }
-
-                if (this.ctrl.getPaginationSize() >= this.ctrl.getTotalElements()) {
-                  this.ctrl.setLastPageElement(this.ctrl.getTotalElements());
-                } else {
-                  if (this.ctrl.getCurrentPage() + 1 === this.ctrl.getNumberOfPages() && this.ctrl.getCurrentPage() > 0) {
-                    this.ctrl.setLastPageElement(this.ctrl.getTotalElements());
-                  } else {
-                    this.ctrl.setLastPageElement(this.ctrl.getCurrentPage() * this.ctrl.getPaginationSize() + this.ctrl.getPaginationSize());
-                  }
-                }
-
-                var cardsList = this.ctrl.bucketMatrix.targets.slice(this.ctrl.getPaginationSize() * this.ctrl.getCurrentPage(), this.ctrl.getPaginationSize() * this.ctrl.getCurrentPage() + this.ctrl.getPaginationSize());
-                var cardsToShow = [];
-                var labelsToShow = []; // Rewrite for bucket matrix.
-
-                for (var i = 0; i < this.cardsData.cards.length; i++) {
-                  var card = this.cardsData.cards[i];
-
-                  for (var j = 0; j < cardsList.length; j++) {
-                    var value = cardsList[j];
-
-                    if (card.y === value) {
-                      cardsToShow.push(card);
-                      labelsToShow.push(value);
-                    }
-                  }
-                }
-
-                var labelsToShowClean = _toConsumableArray(new Set(labelsToShow));
-
-                this.cardsData.cards = cardsToShow.slice();
-                this.ctrl.ticksWhenPaginating = labelsToShowClean;
-                cardsToShow = undefined;
-              } else {
-                var pageSize = this.ctrl.bucketMatrix.targets.length;
-                this.ctrl.getPaginationSize(pageSize);
-                this.ctrl.ticksWhenPaginating = undefined;
-              }
             } // Draw default axes and return if no data
 
 
@@ -950,8 +868,7 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
             this.scope.xAxisHeight = this.xAxisHeight;
             this.scope.chartHeight = this.chartHeight;
             this.scope.chartWidth = this.chartWidth;
-            this.scope.chartTop = this.chartTop; // TODO pagination. Why this needed?
-            //this.ctrl.cardsData.cards = this.ctrl.cardsDataComplete.slice();
+            this.scope.chartTop = this.chartTop;
           }
         }, {
           key: "_renderAnnotations",

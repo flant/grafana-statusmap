@@ -16,7 +16,7 @@ import {loadPluginCss} from 'app/plugins/sdk';
 import { MetricsPanelCtrl } from 'app/plugins/sdk';
 import { AnnotationsSrv } from 'app/features/annotations/annotations_srv';
 import { CoreEvents, PanelEvents } from './libs/grafana/events/index';
-import { Bucket, BucketMatrix } from './statusmap_data';
+import {Bucket, BucketMatrix, BucketMatrixPager } from './statusmap_data';
 import rendering from './rendering';
 import { Polygrafill } from './libs/polygrafill/index';
 
@@ -70,6 +70,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
   data: any;
   bucketMatrix: BucketMatrix;
+  bucketMatrixPager: BucketMatrixPager;
 
   graph: any;
   discreteHelper: ColorModeDiscrete;
@@ -77,10 +78,6 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   colorModes: any = [];
   colorSchemes: any = [];
   unitFormats: any;
-
-  cardsDataComplete: any;
-  cardsDataLabelsComplete: any;
-  ticksWhenPaginating: [];
 
   dataWarnings: {[warningId: string]: {title: string, tip: string}} = {};
   multipleValues: boolean;
@@ -92,12 +89,8 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   annotations: object[] = [];
   annotationsPromise: any;
 
+  // TODO remove this transient variable: use ng-model-options="{ getterSetter: true }"
   pageSizeViewer: number = 15;
-  currentPage: number = 0;
-  numberOfPages: number = 1;
-  totalElements: number = 0;
-  firstPageElement: number = 1;
-  lastPageElement: number = 5;
 
   panelDefaults: any = {
     // datasource name, null = default datasource
@@ -144,10 +137,10 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     useMax: true,
 
     seriesFilterIndex: -1,
+
+    // Pagination options
     usingPagination: false,
-    pageSize: 15,
-    allowAllElements: false,
-    availableValues: []
+    pageSize: 15
   };
 
   /** @ngInject */
@@ -163,10 +156,14 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     migratePanelConfig(this.panel);
     _.defaultsDeep(this.panel, this.panelDefaults);
 
-    if (this.panel.usingPagination) {
-      this.setPaginationSize(this.panel.pageSize);
-      this.setCurrentPage(0);
-    }
+    this.bucketMatrix = new BucketMatrix();
+
+    // Create pager for bucketMatrix and restore page size.
+    this.bucketMatrixPager = new BucketMatrixPager();
+    this.bucketMatrixPager.setEnable(this.panel.usingPagination);
+    this.bucketMatrixPager.setDefaultPageSize(this.panel.pageSize);
+    this.bucketMatrixPager.setPageSize(this.panel.pageSize);
+    $scope.pager = this.bucketMatrixPager;
 
     this.opacityScales = opacityScales;
     this.colorModes = colorModes;
@@ -220,66 +217,35 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   }
 
   changeDefaultPaginationSize(defaultPageSize: number): void {
+    this.bucketMatrixPager.setDefaultPageSize(defaultPageSize);
+    this.bucketMatrixPager.setPageSize(defaultPageSize);
     this.pageSizeViewer = defaultPageSize;
 
     this.render();
     this.refresh();
   }
 
-  changePaginationSize(): void {
+  onChangePageSize(): void {
     if (this.pageSizeViewer <= 0) {
-      this.pageSizeViewer = 1;
+      this.pageSizeViewer = this.bucketMatrixPager.defaultPageSize;
     }
-
-    this.currentPage = 0;
+    this.bucketMatrixPager.setPageSize(this.pageSizeViewer);
+    this.bucketMatrixPager.setCurrent(0);
 
     this.render();
     this.refresh();
   }
 
-  getPaginationSize(): number {
-    return this.pageSizeViewer;
+  onPrevPage(): void {
+    this.bucketMatrixPager.switchToPrev();
+    this.render();
   }
 
-  setPaginationSize(pageSize: number): void {
-    this.pageSizeViewer = pageSize;
+  onNextPage(): void {
+    this.bucketMatrixPager.switchToNext();
+    this.render();
   }
 
-  getCurrentPage(): number {
-    return this.currentPage;
-  }
-
-  setCurrentPage(currentPage: number): void {
-    this.currentPage = currentPage;
-  }
-
-  getNumberOfPages(): number {
-    return this.numberOfPages;
-  }
-
-  getTotalElements(): number {
-    return this.totalElements;
-  }
-
-  setTotalElements(totalElements: number): void {
-    this.totalElements = totalElements;
-  }
-
-  getFirstPageElement(): number {
-    return this.firstPageElement;
-  }
-
-  setFirstPageElement(firstPageElement: number): void {
-    this.firstPageElement = firstPageElement;
-  }
-
-  getLastPageElement(): number {
-    return this.lastPageElement;
-  }
-
-  setLastPageElement(lastPageElement: number): void {
-    this.lastPageElement = lastPageElement;
-  }
 
   // getChartWidth returns an approximation of chart canvas width or
   // a saved value calculated during a render.
@@ -402,15 +368,16 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     if (!this.intervalMs) {
       this.calculateInterval();
     }
-    this.bucketMatrix = this.convertDataToBuckets(dataList, this.range.from.valueOf(), this.range.to.valueOf(), this.intervalMs, true);
-    this.noDatapoints = this.bucketMatrix.noDatapoints;
 
-    if (this.panel.usingPagination && this.cardsData.targets) {
-      this.numberOfPages = Math.ceil(this.cardsData.targets.length/this.pageSizeViewer);
-      this.totalElements = this.cardsData.targets.length;
-    } else {
-      this.setPaginationSize(this.cardsData.targets.length);
+    let newBucketMatrix = this.convertDataToBuckets(dataList, this.range.from.valueOf(), this.range.to.valueOf(), this.intervalMs, true);
+
+    this.bucketMatrix = newBucketMatrix;
+    this.bucketMatrixPager.bucketMatrix = newBucketMatrix;
+    if (newBucketMatrix.targets.length !== this.bucketMatrix.targets.length) {
+      this.bucketMatrixPager.setCurrent(0);
     }
+
+    this.noDatapoints = this.bucketMatrix.noDatapoints;
 
     if (this.annotationsPromise) {
       this.annotationsPromise.then(
@@ -427,7 +394,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
         () => {
           this.loading = false;
           this.annotations = [];
-          this.render(); // this.render(this.data);???
+          this.render();
         }
       );
     } else {
@@ -441,10 +408,6 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.addEditorTab('Options', optionsEditorCtrl, 2);
     this.addEditorTab('Tooltip', tooltipEditorCtrl, 3);
     this.unitFormats = kbn.getUnitFormats();
-  }
-
-  paginate() {
-    this.refresh();
   }
 
   // onRender will be called before StatusmapRenderer.onRender.
