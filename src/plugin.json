@@ -9,7 +9,7 @@
       "name": "Flant JSC",
       "url": "http://flant.com"
     },
-    "keywords": ["status", "heatmap", "panel"],
+    "keywords": ["status", "statusmap", "heatmap", "panel"],
     "logos": {
       "small": "img/logo.svg",
       "large": "img/logo.svg"
@@ -24,12 +24,12 @@
       {"name": "Color mapping", "path": "img/color-mapping.png"},
       {"name": "Queries example", "path": "img/queries-example.png"}
     ],
-    "version": "0.2.0",
-    "updated": "2019-12-03"
+    "version": "0.3.0",
+    "updated": "2020-07-14"
   },
 
   "dependencies": {
-    "grafanaVersion": "5.1.x",
+    "grafanaVersion": "5.4.x",
     "plugins": [ ]
   }
 }

@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.3.0
+
+- Tooltip freeze on click
+- Show URLs in tooltip
+- Pagination controls
+- Fix tooltip and null buckets
+- Fix display for 6.7+, 7.0+
+
 ## v0.2.0
 
 - Migrate code base to typescript

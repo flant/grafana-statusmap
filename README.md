@@ -26,9 +26,9 @@
   - InfluxDB
   - Mysql
 * Tested with Grafana:
-  - 5.1.3
   - 5.4.3
-  - 6.0.0
+  - 6.3, 6.6, 6.7
+  - 7.0
 
 ## Installation
 
