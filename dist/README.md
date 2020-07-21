@@ -28,7 +28,7 @@
 * Tested with Grafana:
   - 5.4.3
   - 6.3, 6.6, 6.7
-  - 7.0
+  - 7.0, 7.1
 
 ## Installation
 

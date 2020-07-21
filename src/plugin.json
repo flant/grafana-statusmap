@@ -24,8 +24,8 @@
       {"name": "Color mapping", "path": "img/color-mapping.png"},
       {"name": "Queries example", "path": "img/queries-example.png"}
     ],
-    "version": "0.3.0",
-    "updated": "2020-07-14"
+    "version": "0.3.1",
+    "updated": "2020-07-21"
   },
 
   "dependencies": {

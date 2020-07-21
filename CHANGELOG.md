@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.3.1
+
+- Fix to work in Grafana 7.1.0
+
 ## v0.3.0
 
 - Tooltip freeze on click
