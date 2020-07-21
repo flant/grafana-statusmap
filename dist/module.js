@@ -163,21 +163,20 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
       _export("PanelCtrl", _export("StatusHeatmapCtrl", StatusHeatmapCtrl =
       /*#__PURE__*/
       function (_MetricsPanelCtrl) {
-        StatusHeatmapCtrl.$inject = ["$scope", "$injector", "timeSrv", "annotationsSrv", "$window", "datasourceSrv", "variableSrv", "templateSrv"];
+        StatusHeatmapCtrl.$inject = ["$scope", "$injector", "annotationsSrv"];
 
         _inherits(StatusHeatmapCtrl, _MetricsPanelCtrl);
 
         // TODO remove this transient variable: use ng-model-options="{ getterSetter: true }"
 
         /** @ngInject */
-        function StatusHeatmapCtrl($scope, $injector, timeSrv, annotationsSrv, $window, datasourceSrv, variableSrv, templateSrv) {
+        function StatusHeatmapCtrl($scope, $injector, annotationsSrv) {
           var _this;
 
           _classCallCheck(this, StatusHeatmapCtrl);
 
           _this = _possibleConstructorReturn(this, _getPrototypeOf(StatusHeatmapCtrl).call(this, $scope, $injector));
           _this.annotationsSrv = annotationsSrv;
-          _this.variableSrv = variableSrv;
 
           _defineProperty(_assertThisInitialized(_this), "data", void 0);
 
@@ -312,7 +311,6 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
           };
           _this.annotations = [];
           _this.annotationsSrv = annotationsSrv;
-          _this.timeSrv = timeSrv;
 
           _this.events.on(PanelEvents.render, _this.onRender.bind(_assertThisInitialized(_this)));
 
