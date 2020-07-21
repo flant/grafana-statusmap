@@ -144,7 +144,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   };
 
   /** @ngInject */
-  constructor($scope: any, $injector: auto.IInjectorService, timeSrv, private annotationsSrv: AnnotationsSrv, $window, datasourceSrv, public variableSrv: any, templateSrv) {
+  constructor($scope: any, $injector: auto.IInjectorService, private annotationsSrv: AnnotationsSrv) {
     super($scope, $injector);
 
     if(!Polygrafill.hasAppEventCompatibleEmitter(this.events)){
@@ -196,8 +196,6 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
     this.annotations = [];
     this.annotationsSrv = annotationsSrv;
-
-    this.timeSrv = timeSrv;
 
     this.events.on(PanelEvents.render, this.onRender.bind(this));
     this.events.on(PanelEvents.dataReceived, this.onDataReceived.bind(this));
