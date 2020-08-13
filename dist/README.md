@@ -184,7 +184,7 @@ __Rows sort__ can be used to sort labels on Y axis. Metrics — sort y labels a
 
 #### Pagination
 
-![Pagination controls](src/img/pagination-graph.png)
+![Pagination controls](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/pagination-graph.png)
 
 __Enable pagination__ toggles pagination controls on graph.
 
@@ -192,7 +192,7 @@ __Rows per page__ a number of rows to display on graph.
 
 #### Tooltip
 
-![Tooltip in frozen state](src/img/tooltip-frozen.png)
+![Tooltip in frozen state](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/tooltip-frozen.png)
 
 __Show tooltip__ toggles tooltip display on mouse over buckets.
 
@@ -204,7 +204,7 @@ __Items__ is a list of definitions to display URLs in tooltip.
 
 Each URL has a template, icon, label and formating options: lowercase and date format for variables.
 
-![Tooltip items editor](src/img/tooltip-editor.png)
+![Tooltip items editor](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/tooltip-editor.png)
 
 ## Development
 
@@ -215,7 +215,7 @@ the directory containing Statusmap plugin):
 docker run --rm -it -v $PWD:/var/lib/grafana/plugins/flant-statusmap-panel \
            -p 3000:3000 --name grafana.docker \
            --env=GF_USERS_DEFAULT_THEME=light \
-           grafana/grafana:5.1.3
+           grafana/grafana:7.1.3
 ```
 
 This will expose local plugin from your machine to Grafana container. Now run `grunt` to compile
