@@ -24,11 +24,12 @@
       {"name": "Color mapping", "path": "img/color-mapping.png"},
       {"name": "Queries example", "path": "img/queries-example.png"}
     ],
-    "version": "0.3.1",
-    "updated": "2020-07-21"
+    "version": "0.3.2",
+    "updated": "2020-08-13"
   },
 
   "dependencies": {
+    "grafanaDependency": ">=5.4.3",
     "grafanaVersion": "5.4.x",
     "plugins": [ ]
   }
