@@ -63,7 +63,7 @@ loadPluginCss({
   light: 'plugins/flant-statusmap-panel/css/statusmap.light.css'
 });
 
-export var renderComplete:any = {name:'statusmap-render-complete'}; // eventFactory('statusmap-render-complete');
+export var renderComplete:any = {name:'statusmap-render-complete'};
 
 class StatusHeatmapCtrl extends MetricsPanelCtrl {
   static templateUrl = 'module.html';
@@ -150,7 +150,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     if(!Polygrafill.hasAppEventCompatibleEmitter(this.events)){
       CoreEvents.fallbackToStringEvents();
       PanelEvents.fallbackToStringEvents();
-      renderComplete = renderComplete.name;
+      renderComplete = 'statusmap-render-complete';
     }
 
     migratePanelConfig(this.panel);

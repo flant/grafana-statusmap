@@ -157,8 +157,7 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
 
       _export("renderComplete", renderComplete = {
         name: 'statusmap-render-complete'
-      }); // eventFactory('statusmap-render-complete');
-
+      });
 
       _export("PanelCtrl", _export("StatusHeatmapCtrl", StatusHeatmapCtrl =
       /*#__PURE__*/
@@ -267,7 +266,7 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
             CoreEvents.fallbackToStringEvents();
             PanelEvents.fallbackToStringEvents();
 
-            _export("renderComplete", renderComplete = renderComplete.name);
+            _export("renderComplete", renderComplete = 'statusmap-render-complete');
           }
 
           migratePanelConfig(_this.panel);
