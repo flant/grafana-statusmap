@@ -441,7 +441,7 @@ export class StatusmapRenderer {
         (colorScheme.invert === 'dark' && !contextSrv.user.lightTheme);
 
     if (maxValue == minValue)
-      maxValue = minValue + 1;
+      minValue = maxValue - 1;
 
     let start = colorScaleInverted ? maxValue : minValue;
     let end = colorScaleInverted ? minValue : maxValue;
