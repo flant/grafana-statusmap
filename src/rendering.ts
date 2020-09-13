@@ -368,6 +368,10 @@ export class StatusmapRenderer {
     let minValue = this.panel.color.min || this.bucketMatrix.minValue;
 
     if (this.panel.color.mode !== 'discrete') {
+      if (this.panel.color.restrict) {
+        maxValue =  this.panel.color.max;
+        minValue =  this.panel.color.min;
+      }
       this.colorScale = this.getColorScale(maxValue, minValue);
     }
     this.setOpacityScale(maxValue);

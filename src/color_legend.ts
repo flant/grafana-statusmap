@@ -70,6 +70,10 @@ coreModule.directive('statusHeatmapLegend', function() {
           let rangeTo = ctrl.bucketMatrix.maxValue;
           let maxValue = panel.color.max || rangeTo;
           let minValue = panel.color.min || rangeFrom;
+          if (panel.color.restrict) {
+            minValue = panel.color.min
+            maxValue = panel.color.max
+          }
 
           if (ctrl.bucketMatrix.noDatapoints) {
             if (!panel.color.max) {
