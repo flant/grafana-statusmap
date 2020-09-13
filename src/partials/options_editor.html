@@ -127,12 +127,20 @@
   <div class="section gf-form-group" ng-show="ctrl.panel.color.mode !== 'discrete'">
     <h5 class="section-heading">Color scale</h5>
     <div class="gf-form">
-      <label class="gf-form-label width-8">Min value</label>
+      <label class="gf-form-label width-5">Min value</label>
       <input type="number" ng-model="ctrl.panel.color.min" class="gf-form-input width-5" placeholder="auto" data-placement="right" bs-tooltip="''" ng-change="ctrl.refresh()" ng-model-onblur>
+      <gf-form-switch class="gf-form" label-class="width-5"
+        label="Restrict" 
+        tooltip="'Color interpolation is restricted to start from Min Value when checked'" 
+        checked="ctrl.panel.color.restrictMin" on-change="ctrl.render()">
     </div>
     <div class="gf-form">
-      <label class="gf-form-label width-8">Max value</label>
+      <label class="gf-form-label width-5">Max value</label>
       <input type="number" ng-model="ctrl.panel.color.max" class="gf-form-input width-5" placeholder="auto" data-placement="right" bs-tooltip="''" ng-change="ctrl.refresh()" ng-model-onblur>
+      <gf-form-switch class="gf-form" label-class="width-5" 
+        label="Restrict"
+        tooltip="'Color interpolation is restricted to end at Max Value when checked'" 
+        checked="ctrl.panel.color.restrictMax" on-change="ctrl.render()">
     </div>
   </div>
 
