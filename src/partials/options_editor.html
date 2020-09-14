@@ -134,15 +134,6 @@
       <label class="gf-form-label width-8">Max value</label>
       <input type="number" ng-model="ctrl.panel.color.max" class="gf-form-input width-5" placeholder="auto" data-placement="right" bs-tooltip="''" ng-change="ctrl.refresh()" ng-model-onblur>
     </div>
-    <div>
-    <gf-form-switch class="gf-form" label-class="width-8"
-      label="Restrict" 
-      tooltip="'Color scaling is restricted to Min-Max Value range when checked'" 
-      checked="ctrl.panel.color.restrict" on-change="ctrl.render()">
-    </div>
-    <div class="gf-form" ng-show="ctrl.panel.color.restrict">
-      Color scale will be restricted to Min and Max values. They cannot be empty<br/>
-    </div>
   </div>
 
   <div class="section gf-form-group">
