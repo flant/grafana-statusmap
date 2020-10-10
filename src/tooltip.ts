@@ -154,12 +154,12 @@ export class StatusmapTooltip {
     } else {
       if (values.length === 1) {
         tooltipHtml += `<div> 
-      name: <b>${name}</b> <br>
+      name: <b>${yLabel}</b> <br>
       value: <b>${value}</b> <br>
       </div>`;
       } else {
         tooltipHtml += `<div>
-      name: <b>${name}</b> <br>
+      name: <b>${yLabel}</b> <br>
       values:
       <ul>
         ${_.join(_.map(values, v => `<li>${v}</li>`), "")}
