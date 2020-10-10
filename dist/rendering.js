@@ -462,8 +462,8 @@ System.register(["lodash", "jquery", "moment", "app/core/utils/kbn", "app/core/c
           value: function addStatusmap() {
             var _this = this;
 
-            var maxValue = this.panel.color.max || this.bucketMatrix.maxValue;
-            var minValue = this.panel.color.min || this.bucketMatrix.minValue;
+            var maxValue = this.panel.color.max != null ? this.panel.color.max : this.bucketMatrix.maxValue;
+            var minValue = this.panel.color.min != null ? this.panel.color.min : this.bucketMatrix.minValue;
 
             if (this.panel.color.mode !== 'discrete') {
               this.colorScale = this.getColorScale(maxValue, minValue);

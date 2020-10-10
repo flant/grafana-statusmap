@@ -366,17 +366,17 @@ System.register(["lodash", "jquery", "d3", "./libs/d3-scale-chromatic/index", "a
               if (ctrl.bucketMatrix) {
                 var rangeFrom = ctrl.bucketMatrix.minValue;
                 var rangeTo = ctrl.bucketMatrix.maxValue;
-                var maxValue = panel.color.max || rangeTo;
-                var minValue = panel.color.min || rangeFrom;
+                var maxValue = panel.color.max != null ? panel.color.max : rangeTo;
+                var minValue = panel.color.min != null ? panel.color.min : rangeFrom;
 
                 if (ctrl.bucketMatrix.noDatapoints) {
-                  if (!panel.color.max) {
+                  if (panel.color.max != null) {
                     rangeTo = maxValue = 100;
                   } else {
                     rangeTo = 100;
                   }
 
-                  if (!panel.color.min) {
+                  if (panel.color.min != null) {
                     rangeFrom = minValue = 0;
                   } else {
                     rangeFrom = 0;
