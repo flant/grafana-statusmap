@@ -364,8 +364,8 @@ export class StatusmapRenderer {
   }
 
   addStatusmap():void {
-    let maxValue = this.panel.color.max || this.bucketMatrix.maxValue;
-    let minValue = this.panel.color.min || this.bucketMatrix.minValue;
+    let maxValue = this.panel.color.max != null ? this.panel.color.max : this.bucketMatrix.maxValue;
+    let minValue = this.panel.color.min != null ? this.panel.color.min : this.bucketMatrix.minValue;
 
     if (this.panel.color.mode !== 'discrete') {
       this.colorScale = this.getColorScale(maxValue, minValue);
