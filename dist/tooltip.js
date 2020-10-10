@@ -186,9 +186,9 @@ System.register(["d3", "jquery", "lodash"], function (_export, _context) {
               }), ""), "\n        </ul>\n      </div>");
             } else {
               if (values.length === 1) {
-                tooltipHtml += "<div> \n      name: <b>".concat(name, "</b> <br>\n      value: <b>").concat(value, "</b> <br>\n      </div>");
+                tooltipHtml += "<div> \n      name: <b>".concat(yLabel, "</b> <br>\n      value: <b>").concat(value, "</b> <br>\n      </div>");
               } else {
-                tooltipHtml += "<div>\n      name: <b>".concat(name, "</b> <br>\n      values:\n      <ul>\n        ").concat(_.join(_.map(values, function (v) {
+                tooltipHtml += "<div>\n      name: <b>".concat(yLabel, "</b> <br>\n      values:\n      <ul>\n        ").concat(_.join(_.map(values, function (v) {
                   return "<li>".concat(v, "</li>");
                 }), ""), "\n      </ul>\n      </div>");
               }
