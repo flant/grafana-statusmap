@@ -72,12 +72,12 @@ coreModule.directive('statusHeatmapLegend', function() {
           let minValue = panel.color.min != null ? panel.color.min : rangeFrom;
 
           if (ctrl.bucketMatrix.noDatapoints) {
-            if (!panel.color.max) {
+            if (panel.color.max != null) {
               rangeTo = maxValue = 100;
             } else {
               rangeTo = 100;
             }
-            if (!panel.color.min) {
+            if (panel.color.min != null) {
               rangeFrom = minValue = 0;
             } else {
               rangeFrom = 0;
