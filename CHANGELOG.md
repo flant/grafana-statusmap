@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.3.4
+
+- Fix to work in Grafana 7.2.0,7.2.1
+- Fix 'name' in tooltip for opacity and gradient modes
+- Fix color scale for opacity and gradient modes
+
+## v0.3.3
+
+- Fix fallback to string events for older versions of Grafana
+
+## v0.3.2
+
+- Fix plugin metadata for Grafana repository
+
 ## v0.3.1
 
 - Fix to work in Grafana 7.1.0
