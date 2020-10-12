@@ -267,6 +267,11 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
             PanelEvents.fallbackToStringEvents();
 
             _export("renderComplete", renderComplete = 'statusmap-render-complete');
+          } // Grafana 7.2 workaround
+
+
+          if (typeof kbn["intervalToMs"] === "function") {
+            kbn.interval_to_ms = kbn.intervalToMs;
           }
 
           migratePanelConfig(_this.panel);
