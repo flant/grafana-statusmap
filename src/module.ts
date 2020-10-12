@@ -153,6 +153,11 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
       renderComplete = 'statusmap-render-complete';
     }
 
+    // Grafana 7.2 workaround
+    if (typeof kbn["intervalToMs"] === "function") {
+      kbn.interval_to_ms = kbn.intervalToMs;
+    }
+
     migratePanelConfig(this.panel);
     _.defaultsDeep(this.panel, this.panelDefaults);
 
