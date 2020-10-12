@@ -1,6 +1,8 @@
-[![Download from Github](https://img.shields.io/github/tag-date/flant/grafana-statusmap.svg?logo=github&label=latest)](https://github.com/flant/grafana-statusmap/releases/latest)
-[![Telegram chat RU](https://img.shields.io/badge/@statusmap_ru-RU-informational.svg?logo=telegram)](https://t.me/statusmap_ru)
-[![Slack chat EN](https://img.shields.io/badge/%23grafana--statusmap-EN-informational.svg?logo=slack)](https://cloud-native.slack.com/messages/CHGSGTAHY)
+<p align="center">
+<a href="https://github.com/flant/grafana-statusmap/releases/latest"><img src="https://img.shields.io/github/tag-date/flant/grafana-statusmap.svg?logo=github&label=latest" alt="Download from Github"/></a>
+<a href="https://community.flant.com/c/grafana-statusmap/8"><img src="https://img.shields.io/discourse/status?server=https%3A%2F%2Fcommunity.flant.com" alt="Discourse forum for discussions"/></a>
+<a href="https://t.me/statusmap_ru"><img src="https://img.shields.io/badge/@statusmap_ru-RU-informational.svg?logo=telegram" alt="Telegram chat RU"/></a>
+</p>
 
 # Statusmap panel for Grafana
 
@@ -26,9 +28,9 @@
   - InfluxDB
   - Mysql
 * Tested with Grafana:
-  - 5.4.3
+  - 7.0, 7.1, 7.2
   - 6.3, 6.6, 6.7
-  - 7.0, 7.1
+  - 5.4.3
 
 ## Installation
 
