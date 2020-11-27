@@ -215,6 +215,9 @@ System.register(["d3", "jquery", "lodash"], function (_export, _context) {
               };
               scopedVars["__y_label"] = {
                 value: yLabel
+              };
+              scopedVars["__y_label_trim"] = {
+                value: yLabel.trim()
               }; // Grafana 7.0 compatible
 
               scopedVars["__url_time_range"] = {
