@@ -184,6 +184,7 @@ export class StatusmapTooltip {
       }
       scopedVars[`__value`] = {value: bucket.value};
       scopedVars[`__y_label`] = {value: yLabel};
+      scopedVars[`__y_label_trim`] = {value: yLabel.trim()};
       // Grafana 7.0 compatible
       scopedVars[`__url_time_range`] = {value: this.panelCtrl.retrieveTimeVar()};
 
