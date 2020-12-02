@@ -112,6 +112,7 @@ export class StatusmapTooltip {
 
     let timestamp = bucket.to;
     let yLabel = bucket.yLabel;
+    let pLabels = bucket.pLabels;
     let value = bucket.value;
     let values = bucket.values;
     // TODO create option for this formatting.
@@ -192,6 +193,11 @@ export class StatusmapTooltip {
       scopedVars[`__bucket_from`] = {value: bucket.from-percentualBucket};
       scopedVars[`__bucket_to`] = {value: bucket.to+percentualBucket};
 
+      //New vars based on partialLabels:
+      for (let i in pLabels) {
+        scopedVars[`__y_label_${i}`] = {value: pLabels[i]};
+      }
+
       for (let item of items) {
         if (_.isEmpty(item.urlTemplate)) {
           item.link = "#";
@@ -219,6 +225,11 @@ export class StatusmapTooltip {
         if (_.isEmpty(item.label)) {
           item.label = _.isEmpty(item.urlTemplate) ? "Empty URL" : _.truncate(item.link);
         }
+      }
+
+      if (this.panel.tooltip.showCustomContent) {
+        let customContent: string = this.panelCtrl.templateSrv.replace(this.panel.tooltip.customContent, scopedVars)
+        tooltipHtml += `<div>${customContent}</div>`
       }
 
       tooltipHtml += _.join(_.map(items, v => `

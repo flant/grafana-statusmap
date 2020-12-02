@@ -245,11 +245,18 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
               show: true,
               freezeOnClick: true,
               showItems: false,
-              items: [] // see tooltip_editor.ts
-
+              items: [],
+              // see tooltip_editor.ts
+              showExtraInfo: false,
+              extraInfo: ""
             },
             legend: {
               show: true
+            },
+            yLabel: {
+              usingSplitLabel: false,
+              delimiter: "",
+              labelTemplate: ""
             },
             // how null points should be handled
             nullPointMode: 'as empty',
@@ -665,14 +672,39 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
               return bucketMatrix;
             }
 
-            var targetIndex = {}; // Group indicies of elements in data by target (y label).
+            var targetIndex = {};
+            var targetPartials = {}; // Group indicies of elements in data by target (y label).
             // lodash version:
             //_.map(data, (d, i) => {
             //  targetIndex[d.target] = _.concat(_.toArray(targetIndex[d.target]), i);
             //});
 
             data.map(function (queryResult, i) {
-              var yLabel = queryResult.target;
+              // Init yLabel as the query target
+              var yLabel = queryResult.target; // Check if there is some labelTemplate configured
+
+              if (_this4.panel.yLabel.usingSplitLabel && _this4.panel.yLabel.delimiter != "") {
+                var pLabels = queryResult.target.split(_this4.panel.yLabel.delimiter); // Load all possible values as scoped vars and load them into targetPartials
+                // to be used on different components as Bucket and BucketMatrix props
+
+                var scopedVars = [];
+                scopedVars["__y_label"] = {
+                  value: yLabel
+                };
+
+                for (var _i in pLabels) {
+                  scopedVars["__y_label_".concat(_i)] = {
+                    value: pLabels[_i]
+                  };
+                }
+
+                if (_this4.panel.yLabel.labelTemplate != "") {
+                  yLabel = _this4.templateSrv.replace(_this4.panel.yLabel.labelTemplate, scopedVars);
+                }
+
+                targetPartials[yLabel] = pLabels;
+              } //reset if it already exists
+
 
               if (!targetIndex.hasOwnProperty(yLabel)) {
                 targetIndex[yLabel] = [];
@@ -757,6 +789,7 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
               while (bucketFrom >= 0) {
                 var b = new Bucket();
                 b.yLabel = target;
+                b.pLabels = targetPartials[target];
                 b.relTo = lastTs - idx * intervalMs;
                 b.relFrom = lastTs - (idx + 1) * intervalMs;
                 b.to = b.relTo + from;
@@ -818,6 +851,7 @@ System.register(["lodash", "./color_legend", "./options_editor", "./tooltip_edit
             }); //console.log ("bucketMatrix with values: ", bucketMatrix);
 
             bucketMatrix.targets = targetKeys;
+            bucketMatrix.pLabels = targetPartials;
             return bucketMatrix;
           }
         }]);

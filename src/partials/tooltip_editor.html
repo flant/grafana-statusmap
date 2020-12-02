@@ -18,15 +18,51 @@
   </div>
 
   <div class="section gf-form-group">
+    <h5 class="section-heading">Custom content</h5>
+    <gf-form-switch class="gf-form" label-class="width-14"
+    label="Show custom content"
+    tooltip="'Show custom content on tooltip'"
+    checked="ctrl.panel.tooltip.showCustomContent" on-change="ctrl.render()">
+    </gf-form-switch>
+    <div class="gf-form" ng-if="ctrl.panel.tooltip.showCustomContent">
+      <label class="gf-form-label width-10">
+        Template
+        <info-popover mode="left-normal">
+          <p>Set custom content that will appear on the tooltip</p>
+          <span>
+            Use special variables:
+            <br>
+            <em>${__y_label}</em> name of the time series (alias or legend in the query editor).
+            <br>
+            <em>${__y_label_trim}</em> trimmed name of the time series (alias or legend in the query editor).
+            <br>
+            <em>${__y_label_N}</em> partial name of the time series (alias or legend in the query editor), only valid when custom y-label is enabled.
+            <br>
+            <em>${__url_time_range}</em> refers to graph range in the form of 'from=...&to=...'.
+            <br>
+            <em>${__value}</em> refers to current bucket value or max value if multiple values mode is on.
+            <br>
+            <em>${__value_N}</em> refers to Nth value in current bucket. Value indexes are started from 0. For instance,
+            <em>${__value_1}</em> refers to second value.
+            <br>
+            <em>${__value_date}</em> refers to __value formatted as date.
+            <em>${__value_N_date}</em> refers to Nth value in current bucket formatted as date.
+          </span>
+        </info-popover>
+      </label>
+      <textarea type="text" class="gf-form-input" placeholder="" data-placement="top" cols="100"
+      bs-tooltip="'Extra Tooltip info'" ng-model="ctrl.panel.tooltip.customContent" ng-change="ctrl.refresh()" ng-model-onblur> </textarea>
+    </div>
+  </div>
+  <br>
+
+  <div class="section gf-form-group">
     <h5 class="section-heading">Items</h5>
 
     <div class="gf-form" ng-show="ctrl.panel.tooltip.items.length == 0">
       <label class="gf-form-label width-2">0</label>
       <label class="gf-form-input width-30">No items defined.</label>
     </div>
-  </div>
-</div>  
-  
 <div>
   <div ng-repeat="item in ctrl.panel.tooltip.items">
     <div class="gf-form gf-form--grow">
@@ -38,6 +74,10 @@
               Use special variables:
               <br>
               <em>${__y_label}</em> name of the time series (alias or legend in the query editor).
+              <br>
+              <em>${__y_label_trim}</em> trimmed name of the time series (alias or legend in the query editor).
+              <br>
+              <em>${__y_label_N}</em> partial name of the time series (alias or legend in the query editor), only valid when custom y-label is enabled.
               <br>
               <em>${__url_time_range}</em> refers to graph range in the form of 'from=...&to=...'.
               <br>
@@ -117,3 +157,6 @@
     </div>
   </div>
 </div>
+</div>
+
+</div>  
