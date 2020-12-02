@@ -125,10 +125,17 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
       show: true,
       freezeOnClick: true,
       showItems: false,
-      items: [] // see tooltip_editor.ts
+      items: [], // see tooltip_editor.ts
+      showExtraInfo: false,
+      extraInfo: "",
     },
     legend: {
       show: true
+    },
+    yLabel: {
+      usingSplitLabel: false,
+      delimiter: "",
+      labelTemplate: "",
     },
     // how null points should be handled
     nullPointMode: 'as empty',
@@ -526,6 +533,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     }
 
     let targetIndex: {[target: string]: number[]} = {};
+    let targetPartials: {[target: string]: string[]} = {};
 
     // Group indicies of elements in data by target (y label).
 
@@ -535,7 +543,29 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     //});
 
     data.map((queryResult: any, i: number) => {
+      // Init yLabel as the query target
       let yLabel = queryResult.target;
+
+      // Check if there is some labelTemplate configured
+      if (this.panel.yLabel.usingSplitLabel && this.panel.yLabel.delimiter != "" ) {
+        let pLabels = queryResult.target.split(this.panel.yLabel.delimiter);
+
+        // Load all possible values as scoped vars and load them into targetPartials
+        // to be used on different components as Bucket and BucketMatrix props
+        let scopedVars = []
+        scopedVars[`__y_label`] = {value: yLabel}
+        for (let i in pLabels) {
+          scopedVars[`__y_label_${i}`] = {value: pLabels[i]};
+        }
+
+        if (this.panel.yLabel.labelTemplate != "") {
+          yLabel = this.templateSrv.replace(this.panel.yLabel.labelTemplate, scopedVars)
+        }
+
+        targetPartials[yLabel] = pLabels
+      }
+
+      //reset if it already exists
       if (!targetIndex.hasOwnProperty(yLabel)) {
         targetIndex[yLabel] = [];
       }
@@ -618,6 +648,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
       while (bucketFrom >= 0) {
         let b = new Bucket();
         b.yLabel = target;
+        b.pLabels = targetPartials[target]
         b.relTo = lastTs - idx*intervalMs;
         b.relFrom = lastTs - ((idx+1) * intervalMs);
         b.to = b.relTo+from;
@@ -681,6 +712,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     //console.log ("bucketMatrix with values: ", bucketMatrix);
 
     bucketMatrix.targets = targetKeys;
+    bucketMatrix.pLabels = targetPartials;
     return bucketMatrix;
   }
 }

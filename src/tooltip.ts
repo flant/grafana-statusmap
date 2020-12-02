@@ -112,6 +112,7 @@ export class StatusmapTooltip {
 
     let timestamp = bucket.to;
     let yLabel = bucket.yLabel;
+    let pLabels = bucket.pLabels;
     let value = bucket.value;
     let values = bucket.values;
     // TODO create option for this formatting.
@@ -188,6 +189,11 @@ export class StatusmapTooltip {
       // Grafana 7.0 compatible
       scopedVars[`__url_time_range`] = {value: this.panelCtrl.retrieveTimeVar()};
 
+      //New vars based on partialLabels:
+      for (let i in pLabels) {
+        scopedVars[`__y_label_${i}`] = {value: pLabels[i]};
+      }
+
       for (let item of items) {
         if (_.isEmpty(item.urlTemplate)) {
           item.link = "#";
@@ -215,6 +221,11 @@ export class StatusmapTooltip {
         if (_.isEmpty(item.label)) {
           item.label = _.isEmpty(item.urlTemplate) ? "Empty URL" : _.truncate(item.link);
         }
+      }
+
+      if (this.panel.tooltip.showCustomContent) {
+        let customContent: string = this.panelCtrl.templateSrv.replace(this.panel.tooltip.customContent, scopedVars)
+        tooltipHtml += `<div>${customContent}</div>`
       }
 
       tooltipHtml += _.join(_.map(items, v => `

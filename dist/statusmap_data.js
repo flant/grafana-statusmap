@@ -48,6 +48,8 @@ System.register([], function (_export, _context) {
 
           _defineProperty(this, "yLabel", "");
 
+          _defineProperty(this, "pLabels", []);
+
           _defineProperty(this, "x", 0);
 
           _defineProperty(this, "xid", 0);
@@ -116,6 +118,8 @@ System.register([], function (_export, _context) {
           _defineProperty(this, "noDatapoints", false);
 
           _defineProperty(this, "targets", []);
+
+          _defineProperty(this, "pLabels", {});
 
           _defineProperty(this, "rangeMs", 0);
 

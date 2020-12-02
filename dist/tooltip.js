@@ -152,6 +152,7 @@ System.register(["d3", "jquery", "lodash"], function (_export, _context) {
 
             var timestamp = bucket.to;
             var yLabel = bucket.yLabel;
+            var pLabels = bucket.pLabels;
             var value = bucket.value;
             var values = bucket.values; // TODO create option for this formatting.
 
@@ -222,7 +223,14 @@ System.register(["d3", "jquery", "lodash"], function (_export, _context) {
 
               scopedVars["__url_time_range"] = {
                 value: this.panelCtrl.retrieveTimeVar()
-              };
+              }; //New vars based on partialLabels:
+
+              for (var _i in pLabels) {
+                scopedVars["__y_label_".concat(_i)] = {
+                  value: pLabels[_i]
+                };
+              }
+
               var _iteratorNormalCompletion = true;
               var _didIteratorError = false;
               var _iteratorError = undefined;
@@ -242,10 +250,10 @@ System.register(["d3", "jquery", "lodash"], function (_export, _context) {
 
                     var valueDateVar = void 0;
 
-                    for (var _i = 0; _i < bucket.values.length; _i++) {
-                      valueDateVar = "__value_".concat(_i, "_date");
+                    for (var _i2 = 0; _i2 < bucket.values.length; _i2++) {
+                      valueDateVar = "__value_".concat(_i2, "_date");
                       scopedVars[valueDateVar] = {
-                        value: this.dashboard.formatDate(+bucket.values[_i], dateFormat)
+                        value: this.dashboard.formatDate(+bucket.values[_i2], dateFormat)
                       };
                     }
 
@@ -278,6 +286,11 @@ System.register(["d3", "jquery", "lodash"], function (_export, _context) {
                     throw _iteratorError;
                   }
                 }
+              }
+
+              if (this.panel.tooltip.showCustomContent) {
+                var customContent = this.panelCtrl.templateSrv.replace(this.panel.tooltip.customContent, scopedVars);
+                tooltipHtml += "<div>".concat(customContent, "</div>");
               }
 
               tooltipHtml += _.join(_.map(items, function (v) {
