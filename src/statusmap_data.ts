@@ -12,6 +12,8 @@ class Bucket {
   // y label
   y: string = "";
   yLabel: string = "";
+  pLabels: string[] = [];
+
   // This value can be used to calculate a x coordinate on a graph
   x: number = 0;
   xid: number = 0;
@@ -64,6 +66,7 @@ class BucketMatrix {
 
   // An array of row labels
   targets: string[] = [];
+  pLabels: {[target: string]: string[]} = {};
   rangeMs: number = 0;
   intervalMs: number = 0;
 
