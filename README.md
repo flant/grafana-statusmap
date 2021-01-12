@@ -1,6 +1,6 @@
 <p align="center">
-<a href="https://github.com/flant/grafana-statusmap/releases/latest"><img src="https://img.shields.io/github/tag-date/flant/grafana-statusmap.svg?logo=github&label=latest" alt="Download from Github"/></a>
-<a href="https://community.flant.com/c/grafana-statusmap/8"><img src="https://img.shields.io/discourse/status?server=https%3A%2F%2Fcommunity.flant.com" alt="Discourse forum for discussions"/></a>
+<a href="https://github.com/flant/grafana-statusmap/releases/latest"><img src="https://img.shields.io/github/tag-date/flant/grafana-statusmap.svg?logo=github&label=latest" alt="Download from GitHub"/></a>
+<a href="https://github.com/flant/grafana-statusmap/discussions"><img src="https://img.shields.io/badge/GitHub-discussions-brightgreen" alt="GH Discussions"/></a>
 <a href="https://t.me/statusmap_ru"><img src="https://img.shields.io/badge/@statusmap_ru-RU-informational.svg?logo=telegram" alt="Telegram chat RU"/></a>
 </p>
 
@@ -233,13 +233,18 @@ dist directory and start changes watcher:
 grunt watch
 ```
 
+## Changelog
+
+The latest changes can be found here: [CHANGELOG.md](https://github.com/flant/grafana-statusmap/blob/master/CHANGELOG.md)
+
+## Community
+
+Please feel free to reach developers/maintainers and users via [GitHub Discussions](https://github.com/flant/grafana-statusmap/discussions) for any questions regarding grafana-statusmap.
+
+You're also welcome to follow [@flant_com](https://twitter.com/flant_com) to stay informed about all our Open Source initiatives.
+
 ## Acknowledgements
 
 The first public release of this plugin has been fully made by [Flant](https://flant.com/) engineers. The whole idea has come from Dmitry Stolyarov ([@distol](https://github.com/distol)), initial version has been written by Sergey Gnuskov ([@gsmetal](https://github.com/gsmetal)) and final changes has been made by Ivan Mikheykin ([@diafour](https://github.com/diafour)).
 
 This plugin is based on "Heatmap" panel by Grafana and partly inspired by ideas from Carpet plot, Discrete panel, Status Panel, Status Dot, Status By Group.
-
-
-### CHANGELOG
-
-The latest changes can be found here: [CHANGELOG.md](https://github.com/flant/grafana-statusmap/blob/master/CHANGELOG.md)
