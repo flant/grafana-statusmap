@@ -1,4 +1,4 @@
-import d3 from 'd3';
+import * as d3 from 'd3';
 import $ from 'jquery';
 import _ from 'lodash';
 
@@ -22,12 +22,14 @@ export class AnnotationTooltip {
     this.panel = scope.ctrl.panel;
     this.mouseOverAnnotationTick = false;
 
-    elem.on("mouseover", this.onMouseOver.bind(this));
-    elem.on("mouseleave", this.onMouseLeave.bind(this));
+    elem.on('mouseover', this.onMouseOver.bind(this));
+    elem.on('mouseleave', this.onMouseLeave.bind(this));
   }
 
   onMouseOver(e) {
-    if (!this.panel.tooltip.show || !this.scope.ctrl.data || _.isEmpty(this.scope.ctrl.data)) { return; }
+    if (!this.panel.tooltip.show || !this.scope.ctrl.data || _.isEmpty(this.scope.ctrl.data)) {
+      return;
+    }
 
     if (!this.tooltip) {
       this.add();
@@ -40,23 +42,29 @@ export class AnnotationTooltip {
   }
 
   onMouseMove(e) {
-    if (!this.panel.tooltip.show) { return; }
+    if (!this.panel.tooltip.show) {
+      return;
+    }
 
     this.move(e);
   }
 
   add() {
-    this.tooltipBase = d3.select("body")
-    .append("div")
-    .attr("class", "statusmap-annotation-tooltip drop drop-popover drop-popover--annotation drop-element drop-enabled drop-target-attached-center drop-open drop-open-transitionend drop-after-open")
-    .style("position", "absolute")
+    this.tooltipBase = d3
+      .select('body')
+      .append('div')
+      .attr(
+        'class',
+        'statusmap-annotation-tooltip drop drop-popover drop-popover--annotation drop-element drop-enabled drop-target-attached-center drop-open drop-open-transitionend drop-after-open'
+      )
+      .style('position', 'absolute');
     this.tooltip = this.tooltipBase
-      .append("div")
-      .attr("class", "drop-content")
-      .append("div")
-      .append("annotation-tooltip")
-      .append("div")
-      .attr("class", "graph-annotation");
+      .append('div')
+      .attr('class', 'drop-content')
+      .append('div')
+      .append('annotation-tooltip')
+      .append('div')
+      .attr('class', 'graph-annotation');
   }
 
   destroy() {
@@ -71,11 +79,12 @@ export class AnnotationTooltip {
     }
 
     this.tooltipBase = null;
-
   }
 
   show(pos) {
-    if (!this.panel.tooltip.show || !this.tooltip) { return; }
+    if (!this.panel.tooltip.show || !this.tooltip) {
+      return;
+    }
     // shared tooltip mode
     //if (pos.panelRelY) {
     //  return;
@@ -93,14 +102,14 @@ export class AnnotationTooltip {
       return;
     }
 
-    let annoTitle = "";
+    let annoTitle = '';
 
     let tooltipTimeFormat = 'YYYY-MM-DD HH:mm:ss';
     let annoTime = this.dashboard.formatDate(anno.time, tooltipTimeFormat);
     let annoText = anno.text;
-    let annoTags:any = [];
+    let annoTags: any = [];
     if (anno.tags) {
-      annoTags = _.map(anno.tags, t => ({"text": t, "backColor": "rgb(63, 43, 91)", "borderColor":"rgb(101, 81, 129)"}))
+      annoTags = _.map(anno.tags, t => ({ text: t, backColor: 'rgb(63, 43, 91)', borderColor: 'rgb(101, 81, 129)' }));
     }
 
     let tooltipHtml = `<div class="graph-annotation__header">
@@ -108,7 +117,14 @@ export class AnnotationTooltip {
     <span class="graph-annotation__time">${annoTime}</span></div>
     <div class="graph-annotation__body">
       <div>${annoText}</div>
-      ${_.join(_.map(annoTags, t => `<span class="label label-tag small" style="background-color: ${t.backColor}; border-color: ${t.borderColor}">${t.text}</span>`), "")}
+      ${_.join(
+        _.map(
+          annoTags,
+          t =>
+            `<span class="label label-tag small" style="background-color: ${t.backColor}; border-color: ${t.borderColor}">${t.text}</span>`
+        ),
+        ''
+      )}
     </div>
       <div class="statusmap-histogram"></div>`;
 
@@ -118,16 +134,18 @@ export class AnnotationTooltip {
   }
 
   move(pos) {
-    if (!this.tooltipBase) { return; }
+    if (!this.tooltipBase) {
+      return;
+    }
 
     let elem = $(this.tooltipBase.node())[0];
     let tooltipWidth = elem.clientWidth;
     let tooltipHeight = elem.clientHeight;
 
-    let left = pos.pageX - tooltipWidth/2;
+    let left = pos.pageX - tooltipWidth / 2;
     let top = pos.pageY + TOOLTIP_PADDING_Y;
 
-    if (pos.pageX + tooltipWidth/2 + 10 > window.innerWidth) {
+    if (pos.pageX + tooltipWidth / 2 + 10 > window.innerWidth) {
       left = pos.pageX - tooltipWidth - TOOLTIP_PADDING_X;
     }
 
@@ -135,8 +153,6 @@ export class AnnotationTooltip {
       top = pos.pageY - tooltipHeight - TOOLTIP_PADDING_Y;
     }
 
-    return this.tooltipBase
-      .style("left", left + "px")
-      .style("top", top + "px");
+    return this.tooltipBase.style('left', left + 'px').style('top', top + 'px');
   }
 }

@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../../src/libs/polygrafill/index.ts"],"names":["Polygrafill"],"mappings":";;;;;;;;AAAYA,MAAAA,W;;;6BACHA,W","sourcesContent":["import * as Polygrafill from './funcs';\nexport { Polygrafill };"],"file":"index.js"}

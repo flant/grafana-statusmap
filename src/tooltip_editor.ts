@@ -5,13 +5,14 @@ let emptyTooltipItem = {
   urlTemplate: '',
   urlIcon: 'external-link',
   urlToLowerCase: true,
-  valueDateFormat: ''
+  valueDateFormat: '',
 };
 
 export class TooltipEditorCtrl {
   panel: any;
   panelCtrl: StatusHeatmapCtrl;
 
+  /** @ngInject */
   constructor($scope: any) {
     $scope.editor = this;
     this.panelCtrl = $scope.ctrl as StatusHeatmapCtrl;
@@ -42,11 +43,7 @@ export class TooltipEditorCtrl {
   }
 
   getValueDateFormats() {
-    return [
-        'YYYY/MM/DD/HH_mm_ss',
-        'YYYYMMDDHHmmss',
-        'YYYY-MM-DD-HH-mm-ss'
-        ];
+    return ['YYYY/MM/DD/HH_mm_ss', 'YYYYMMDDHHmmss', 'YYYY-MM-DD-HH-mm-ss'];
   }
 }
 

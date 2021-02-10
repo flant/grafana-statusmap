@@ -1,39 +1,38 @@
 // A holder of a group of values
 class Bucket {
   // uniq id
-  id: number = 0;
+  id = 0;
   // Array of values in this bucket
   values: any[] = [];
   columns: any[] = []; // From pr/86
   // a bucket has multiple values
-  multipleValues: boolean = false;
+  multipleValues = false;
   // a bucket has values that has no mapped color
-  noColorDefined: boolean = false;
+  noColorDefined = false;
   // y label
-  y: string = "";
-  yLabel: string = "";
+  y = '';
+  yLabel = '';
   pLabels: string[] = [];
 
   // This value can be used to calculate a x coordinate on a graph
-  x: number = 0;
-  xid: number = 0;
+  x = 0;
+  xid = 0;
   // a time range of this bucket
-  from: number = 0;
-  to: number = 0;
+  from = 0;
+  to = 0;
   // to and from relative to real "from"
-  relFrom: number = 0;
-  relTo: number = 0;
+  relFrom = 0;
+  relTo = 0;
 
-  mostRecent: boolean = false;
+  mostRecent = false;
 
   // Saved minimum and maximum of values in this bucket
-  minValue: number = 0;
-  maxValue: number = 0;
+  minValue = 0;
+  maxValue = 0;
   // A value if multiple values is not allowed
-  value: number = 0;
+  value = 0;
 
-  constructor() {
-  }
+  constructor() {}
 
   belong(ts: number): boolean {
     return ts >= this.from && ts <= this.to;
@@ -48,32 +47,29 @@ class Bucket {
   }
 
   isEmpty(): boolean {
-    return this.values.length == 0;
+    return this.values.length === 0;
   }
-
 }
-
 
 class BucketMatrix {
   // buckets for each y label
-  buckets: {[yLabel: string]: Bucket[]} = {};
-  maxValue: number = 0;
-  minValue: number = 0;
-  multipleValues: boolean = false;
-  noColorDefined: boolean = false;
+  buckets: { [yLabel: string]: Bucket[] } = {};
+  maxValue = 0;
+  minValue = 0;
+  multipleValues = false;
+  noColorDefined = false;
   // a flag that indicate that buckets has stub values
-  noDatapoints: boolean = false;
+  noDatapoints = false;
 
   // An array of row labels
   targets: string[] = [];
-  pLabels: {[target: string]: string[]} = {};
-  rangeMs: number = 0;
-  intervalMs: number = 0;
+  pLabels: { [target: string]: string[] } = {};
+  rangeMs = 0;
+  intervalMs = 0;
 
-  xBucketSize: number = 0; // TODO remove: a transition from CardsData
+  xBucketSize = 0; // TODO remove: a transition from CardsData
 
-  constructor() {
-  }
+  constructor() {}
 
   get(yid: string, xid: number): Bucket {
     if (yid in this.buckets) {
@@ -87,7 +83,7 @@ class BucketMatrix {
   hasData(): boolean {
     let hasData = false;
     if (this.targets.length > 0) {
-      this.targets.map((target:string) => {
+      this.targets.map((target: string) => {
         if (this.buckets[target].length > 0) {
           hasData = true;
         }
@@ -97,14 +93,14 @@ class BucketMatrix {
   }
 }
 
-export var pagerChanged:any = {name:'statusmap-pager-changed'};
+export var pagerChanged: any = { name: 'statusmap-pager-changed' };
 
 class BucketMatrixPager {
   bucketMatrix: BucketMatrix;
   enable: boolean;
-  defaultPageSize: number = -1;
-  pageSize: number = -1;
-  currentPage: number = 0;
+  defaultPageSize = -1;
+  pageSize = -1;
+  currentPage = 0;
 
   constructor() {
     let m = new BucketMatrix();
@@ -118,20 +114,20 @@ class BucketMatrixPager {
       return this.bucketMatrix.targets;
     }
 
-    return this.bucketMatrix.targets.slice(this.pageSize * this.currentPage, this.pageSize * (this.currentPage+1) );
+    return this.bucketMatrix.targets.slice(this.pageSize * this.currentPage, this.pageSize * (this.currentPage + 1));
   }
 
-  buckets(): {[yLabel: string]: Bucket[]} {
+  buckets(): { [yLabel: string]: Bucket[] } {
     if (!this.enable) {
       return this.bucketMatrix.buckets;
     }
 
-    let buckets: {[yLabel: string]: Bucket[]} = {}
+    let buckets: { [yLabel: string]: Bucket[] } = {};
     let me = this;
 
-    this.targets().map(function (rowLabel) {
+    this.targets().map(function(rowLabel) {
       buckets[rowLabel] = me.bucketMatrix.buckets[rowLabel];
-    })
+    });
 
     return buckets;
   }
@@ -164,7 +160,7 @@ class BucketMatrixPager {
     if (!this.enable) {
       return 1;
     }
-    return (this.pageSize * this.currentPage) + 1;
+    return this.pageSize * this.currentPage + 1;
   }
 
   pageEndRow(): number {
@@ -172,7 +168,7 @@ class BucketMatrixPager {
       return this.totalRows();
     }
 
-    let last = this.pageSize * (this.currentPage+1);
+    let last = this.pageSize * (this.currentPage + 1);
     if (last > this.totalRows()) {
       return this.totalRows();
     }
@@ -185,7 +181,7 @@ class BucketMatrixPager {
       return false;
     }
 
-    if ((this.currentPage+1)*this.pageSize >= this.totalRows()) {
+    if ((this.currentPage + 1) * this.pageSize >= this.totalRows()) {
       return false;
     }
 
@@ -212,7 +208,6 @@ class BucketMatrixPager {
       this.currentPage = this.currentPage - 1;
     }
   }
-
 }
 
-export {Bucket, BucketMatrix, BucketMatrixPager };
+export { Bucket, BucketMatrix, BucketMatrixPager };
