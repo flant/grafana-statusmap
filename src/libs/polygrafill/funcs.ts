@@ -1,4 +1,4 @@
-import { Emitter } from 'app/core/utils/emitter';
+import { Emitter } from 'grafana/app/core/utils/emitter';
 
 // Old Grafana releases use strings as event ids and
 // new event ids in form of object {name: "event-id"} are not
@@ -7,17 +7,17 @@ import { Emitter } from 'app/core/utils/emitter';
 //
 // This method detects this behaviour and return true
 // only for new Grafana versions.
-export function hasAppEventCompatibleEmitter(emitter: Emitter):boolean {
-    let receiveEvents = 0;
-    let eventId: any = {name: "non-existed-event-id"};
-    let eventId2: any = {name: "non-existed-event-id-2"};
-    emitter.on(eventId, function(){
-        receiveEvents++;
-    });
-    emitter.emit(eventId);
-    emitter.emit(eventId2);
-    emitter.removeAllListeners(eventId);
+export function hasAppEventCompatibleEmitter(emitter: Emitter): boolean {
+  let receiveEvents = 0;
+  let eventId: any = { name: 'non-existed-event-id' };
+  let eventId2: any = { name: 'non-existed-event-id-2' };
+  emitter.on(eventId, function() {
+    receiveEvents++;
+  });
+  emitter.emit(eventId);
+  emitter.emit(eventId2);
+  emitter.removeAllListeners(eventId);
 
-    // New Grafana versions should receive one event.
-    return receiveEvents == 1;
+  // New Grafana versions should receive one event.
+  return receiveEvents === 1;
 }

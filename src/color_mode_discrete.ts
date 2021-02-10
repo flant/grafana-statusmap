@@ -1,6 +1,6 @@
 import _ from 'lodash';
-import { Bucket } from "./statusmap_data";
-import { StatusHeatmapCtrl } from "./module";
+import { Bucket } from './statusmap_data';
+import { StatusHeatmapCtrl } from './module';
 
 interface Tooltip {
   tooltip: string;
@@ -26,16 +26,16 @@ export class ColorModeDiscrete {
   }
 
   // get tooltip for each value ordered by thresholds priority
-  convertValuesToTooltips(values:any[]) : Tooltip[] {
+  convertValuesToTooltips(values: any[]): Tooltip[] {
     let thresholds = this.panel.color.thresholds;
-    let tooltips:Tooltip[] = [];
+    let tooltips: Tooltip[] = [];
 
     for (let i = 0; i < thresholds.length; i++) {
       for (let j = 0; j < values.length; j++) {
-        if (values[j] == thresholds[i].value) {
+        if (values[j] === thresholds[i].value) {
           tooltips.push({
-            "tooltip": thresholds[i].tooltip?thresholds[i].tooltip:values[j],
-            "color": thresholds[i].color
+            tooltip: thresholds[i].tooltip ? thresholds[i].tooltip : values[j],
+            color: thresholds[i].color,
           });
         }
       }
@@ -49,19 +49,19 @@ export class ColorModeDiscrete {
 
     for (let i = 0; i < thresholds.length; i++) {
       //for (let j = 0; j < values.length; j++) {
-        if (values == thresholds[i].value) {
-          tooltips.push({
-            "tooltip": thresholds[i].tooltip?thresholds[i].tooltip:values,
-            "color": thresholds[i].color
-          });
+      if (values === thresholds[i].value) {
+        tooltips.push({
+          tooltip: thresholds[i].tooltip ? thresholds[i].tooltip : values,
+          color: thresholds[i].color,
+        });
         //}
       }
     }
     return tooltips;
   }
 
-  getNotMatchedValues(values:any[]) {
-    let notMatched:any[] = [];
+  getNotMatchedValues(values: any[]) {
+    let notMatched: any[] = [];
     for (let j = 0; j < values.length; j++) {
       if (!this.getMatchedThreshold(values[j])) {
         notMatched.push(values[j]);
@@ -70,11 +70,11 @@ export class ColorModeDiscrete {
     return notMatched;
   }
 
-  getNotColoredValues(values:any[]) {
-    let notMatched:any[] = [];
+  getNotColoredValues(values: any[]) {
+    let notMatched: any[] = [];
     for (let j = 0; j < values.length; j++) {
       let threshold = this.getMatchedThreshold(values[j]);
-      if (!threshold || !threshold.color || threshold.color == "") {
+      if (!threshold || !threshold.color || threshold.color === '') {
         notMatched.push(values[j]);
       }
     }
@@ -83,7 +83,7 @@ export class ColorModeDiscrete {
 
   getDiscreteColor(index) {
     let color = this.getThreshold(index).color;
-    if (!color || color == "") {
+    if (!color || color === '') {
       return 'rgba(0,0,0,1)';
     }
     return color;
@@ -96,27 +96,27 @@ export class ColorModeDiscrete {
       return 'rgba(0,0,0,1)';
       //return this.getMatchedThreshold(null).color;
     }
-      let threshold = this.getMatchedThreshold(value);
+    let threshold = this.getMatchedThreshold(value);
 
-      if (!threshold || !threshold.color || threshold.color == "") {
-        return 'rgba(0,0,0,1)';
-      } else {
-        return threshold.color;
-      }
+    if (!threshold || !threshold.color || threshold.color === '') {
+      return 'rgba(0,0,0,1)';
+    } else {
+      return threshold.color;
+    }
   }
 
   // returns color from first matched thresold in order from 0 to thresholds.length
   getBucketColor(values) {
     let thresholds = this.panel.color.thresholds;
 
-    if (!values || values.length == 0) {
+    if (!values || values.length === 0) {
       // treat as null value
       return this.getMatchedThreshold(null).color;
     }
 
-    if (values.length == 1) {
+    if (values.length === 1) {
       let threshold = this.getMatchedThreshold(values[0]);
-      if (!threshold || !threshold.color || threshold.color == "") {
+      if (!threshold || !threshold.color || threshold.color === '') {
         return 'rgba(0,0,0,1)';
       } else {
         return threshold.color;
@@ -135,7 +135,7 @@ export class ColorModeDiscrete {
 
     for (let i = 0; i < thresholds.length; i++) {
       for (let j = 0; j < values.length; j++) {
-        if (values[j] == thresholds[i].value) {
+        if (values[j] === thresholds[i].value) {
           return this.getDiscreteColor(i);
         }
       }
@@ -143,18 +143,17 @@ export class ColorModeDiscrete {
     return 'rgba(0,0,0,1)';
   }
 
-
   updateCardsValuesHasColorInfoSingle() {
     if (!this.panelCtrl.bucketMatrix) {
       return;
     }
     this.panelCtrl.bucketMatrix.noColorDefined = false;
 
-    this.panelCtrl.bucketMatrix.targets.map((target:string) => {
-      this.panelCtrl.bucketMatrix.buckets[target].map((bucket:Bucket) => {
+    this.panelCtrl.bucketMatrix.targets.map((target: string) => {
+      this.panelCtrl.bucketMatrix.buckets[target].map((bucket: Bucket) => {
         bucket.noColorDefined = false;
         let threshold = this.getMatchedThreshold(bucket.value);
-        if (!threshold || !threshold.color || threshold.color == "") {
+        if (!threshold || !threshold.color || threshold.color === '') {
           bucket.noColorDefined = true;
           this.panelCtrl.bucketMatrix.noColorDefined = true;
         }
@@ -164,16 +163,16 @@ export class ColorModeDiscrete {
 
   updateCardsValuesHasColorInfo() {
     if (!this.panelCtrl.bucketMatrix) {
-      return
+      return;
     }
     this.panelCtrl.bucketMatrix.noColorDefined = false;
 
-    this.panelCtrl.bucketMatrix.targets.map((target:string) => {
-      this.panelCtrl.bucketMatrix.buckets[target].map((bucket:Bucket) => {
+    this.panelCtrl.bucketMatrix.targets.map((target: string) => {
+      this.panelCtrl.bucketMatrix.buckets[target].map((bucket: Bucket) => {
         bucket.noColorDefined = false;
-        for (let j=0; j<bucket.values.length; j++) {
+        for (let j = 0; j < bucket.values.length; j++) {
           let threshold = this.getMatchedThreshold(bucket.values[j]);
-          if (!threshold || !threshold.color || threshold.color == "") {
+          if (!threshold || !threshold.color || threshold.color === '') {
             bucket.noColorDefined = true;
             this.panelCtrl.bucketMatrix.noColorDefined = true;
             break;
@@ -185,14 +184,14 @@ export class ColorModeDiscrete {
 
   getMatchedThreshold(value) {
     if (value == null) {
-      if (this.panel.nullPointMode == 'as empty') {
+      if (this.panel.nullPointMode === 'as empty') {
         // FIXME: make this explicit for user
         // Right now this color never used because null as empty handles in getCardOpacity method.
         return {
-          "color": "rgba(0,0,0,0)",
-          "value": "null",
-          "tooltip": "null",
-        }
+          color: 'rgba(0,0,0,0)',
+          value: 'null',
+          tooltip: 'null',
+        };
       } else {
         value = 0;
       }
@@ -200,7 +199,7 @@ export class ColorModeDiscrete {
 
     let thresholds = this.panel.color.thresholds;
     for (let k = 0; k < thresholds.length; k++) {
-      if (value == thresholds[k].value) {
+      if (value === thresholds[k].value) {
         return thresholds[k];
       }
     }
@@ -211,10 +210,10 @@ export class ColorModeDiscrete {
     let thresholds = this.panel.color.thresholds;
     if (index < 0 || index >= thresholds.length == null) {
       return {
-        "color": "rgba(0,0,0,0)",
-        "value": "null",
-        "tooltip": "null",
-      }
+        color: 'rgba(0,0,0,0)',
+        value: 'null',
+        tooltip: 'null',
+      };
     }
     return thresholds[index];
   }

@@ -1,12 +1,13 @@
 {
   "name": "flant-statusmap-panel",
-  "version": "0.3.4",
+  "version": "0.4.0-pre",
   "description": "Grafana panel plugin to visualize status of multiple objects over time",
   "main": "README.md",
   "scripts": {
-    "build": "grunt",
-    "check-types": "node_modules/typescript/bin/tsc",
-    "test": "jest"
+    "build": "grafana-toolkit plugin:build",
+    "test": "grafana-toolkit plugin:test",
+    "dev": "grafana-toolkit plugin:dev",
+    "watch": "grafana-toolkit plugin:dev --watch"
   },
   "author": "Flant JSC",
   "license": "Apache-2.0",
@@ -15,48 +16,20 @@
     "url": "https://github.com/flant/grafana-statusmap.git"
   },
   "devDependencies": {
-    "@babel/core": "7.6.4",
-    "@babel/plugin-proposal-class-properties": "^7.4.4",
-    "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
-    "@babel/plugin-transform-for-of": "^7.0.0",
-    "@babel/plugin-transform-modules-systemjs": "^7.0.0",
-    "@babel/plugin-syntax-dynamic-import": "7.2.0",
-    "@babel/preset-env": "7.6.3",
-    "@babel/preset-typescript": "7.6.0",
+    "@grafana/toolkit": "^7.3.4",
+    "@grafana/data": "^7.3.4",
+    "@grafana/ui": "^7.3.4",
     "@types/d3": "4.13.1",
     "@types/d3-scale-chromatic": "1.3.1",
     "@types/angular": "1.6.56",
     "@types/grafana": "github:flant/types-grafana",
-    "@types/jest": "24.0.13",
     "@types/jquery": "1.10.35",
     "@types/lodash": "4.14.123",
-    "babel-core": "7.0.0-bridge.0",
-    "babel-jest": "24.8.0",
-    "babel-loader": "8.0.5",
-    "babel-plugin-angularjs-annotate": "0.10.0",
-    "babel-eslint": "^10.0.2",
-    "eslint": "^4.12.1",
-    "grunt": "^1.0.4",
-    "grunt-angular-templates": "1.2.0",
-    "grunt-babel": "^8.0.0",
-    "grunt-contrib-clean": "^1.1.0",
-    "grunt-contrib-copy": "^1.0.0",
-    "grunt-contrib-sass": "^1.0.0",
-    "grunt-contrib-uglify": "^3.0.1",
-    "grunt-contrib-watch": "^1.0.0",
-    "grunt-notify": "^0.4.5",
-    "jest": "24.8.0",
-    "jest-canvas-mock": "2.1.2",
-    "jest-date-mock": "1.0.7",
-    "load-grunt-tasks": "^3.5.2",
-    "typescript": "3.7.2",
-    "ts-jest": "24.1.0",
-    "tslib": "1.10.0"
+    "emotion": "10.0.27"
   },
   "dependencies": {
     "d3": "4.13.0",
-    "d3-scale-chromatic": "1.5.0",
-    "lodash": "4.17.19",
-    "moment": "2.24.0"
+    "d3-scale-chromatic": "^2",
+    "lodash": "4.17.19"
   }
 }

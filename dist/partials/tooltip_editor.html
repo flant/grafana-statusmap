@@ -2,17 +2,17 @@
   <div class="section gf-form-group">
     <gf-form-switch class="gf-form" label-class="width-10"
       label="Show tooltip"
-      tooltip="'Show tooltip when mouse is over the card'"
+      tooltip="Show tooltip when mouse is over the card"
       checked="ctrl.panel.tooltip.show" on-change="ctrl.render()">
     </gf-form-switch>
     <gf-form-switch class="gf-form" label-class="width-10"
       label="Freeze on click"
-      tooltip="'Freeze tooltip copy when card is clicked'"
+      tooltip="Freeze tooltip copy when card is clicked"
       checked="ctrl.panel.tooltip.freezeOnClick" on-change="ctrl.render()">
     </gf-form-switch>
     <gf-form-switch class="gf-form" label-class="width-10"
       label="Show items"
-      tooltip="'Show items (urls) in tooltip'"
+      tooltip="Show items (urls) in tooltip"
       checked="ctrl.panel.tooltip.showItems" on-change="ctrl.render()">
     </gf-form-switch>
   </div>
@@ -63,6 +63,7 @@
       <label class="gf-form-label width-2">0</label>
       <label class="gf-form-input width-30">No items defined.</label>
     </div>
+
 <div>
   <div ng-repeat="item in ctrl.panel.tooltip.items">
     <div class="gf-form gf-form--grow">
@@ -159,4 +160,4 @@
 </div>
 </div>
 
-</div>  
+</div>
