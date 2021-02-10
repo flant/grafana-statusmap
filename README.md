@@ -28,9 +28,8 @@
   - InfluxDB
   - Mysql
 * Tested with Grafana:
-  - 7.0, 7.1, 7.2
-  - 6.3, 6.6, 6.7
-  - 5.4.3
+  - 7.0, 7.1, 7.2, 7.3
+  - 6.6, 6.7
 
 ## Installation
 
@@ -210,22 +209,17 @@ Each URL has a template, icon, label and formating options: lowercase and date f
 
 ## Development
 
-To test and improve the plugin you can run Grafana instance in Docker using following command (in
-the directory containing Statusmap plugin):
+To test and improve the plugin you can run Grafana instance in Docker:
 
 ```
+cd grafana-statusmap
 docker run --rm -it -v $PWD:/var/lib/grafana/plugins/flant-statusmap-panel \
            -p 3000:3000 --name grafana.docker \
            --env=GF_USERS_DEFAULT_THEME=light \
-           grafana/grafana:7.1.3
+           grafana/grafana:7.3.4
 ```
 
-This will expose local plugin from your machine to Grafana container. Now run `grunt` to compile
-dist directory and start changes watcher:
-
-```
-grunt watch
-```
+The `-v` flag exposes plugin directory from your machine to Grafana container. Now run `yarn run watch` to compile dist directory and start changes watcher.
 
 ## Changelog
 

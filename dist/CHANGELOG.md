@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.4.0
+
+- Fix to work with Grafana 7.3.6, 7.4.0
+- Use grafana-toolkit to build and sign
+- Drop support for Grafana 5.*
+
 ## v0.3.4
 
 - Fix to work in Grafana 7.2.0,7.2.1

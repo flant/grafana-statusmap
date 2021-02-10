@@ -1,4 +1,4 @@
-import d3 from 'd3';
+import * as d3 from 'd3';
 import $ from 'jquery';
 import _ from 'lodash';
 
@@ -33,12 +33,14 @@ export class StatusmapTooltip {
     this.mouseOverBucket = false;
     this.originalFillColor = null;
 
-    elem.on("mouseover", this.onMouseOver.bind(this));
-    elem.on("mouseleave", this.onMouseLeave.bind(this));
+    elem.on('mouseover', this.onMouseOver.bind(this));
+    elem.on('mouseleave', this.onMouseLeave.bind(this));
   }
 
   onMouseOver(e) {
-    if (!this.panel.tooltip.show || !this.scope.ctrl.data || _.isEmpty(this.scope.ctrl.data)) { return; }
+    if (!this.panel.tooltip.show || !this.scope.ctrl.data || _.isEmpty(this.scope.ctrl.data)) {
+      return;
+    }
 
     if (!this.tooltip) {
       this.add();
@@ -51,15 +53,18 @@ export class StatusmapTooltip {
   }
 
   onMouseMove(e) {
-    if (!this.panel.tooltip.show) { return; }
+    if (!this.panel.tooltip.show) {
+      return;
+    }
 
     this.move(e, this.tooltip);
   }
 
   add() {
-    this.tooltip = d3.select("body")
-      .append("div")
-      .attr("class", "graph-tooltip statusmap-tooltip");
+    this.tooltip = d3
+      .select('body')
+      .append('div')
+      .attr('class', 'graph-tooltip statusmap-tooltip');
   }
 
   destroy() {
@@ -73,21 +78,24 @@ export class StatusmapTooltip {
   removeFrozen() {
     if (this.tooltipFrozen) {
       this.tooltipFrozen.remove();
-      this.tooltipFrozen = null
+      this.tooltipFrozen = null;
     }
   }
 
   showFrozen(pos: any) {
     this.removeFrozen();
-    this.tooltipFrozen = d3.select(this.panelElem[0])
-        .append("div")
-        .attr("class", "graph-tooltip statusmap-tooltip statusmap-tooltip-frozen");
+    this.tooltipFrozen = d3
+      .select(this.panelElem[0])
+      .append('div')
+      .attr('class', 'graph-tooltip statusmap-tooltip statusmap-tooltip-frozen');
     this.displayTooltip(pos, this.tooltipFrozen, true);
     this.moveRelative(pos, this.tooltipFrozen);
   }
 
   show(pos: any) {
-    if (!this.panel.tooltip.show || !this.tooltip) { return; }
+    if (!this.panel.tooltip.show || !this.tooltip) {
+      return;
+    }
 
     // TODO support for shared tooltip mode
     if (pos.panelRelY) {
@@ -104,6 +112,7 @@ export class StatusmapTooltip {
     let cardEl = d3.select(pos.target);
     let yid = cardEl.attr('yid');
     let xid = cardEl.attr('xid');
+    // @ts-ignore
     let bucket = this.panelCtrl.bucketMatrix.get(yid, xid); // TODO string-to-number conversion for xid
     if (!bucket || bucket.isEmpty()) {
       this.destroy();
@@ -116,11 +125,11 @@ export class StatusmapTooltip {
     let value = bucket.value;
     let values = bucket.values;
     // TODO create option for this formatting.
-    let tooltipTimeFormat:string = 'YYYY-MM-DD HH:mm:ss';
+    let tooltipTimeFormat = 'YYYY-MM-DD HH:mm:ss';
     let time: Date = this.dashboard.formatDate(+timestamp, tooltipTimeFormat);
 
     // Close button for the frozen tooltip.
-    let tooltipClose:string = ``;
+    let tooltipClose = ``;
     if (frozen) {
       tooltipClose = `
 <a class="pointer pull-right small tooltip-close">
@@ -129,7 +138,7 @@ export class StatusmapTooltip {
 `;
     }
 
-    let tooltipHtml:string = `<div class="graph-tooltip-time">${time}${tooltipClose}</div>`;
+    let tooltipHtml = `<div class="graph-tooltip-time">${time}${tooltipClose}</div>`;
 
     if (this.panel.color.mode === 'discrete') {
       let statuses;
@@ -138,10 +147,10 @@ export class StatusmapTooltip {
       } else {
         statuses = this.panelCtrl.discreteExtraSeries.convertValuesToTooltips(values);
       }
-      
-      let statusTitle:string = "status:";
+
+      let statusTitle = 'status:';
       if (statuses.length > 1) {
-        statusTitle = "statuses:";
+        statusTitle = 'statuses:';
       }
       tooltipHtml += `
       <div>
@@ -149,12 +158,18 @@ export class StatusmapTooltip {
         <br>
         <span>${statusTitle}</span>
         <ul>
-          ${_.join(_.map(statuses, v => `<li style="background-color: ${v.color}; text-align:center" class="discrete-item">${v.tooltip}</li>`), "")}
+          ${_.join(
+            _.map(
+              statuses,
+              v => `<li style="background-color: ${v.color}; text-align:center" class="discrete-item">${v.tooltip}</li>`
+            ),
+            ''
+          )}
         </ul>
       </div>`;
     } else {
       if (values.length === 1) {
-        tooltipHtml += `<div> 
+        tooltipHtml += `<div>
       name: <b>${yLabel}</b> <br>
       value: <b>${value}</b> <br>
       </div>`;
@@ -163,7 +178,10 @@ export class StatusmapTooltip {
       name: <b>${yLabel}</b> <br>
       values:
       <ul>
-        ${_.join(_.map(values, v => `<li>${v}</li>`), "")}
+        ${_.join(
+          _.map(values, v => `<li>${v}</li>`),
+          ''
+        )}
       </ul>
       </div>`;
       }
@@ -181,35 +199,35 @@ export class StatusmapTooltip {
       let valueVar;
       for (let i = 0; i < bucket.values.length; i++) {
         valueVar = `__value_${i}`;
-        scopedVars[valueVar] = {value: bucket.values[i] };
+        scopedVars[valueVar] = { value: bucket.values[i] };
       }
-      scopedVars[`__value`] = {value: bucket.value};
-      scopedVars[`__y_label`] = {value: yLabel};
-      scopedVars[`__y_label_trim`] = {value: yLabel.trim()};
+      scopedVars['__value'] = { value: bucket.value };
+      scopedVars['__y_label'] = { value: yLabel };
+      scopedVars['__y_label_trim'] = { value: yLabel.trim() };
       // Grafana 7.0 compatible
-      scopedVars[`__url_time_range`] = {value: this.panelCtrl.retrieveTimeVar()};
+      scopedVars['__url_time_range'] = { value: this.panelCtrl.retrieveTimeVar() };
 
       //New vars based on partialLabels:
       for (let i in pLabels) {
-        scopedVars[`__y_label_${i}`] = {value: pLabels[i]};
+        scopedVars[`__y_label_${i}`] = { value: pLabels[i] };
       }
 
       for (let item of items) {
         if (_.isEmpty(item.urlTemplate)) {
-          item.link = "#";
+          item.link = '#';
         } else {
           let dateFormat = item.valueDateFormat;
-          if (dateFormat == '') {
+          if (dateFormat === '') {
             dateFormat = DefaultValueDateFormat;
           }
           let valueDateVar;
           for (let i = 0; i < bucket.values.length; i++) {
             valueDateVar = `__value_${i}_date`;
-            scopedVars[valueDateVar] = {value: this.dashboard.formatDate(+bucket.values[i], dateFormat)};
+            scopedVars[valueDateVar] = { value: this.dashboard.formatDate(+bucket.values[i], dateFormat) };
           }
-          scopedVars[`__value_date`] = {value: this.dashboard.formatDate(+bucket.value, dateFormat)};
+          scopedVars['__value_date'] = { value: this.dashboard.formatDate(+bucket.value, dateFormat) };
 
-          item.link = this.panelCtrl.templateSrv.replace(item.urlTemplate, scopedVars)
+          item.link = this.panelCtrl.templateSrv.replace(item.urlTemplate, scopedVars);
 
           // Force lowercase for link
           if (item.urlToLowerCase) {
@@ -219,24 +237,29 @@ export class StatusmapTooltip {
 
         item.label = item.urlText;
         if (_.isEmpty(item.label)) {
-          item.label = _.isEmpty(item.urlTemplate) ? "Empty URL" : _.truncate(item.link);
+          item.label = _.isEmpty(item.urlTemplate) ? 'Empty URL' : _.truncate(item.link);
         }
       }
 
       if (this.panel.tooltip.showCustomContent) {
-        let customContent: string = this.panelCtrl.templateSrv.replace(this.panel.tooltip.customContent, scopedVars)
-        tooltipHtml += `<div>${customContent}</div>`
+        let customContent: string = this.panelCtrl.templateSrv.replace(this.panel.tooltip.customContent, scopedVars);
+        tooltipHtml += `<div>${customContent}</div>`;
       }
 
-      tooltipHtml += _.join(_.map(items, v => `
+      tooltipHtml += _.join(
+        _.map(
+          items,
+          v => `
           <div>
             <a href="${v.link}" target="_blank">
             <div class="dashlist-item">
             <p class="dashlist-link dashlist-link-dash-db">
               <span style="word-wrap: break-word;" class="dash-title">${v.label}</span><span class="dashlist-star">
               <i class="fa fa-${v.urlIcon}"></i>
-            </span></p> </div></a><div>`), "\n");
-
+            </span></p> </div></a><div>`
+        ),
+        '\n'
+      );
     }
 
     // Ambiguous state: there multiple values in bucket!
@@ -252,7 +275,10 @@ export class StatusmapTooltip {
         tooltipHtml += `<div><b>Error:</b> ${this.panelCtrl.dataWarnings.noColorDefined.title}
         <br>not colored values:
         <ul>
-          ${_.join(_.map(badValues, v => `<li>${v}</li>`), "")}
+          ${_.join(
+            _.map(badValues, v => `<li>${v}</li>`),
+            ''
+          )}
         </ul>
         </div>`;
       }
@@ -264,19 +290,29 @@ export class StatusmapTooltip {
     if (frozen) {
       // Stop propagation mouse events up to parents to allow interaction with frozen tooltip’s elements.
       tooltip
-          .on("click", function(){d3.event.stopPropagation(); })
-          .on("mousedown", function(){d3.event.stopPropagation(); })
-          .on("mouseup", function(){d3.event.stopPropagation(); });
+        .on('click', function() {
+          // @ts-ignore
+          d3.event.stopPropagation();
+        })
+        .on('mousedown', function() {
+          // @ts-ignore
+          d3.event.stopPropagation();
+        })
+        .on('mouseup', function() {
+          // @ts-ignore
+          d3.event.stopPropagation();
+        });
 
       // Activate close button
-      tooltip.select("a.tooltip-close")
-          .on("click", this.removeFrozen.bind(this));
+      tooltip.select('a.tooltip-close').on('click', this.removeFrozen.bind(this));
     }
   }
 
   // Move tooltip as absolute positioned element.
   move(pos, tooltip) {
-    if (!tooltip) { return; }
+    if (!tooltip) {
+      return;
+    }
 
     let elem = $(tooltip.node())[0];
     let tooltipWidth = elem.clientWidth;
@@ -294,14 +330,14 @@ export class StatusmapTooltip {
       top = pos.pageY - tooltipHeight - TOOLTIP_PADDING_Y;
     }
 
-    return tooltip
-      .style("left", left + "px")
-      .style("top", top + "px");
+    return tooltip.style('left', left + 'px').style('top', top + 'px');
   }
 
   // Move tooltip relative to svg element of panel.
   moveRelative(pos, tooltip) {
-    if (!tooltip) { return; }
+    if (!tooltip) {
+      return;
+    }
 
     let panelX = pos.pageX - this.panelElem.offset().left;
     let panelY = pos.pageY - this.panelElem.offset().top;
@@ -317,7 +353,7 @@ export class StatusmapTooltip {
     if (tooltipLeft + tooltipWidth > panelWidth) {
       tooltipLeft = panelWidth - tooltipWidth;
     }
-    if (tooltipLeft < 0 ) {
+    if (tooltipLeft < 0) {
       tooltipLeft = 0;
     }
 
@@ -327,10 +363,8 @@ export class StatusmapTooltip {
     let tooltipTop = -(panelHeight - panelY + TOOLTIP_PADDING_Y);
 
     return tooltip
-      .style("left", tooltipLeft + "px")
-      .style("top", tooltipTop + "px")
-      .style("width", tooltipWidth + "px");
+      .style('left', tooltipLeft + 'px')
+      .style('top', tooltipTop + 'px')
+      .style('width', tooltipWidth + 'px');
   }
-
-
 }
