@@ -1,13 +1,13 @@
 import _ from 'lodash';
 import $ from 'jquery';
 import * as d3 from 'd3';
-import { d3ScaleChromatic } from './d3/d3-scale-chromatic';
+import { d3ScaleChromatic } from './util/d3/d3-scale-chromatic';
 import { contextSrv } from 'grafana/app/core/core';
 import { tickStep } from 'grafana/app/core/utils/ticks';
 import coreModule from 'grafana/app/core/core_module';
 
 import { StatusHeatmapCtrl } from './module';
-import { PanelEvents } from './libs/grafana/events/index';
+import { PanelEvents } from './util/grafana/events/index';
 
 const LEGEND_STEP_WIDTH = 2;
 
