@@ -25,11 +25,11 @@
     "@types/grafana": "github:flant/types-grafana",
     "@types/jquery": "1.10.35",
     "@types/lodash": "4.14.123",
-    "emotion": "10.0.27"
+    "d3": "4.13.0",
+    "emotion": "10.0.27",
+    "lodash": "4.17.19"
   },
   "dependencies": {
-    "d3": "4.13.0",
-    "d3-scale-chromatic": "^2",
-    "lodash": "4.17.19"
+    "d3-scale-chromatic": "^2"
   }
 }
