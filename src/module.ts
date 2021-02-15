@@ -72,7 +72,6 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   bucketMatrixPager: BucketMatrixPager;
 
   graph: any;
-  discreteHelper: ColorModeDiscrete;
   opacityScales: any = [];
   colorModes: any = [];
   colorSchemes: any = [];
