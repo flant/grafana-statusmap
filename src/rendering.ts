@@ -8,12 +8,12 @@ import moment from 'moment';
 import kbn from 'grafana/app/core/utils/kbn';
 import { appEvents, contextSrv } from 'grafana/app/core/core';
 import * as d3 from 'd3';
-import { d3ScaleChromatic } from './d3/d3-scale-chromatic';
+import { d3ScaleChromatic } from './util/d3/d3-scale-chromatic';
 import { StatusmapTooltip } from './tooltip';
 import { AnnotationTooltip } from './annotations';
 import { Bucket, BucketMatrix, BucketMatrixPager } from './statusmap_data';
 import { StatusHeatmapCtrl, renderComplete } from './module';
-import { CoreEvents, PanelEvents } from './libs/grafana/events/index';
+import { CoreEvents, PanelEvents } from './util/grafana/events/index';
 
 let MIN_CARD_SIZE = 5,
   CARD_H_SPACING = 2,

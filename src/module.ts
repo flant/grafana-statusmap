@@ -15,10 +15,10 @@ import { loadPluginCss } from 'grafana/app/plugins/sdk';
 // Types
 import { MetricsPanelCtrl } from 'grafana/app/plugins/sdk';
 import { AnnotationsSrv } from 'grafana/app/features/annotations/annotations_srv';
-import { CoreEvents, PanelEvents } from './libs/grafana/events/index';
+import { CoreEvents, PanelEvents } from './util/grafana/events/index';
 import { Bucket, BucketMatrix, BucketMatrixPager } from './statusmap_data';
 import rendering from './rendering';
-import { Polygrafill } from './libs/polygrafill/index';
+import { Polygrafill } from './util/polygrafill/index';
 
 import { ColorModeDiscrete } from './color_mode_discrete';
 

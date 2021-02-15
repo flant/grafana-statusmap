@@ -16,7 +16,8 @@
     },
     "links": [
       {"name": "Github", "url": "https://github.com/flant/grafana-statusmap"},
-      {"name": "MIT Licence", "url": "https://github.com/flant/grafana-statusmap/blob/master/LICENSE"}
+      {"name": "MIT Licence", "url": "https://github.com/flant/grafana-statusmap/blob/master/LICENSE"},
+      {"name": "Developer", "url": "https://flant.com"}
     ],
     "screenshots": [
       {"name": "Panel with light theme", "path": "img/flant-statusmap-panel.png"},
@@ -24,8 +25,8 @@
       {"name": "Color mapping", "path": "img/color-mapping.png"},
       {"name": "Queries example", "path": "img/queries-example.png"}
     ],
-    "version": "0.3.4",
-    "updated": "2020-09-12"
+    "version": "%VERSION%",
+    "updated": "%TODAY%"
   },
 
   "dependencies": {
