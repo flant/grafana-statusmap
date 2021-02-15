@@ -8,6 +8,12 @@ import { Emitter } from 'grafana/app/core/utils/emitter';
 // This method detects this behaviour and return true
 // only for new Grafana versions.
 export function hasAppEventCompatibleEmitter(emitter: Emitter): boolean {
+  // Grafana 7.4 has new event bus for Angular plugins. It is has a 'subscribe' method.
+  let emitterProto = Object.getPrototypeOf(emitter);
+  if (Object.prototype.hasOwnProperty.call(emitterProto, 'subscribe')) {
+    return true;
+  }
+
   let receiveEvents = 0;
   let eventId: any = { name: 'non-existed-event-id' };
   let eventId2: any = { name: 'non-existed-event-id-2' };

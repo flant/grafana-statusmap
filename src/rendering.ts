@@ -1,9 +1,9 @@
 import _ from 'lodash';
 import $ from 'jquery';
 
+// TODO moment is used instead of @grafana/data to run in 6.2 and earlier.
 /* eslint-disable id-blacklist, no-restricted-imports, @typescript-eslint/ban-types */
-// import moment from 'moment';
-import { toUtc } from '@grafana/data';
+import moment from 'moment';
 
 import kbn from 'grafana/app/core/utils/kbn';
 import { appEvents, contextSrv } from 'grafana/app/core/core';
@@ -643,9 +643,10 @@ export class StatusmapRenderer {
         Math.max(this.selection.x1, this.selection.x2) - this.yAxisWidth - this.xGridSize / 2
       );
 
+      // TODO use toUtc method from moment wrapper in @grafana/data
       this.ctrl.timeSrv.setTime({
-        from: toUtc(timeFrom),
-        to: toUtc(timeTo),
+        from: moment.utc(timeFrom),
+        to: moment.utc(timeTo),
       });
     }
 
