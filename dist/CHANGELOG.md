@@ -2,9 +2,12 @@
 
 ## v0.4.0
 
-- Fix to work with Grafana 7.3.6, 7.4.0
-- Use grafana-toolkit to build and sign
-- Drop support for Grafana 5.*
+- Fix to work with Grafana 7.4.x
+- Migrate to grafana-toolkit and yarn to build and sign.
+- Cleanup dist directory, reduce compiled plugin size.
+- Code cleanup: fix linter errors and warnings
+- Add Github Actions configuration to automate release process. 
+- Add unobtrusive branding.
 
 ## v0.3.4
 

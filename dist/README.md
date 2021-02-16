@@ -3,6 +3,7 @@
 [![Download from GitHub](https://img.shields.io/github/tag-date/flant/grafana-statusmap.svg?logo=github&label=latest)](https://github.com/flant/grafana-statusmap/releases/latest)
 [![GH Discussions](https://img.shields.io/badge/GitHub-discussions-brightgreen)](https://github.com/flant/grafana-statusmap/discussions)
 [![Telegram chat RU](https://img.shields.io/badge/@statusmap_ru-RU-informational.svg?logo=telegram)](https://t.me/statusmap_ru)
+[![Follow Flant on Twitter](https://img.shields.io/twitter/follow/flant_com?label=Follow%20Flant&style=social)](https://twitter.com/flant_com)
 
 Panel to show discrete statuses of multiple targets over time.
 
@@ -19,8 +20,6 @@ Panel to show discrete statuses of multiple targets over time.
 * Increasing rows/buckets' interval for better visual representation
 * Representing null values as empty bucket or zero value
 
-:calendar: New features are planned in [#62](https://github.com/flant/grafana-statusmap/issues/62)
-
 ### Supported environment
 
 * Tested with datasources:
@@ -30,25 +29,6 @@ Panel to show discrete statuses of multiple targets over time.
 * Supported Grafana versions:
   - 6.7+ are the most priority (6.7, 7.0-7.4)
   - also works in 5.4.3 and 6.0+
-
-## Installation
-
-The preferred way of installation is Grafana configuration, e.g. with environment variable GF_INSTALL_PLUGINS="flant-statusmap-panel".
-
-Also, you can download a released .zip file from [Releases](https://github.com/flant/grafana-statusmap/releases) page and uncompress it into Grafana's plugin directory (/var/lib/grafana/plugins/flant-statusmap-panel).
-
-
-```
-curl -sLO 
-unzip flant-statusmap-panel-v0.4.0.zip -d /var/lib/grafana/plugins/flant-statusmap-panel
-```
-
-For 5.x and 6.x versions of Grafana you can clone this repo:
-
-```
-git clone git@github.com:flant/grafana-statusmap.git /var/lib/grafana/plugins/flant-statusmap-panel
-```
-
 
 ## Motivation
 
@@ -214,29 +194,13 @@ Each URL has a template, icon, label and formating options: lowercase and date f
 
 ![Tooltip items editor](https://raw.githubusercontent.com/flant/grafana-statusmap/master/docs/img/tooltip-editor.png)
 
-## Development
 
-To test and improve the plugin you can run Grafana instance in Docker:
+## Learn more
 
-```
-cd grafana-statusmap
-docker run --rm -it -v $PWD:/var/lib/grafana/plugins/flant-statusmap-panel \
-           -p 3000:3000 --name grafana.docker \
-           --env=GF_USERS_DEFAULT_THEME=light \
-           grafana/grafana:7.3.4
-```
-
-The `-v` flag exposes plugin directory from your machine to Grafana container. Now run `yarn run watch` to compile dist directory and start changes watcher.
-
-## Changelog
-
-The latest changes can be found here: [CHANGELOG.md](https://github.com/flant/grafana-statusmap/blob/master/CHANGELOG.md)
-
-## Community
-
-Please feel free to reach developers/maintainers and users via [GitHub Discussions](https://github.com/flant/grafana-statusmap/discussions) for any questions regarding grafana-statusmap.
-
-You're also welcome to follow [@flant_com](https://twitter.com/flant_com) to stay informed about all our Open Source initiatives.
+* [Changelog](https://github.com/flant/grafana-statusmap/blob/master/CHANGELOG.md)
+* Use [GitHub Discussions](https://github.com/flant/grafana-statusmap/discussions) to ask for help.
+* [Installation](https://grafana.com/grafana/plugins/flant-statusmap-panel/installation)
+* Setup [development](https://github.com/flant/grafana-statusmap/blob/master/DEVELOPMENT.md) environment to help us improve the plugin.
 
 ## Acknowledgements
 
