@@ -14,6 +14,19 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Setup Go environment
+        uses: actions/setup-go@v2
+        with:
+          go-version: "1.15"
+
+      - name: Lint plugin
+        run: |
+          git clone https://github.com/grafana/plugin-validator
+          pushd ./plugin-validator/cmd/plugincheck
+          go install
+          popd
+          plugincheck --help
+
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.1.2
         with:
