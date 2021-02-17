@@ -421,6 +421,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   onInitEditMode() {
     this.addEditorTab('Options', optionsEditorCtrl, 2);
     this.addEditorTab('Tooltip', tooltipEditorCtrl, 3);
+    this.addEditorTab('About', 'public/plugins/flant-statusmap-panel/partials/about_editor.html', 4);
     this.unitFormats = kbn.getUnitFormats();
   }
 
