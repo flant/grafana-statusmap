@@ -2,10 +2,13 @@
 
 ## v0.4.0
 
-- Fix to work with Grafana 7.4.x
+- Add __y_label_trim variable for tooltip items.
+- Add y-label splitter for tooltip items.
+- Add custom content for toolip.
+- Fix to work with Grafana 7.4.x.
 - Migrate to grafana-toolkit and yarn to build and sign.
-- Cleanup dist directory, reduce compiled plugin size.
-- Code cleanup: fix linter errors and warnings
+- Cleanup dist directory content, reduce compiled plugin size, remove dist from repository.
+- Code cleanup: fix huge amount of linter errors and warnings.
 - Add Github Actions configuration to automate release process. 
 - Add unobtrusive branding.
 
