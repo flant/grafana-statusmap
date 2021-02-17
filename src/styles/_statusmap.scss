@@ -14,6 +14,25 @@
   }
 }
 
+.status-heatmap-wrapper {
+  position: relative;
+  a.logo {
+    display: block;
+    background: $branding-logo no-repeat;
+    background-size: contain;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    opacity: 0.15;
+
+    :hover > & {
+      opacity: 1;
+    }
+  }
+}
+
 .statusmap-panel {
   position: relative;
 
@@ -152,5 +171,18 @@
       opacity: 0.4;
       stroke: $text-color-weak;
     }
+  }
+}
+
+.statusmap-about {
+  .header-logo {
+    height: 145px;
+    width: 330px;
+    background: $about-header-logo no-repeat;
+    background-size: contain;
+    margin-bottom: 7px;
+  }
+  a {
+    text-decoration: underline;
   }
 }
