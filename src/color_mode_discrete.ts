@@ -32,7 +32,7 @@ export class ColorModeDiscrete {
 
     for (let i = 0; i < thresholds.length; i++) {
       for (let j = 0; j < values.length; j++) {
-        if (values[j] === thresholds[i].value) {
+        if (this.isEqualValues(values[j], thresholds[i].value)) {
           tooltips.push({
             tooltip: thresholds[i].tooltip ? thresholds[i].tooltip : values[j],
             color: thresholds[i].color,
@@ -43,18 +43,16 @@ export class ColorModeDiscrete {
     return tooltips;
   }
 
-  convertValueToTooltips(values) {
+  convertValueToTooltips(value) {
     let thresholds = this.panel.color.thresholds;
     let tooltips = [];
 
     for (let i = 0; i < thresholds.length; i++) {
-      //for (let j = 0; j < values.length; j++) {
-      if (values === thresholds[i].value) {
+      if (this.isEqualValues(value, thresholds[i].value)) {
         tooltips.push({
-          tooltip: thresholds[i].tooltip ? thresholds[i].tooltip : values,
+          tooltip: thresholds[i].tooltip ? thresholds[i].tooltip : value,
           color: thresholds[i].color,
         });
-        //}
       }
     }
     return tooltips;
@@ -135,7 +133,7 @@ export class ColorModeDiscrete {
 
     for (let i = 0; i < thresholds.length; i++) {
       for (let j = 0; j < values.length; j++) {
-        if (values[j] === thresholds[i].value) {
+        if (this.isEqualValues(values[j], thresholds[i].value)) {
           return this.getDiscreteColor(i);
         }
       }
@@ -199,7 +197,7 @@ export class ColorModeDiscrete {
 
     let thresholds = this.panel.color.thresholds;
     for (let k = 0; k < thresholds.length; k++) {
-      if (value === thresholds[k].value) {
+      if (this.isEqualValues(value, thresholds[k].value)) {
         return thresholds[k];
       }
     }
@@ -216,6 +214,13 @@ export class ColorModeDiscrete {
       };
     }
     return thresholds[index];
+  }
+
+  isEqualValues(val1, val2) {
+    // Relaxed equal operator here is important.
+    // threshold.value can be a number or a string and input value can be a number or a string.
+    /* eslint-disable eqeqeq */
+    return val1 == val2;
   }
 
   roundIntervalCeil(interval) {
