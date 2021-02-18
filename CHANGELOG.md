@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.4.1
+
+- Fix regression in discrete mode. "Data has value with undefined color"
+
 ## v0.4.0
 
 - Add __y_label_trim variable for tooltip items.
