@@ -199,7 +199,7 @@ Each URL has a template, icon, label and formating options: lowercase and date f
 
 * [Changelog](https://github.com/flant/grafana-statusmap/blob/master/CHANGELOG.md)
 * Use [GitHub Discussions](https://github.com/flant/grafana-statusmap/discussions) to ask for help.
-* [Installation](https://grafana.com/grafana/plugins/flant-statusmap-panel/installation)
+* [Installation](https://grafana.com/grafana/plugins/flant-statusmap-panel/?tab=installation)
 * Setup [development](https://github.com/flant/grafana-statusmap/blob/master/DEVELOPMENT.md) environment to help us improve the plugin.
 
 ## Acknowledgements
