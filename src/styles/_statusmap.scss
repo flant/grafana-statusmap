@@ -25,7 +25,7 @@
     right: 0;
     width: 20px;
     height: 20px;
-    opacity: 0.15;
+    opacity: $branding-opacity;
 
     :hover > & {
       opacity: 1;
