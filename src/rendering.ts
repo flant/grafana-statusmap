@@ -578,14 +578,12 @@ export class StatusmapRenderer {
     if (this.panel.color.mode === 'opacity') {
       return this.panel.color.cardColor;
     } else if (this.panel.color.mode === 'spectrum') {
-      if(bucket.value !== null) {
-        return this.colorScale(bucket.value);
-      } else {
-          if(this.panel.nullPointMode == 'as zero')  {
-            return this.colorScale(0);
-          }
-        }
-      } else if (this.panel.color.mode === 'discrete') {
+      if (!bucket.value && this.panel.nullPointMode === 'as zero') {
+        // bucket.value === 0 falls here, but it is fine.
+        return this.colorScale(0);
+      }
+      return this.colorScale(bucket.value);
+    } else if (this.panel.color.mode === 'discrete') {
       if (this.panel.seriesFilterIndex !== null && this.panel.seriesFilterIndex !== -1) {
         return this.ctrl.discreteExtraSeries.getBucketColorSingle(bucket.values[this.panel.seriesFilterIndex]);
       } else {
