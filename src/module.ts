@@ -334,6 +334,11 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   }
 
   issueQueries(datasource: any) {
+    // Grafana 8.1+: there is no updateTimeRange call before initial issueQueries.
+    // https://github.com/grafana/grafana/commit/6f38883583c4c43af149f68db482b39a3240ec95
+    if (!this.range) {
+      this.updateTimeRange(datasource);
+    }
     this.annotationsPromise = this.annotationsSrv.getAnnotations({
       dashboard: this.dashboard,
       panel: this.panel,
