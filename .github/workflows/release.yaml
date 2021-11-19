@@ -101,7 +101,7 @@ jobs:
       - name: Lint plugin
         run: |
           git clone https://github.com/grafana/plugin-validator
-          pushd ./plugin-validator/cmd/plugincheck2
+          pushd ./plugin-validator/pkg/cmd/plugincheck2
           go install
           popd
           # Ignore error about twitter.com link :(
