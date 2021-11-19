@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.4.2
+
+- Compatibility with Grafana 8.1+. (#230, #219, #220, #221)
+- Fix 'as zero' for spectrum mode. (#208, #209)
+
 ## v0.4.1
 
 - Fix regression in discrete mode. "Data has value with undefined color"
