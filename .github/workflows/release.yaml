@@ -101,12 +101,12 @@ jobs:
       - name: Lint plugin
         run: |
           git clone https://github.com/grafana/plugin-validator
-          pushd ./plugin-validator/cmd/plugincheck
+          pushd ./plugin-validator/cmd/plugincheck2
           go install
           popd
           # Ignore error about twitter.com link :(
           # (https://twitter.com/flant_com) (`400 Bad Request`).
-          plugincheck ${{ steps.metadata.outputs.archive }} || true
+          plugincheck2 ${{ steps.metadata.outputs.archive }} || true
 
       - name: Create release
         id: create_release
