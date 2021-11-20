@@ -23,7 +23,7 @@ jobs:
         run: |
           export PACKAGE_VERSION=$(jq -r .version package.json)
 
-          if [[ "v${PACKAGE_VERSION}" != "${FUTURE_TAG}" ]; then
+          if [[ "v${PACKAGE_VERSION}" != "${FUTURE_TAG}" ]]; then
             printf "\033[0;31mPlugin version 'v${PACKAGE_VERSION}' doesn't match future tag name\033[0m\n"
             printf "Fix package.json please."
             exit 1
@@ -140,6 +140,7 @@ jobs:
 
       - name: Create draft release
         id: create_release
+        if: github.event.ref == 'refs/heads/master'
         uses: actions/create-release@v1.1.4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -151,6 +152,7 @@ jobs:
 
       - name: Add plugin archive to release
         id: upload-plugin-asset
+        if: github.event.ref == 'refs/heads/master'
         uses: actions/upload-release-asset@v1.0.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -162,6 +164,7 @@ jobs:
 
       - name: Add checksum to release
         id: upload-checksum-asset
+        if: github.event.ref == 'refs/heads/master'
         uses: actions/upload-release-asset@v1.0.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -172,6 +175,7 @@ jobs:
           asset_content_type: text/plain
 
       - name: Note about publishing to Grafana.com
+        if: github.event.ref == 'refs/heads/master'
         run: |
           echo A draft release has been created for your plugin. Please review and publish it. Then submit your plugin using grafana.com account.
           echo "Archive URL:"
