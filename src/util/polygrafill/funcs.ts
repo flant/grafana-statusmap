@@ -17,7 +17,7 @@ export function hasAppEventCompatibleEmitter(emitter: Emitter): boolean {
   let receiveEvents = 0;
   let eventId: any = { name: 'non-existed-event-id' };
   let eventId2: any = { name: 'non-existed-event-id-2' };
-  emitter.on(eventId, function() {
+  emitter.on(eventId, function () {
     receiveEvents++;
   });
   emitter.emit(eventId);

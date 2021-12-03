@@ -15,7 +15,7 @@ let GnYlRdScheme = new Array(3)
     '0068371a985066bd63a6d96ad9ef8bfee08bfdae61f46d43d73027a50026',
     '0068371a985066bd63a6d96ad9ef8bffffbffee08bfdae61f46d43d73027a50026'
   )
-  .map(function(specifier) {
+  .map(function (specifier) {
     var n = (specifier.length / 6) | 0,
       colors = new Array(n),
       i = 0;

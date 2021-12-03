@@ -14,12 +14,11 @@ import { migratePanelConfig } from './panel_config_migration';
 
 // Utils
 import kbn from 'grafana/app/core/utils/kbn';
-import { loadPluginCss } from 'grafana/app/plugins/sdk';
+import { loadPluginCss, MetricsPanelCtrl } from 'grafana/app/plugins/sdk';
 
 // Types
-import { MetricsPanelCtrl } from 'grafana/app/plugins/sdk';
 import { AnnotationsSrv } from 'grafana/app/features/annotations/annotations_srv';
-import { CoreEvents/*, PanelEvents*/, fallbackToStringEvents } from './util/grafana/events/index';
+import { CoreEvents /*, PanelEvents*/, fallbackToStringEvents } from './util/grafana/events/index';
 import { Bucket, BucketMatrix, BucketMatrixPager } from './statusmap_data';
 import rendering from './rendering';
 import { Polygrafill } from './util/polygrafill/index';
@@ -226,7 +225,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
     this.onCardColorChange = this.onCardColorChange.bind(this);
 
-    this.isV8orHigher = parseInt(config.buildInfo.version.split('.', 2)[0]) >= 8;
+    this.isV8orHigher = parseInt(config.buildInfo.version.split('.', 2)[0], 10) >= 8;
 
     if (this.isV8orHigher) {
       (this as any).useDataFrames = true;

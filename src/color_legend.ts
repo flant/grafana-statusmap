@@ -14,17 +14,17 @@ const LEGEND_STEP_WIDTH = 2;
 /**
  * Bigger color legend for opacity and spectrum modes editor.
  */
-coreModule.directive('optionsColorLegend', function() {
+coreModule.directive('optionsColorLegend', function () {
   return {
     restrict: 'E',
     template: '<div class="status-heatmap-color-legend"><svg width="16.8rem" height="24px"></svg></div>',
-    link: function(scope: any, elem, attrs) {
+    link: function (scope: any, elem, attrs) {
       let ctrl = scope.ctrl;
       let panel = scope.ctrl.panel;
 
       render();
 
-      ctrl.events.on(PanelEvents.render, function() {
+      ctrl.events.on(PanelEvents.render, function () {
         render();
       });
 
@@ -48,16 +48,16 @@ coreModule.directive('optionsColorLegend', function() {
 /**
  * Graph legend with values.
  */
-coreModule.directive('statusHeatmapLegend', function() {
+coreModule.directive('statusHeatmapLegend', function () {
   return {
     restrict: 'E',
     template: '<div class="status-heatmap-color-legend"><svg width="100px" height="6px"></svg></div>',
-    link: function(scope, elem, attrs) {
+    link: function (scope, elem, attrs) {
       let ctrl: StatusHeatmapCtrl = scope.ctrl;
       let panel = scope.ctrl.panel;
 
       render();
-      ctrl.events.on(PanelEvents.render, function() {
+      ctrl.events.on(PanelEvents.render, function () {
         render();
       });
 
@@ -178,11 +178,7 @@ function drawDiscreteColorLegend(elem, colorOptions, discreteExtraSeries) {
   let valuesNumber = thresholds.length;
 
   // graph width as a fallback
-  const $heatmap = $(elem)
-    .parent()
-    .parent()
-    .parent()
-    .find('.statusmap-panel');
+  const $heatmap = $(elem).parent().parent().parent().find('.statusmap-panel');
   const graphWidthAttr = $heatmap.find('svg').attr('width');
   let graphWidth = parseInt(graphWidthAttr, 10);
 
@@ -196,7 +192,7 @@ function drawDiscreteColorLegend(elem, colorOptions, discreteExtraSeries) {
     .attr('class', 'axis tick hidden-texts')
     .attr('font-family', 'sans-serif')
     .text(d => d)
-    .each(function(d, i) {
+    .each(function (d, i) {
       let thisWidth = this.getBBox().width;
       textWidth.push(thisWidth);
     });
@@ -241,16 +237,10 @@ function drawLegendValues(
     return;
   }
 
-  let legendValueScale = d3
-    .scaleLinear()
-    .domain([rangeFrom, rangeTo])
-    .range([0, legendWidth]);
+  let legendValueScale = d3.scaleLinear().domain([rangeFrom, rangeTo]).range([0, legendWidth]);
 
   let ticks = buildLegendTicks(rangeFrom, rangeTo, maxValue, minValue);
-  let xAxis = d3
-    .axisBottom(legendValueScale)
-    .tickValues(ticks)
-    .tickSize(2);
+  let xAxis = d3.axisBottom(legendValueScale).tickValues(ticks).tickSize(2);
 
   let colorRect = legendElem.find(':first-child');
   let posY = getSvgElemHeight(legendElem) + 2;
@@ -262,10 +252,7 @@ function drawLegendValues(
     .attr('transform', 'translate(' + posX + ',' + posY + ')')
     .call(xAxis);
 
-  legend
-    .select('.axis')
-    .select('.domain')
-    .remove();
+  legend.select('.axis').select('.domain').remove();
 }
 
 function drawDiscreteLegendValues(elem, colorOptions, legendWidth) {
@@ -282,10 +269,7 @@ function drawDiscreteLegendValues(elem, colorOptions, legendWidth) {
   let rangeStep = Math.floor(legendWidth / valuesNumber);
   //let valuesRange = d3.range(0, legendWidth, rangeStep);
 
-  let legendValueScale = d3
-    .scaleLinear()
-    .domain([0, valuesNumber])
-    .range([0, legendWidth]);
+  let legendValueScale = d3.scaleLinear().domain([0, valuesNumber]).range([0, legendWidth]);
 
   let thresholdValues = [];
   let thresholdTooltips = [];
@@ -323,10 +307,7 @@ function drawDiscreteLegendValues(elem, colorOptions, legendWidth) {
     .attr('transform', 'translate(' + posX + ',' + posY + ')')
     .call(xAxis);
 
-  legend
-    .select('.axis')
-    .select('.domain')
-    .remove();
+  legend.select('.axis').select('.domain').remove();
 }
 
 function drawSimpleColorLegend(elem, colorScale) {
@@ -365,16 +346,9 @@ function drawSimpleOpacityLegend(elem, options) {
   if (legendWidth) {
     let legendOpacityScale;
     if (options.colorScale === 'linear') {
-      legendOpacityScale = d3
-        .scaleLinear()
-        .domain([0, legendWidth])
-        .range([0, 1]);
+      legendOpacityScale = d3.scaleLinear().domain([0, legendWidth]).range([0, 1]);
     } else if (options.colorScale === 'sqrt') {
-      legendOpacityScale = d3
-        .scalePow()
-        .exponent(options.exponent)
-        .domain([0, legendWidth])
-        .range([0, 1]);
+      legendOpacityScale = d3.scalePow().exponent(options.exponent).domain([0, legendWidth]).range([0, 1]);
     }
 
     let valuesRange = d3.range(0, legendWidth, LEGEND_STEP_WIDTH);
@@ -413,16 +387,9 @@ function getColorScale(colorScheme, maxValue, minValue = 0) {
 function getOpacityScale(options, maxValue, minValue = 0) {
   let legendOpacityScale;
   if (options.colorScale === 'linear') {
-    legendOpacityScale = d3
-      .scaleLinear()
-      .domain([minValue, maxValue])
-      .range([0, 1]);
+    legendOpacityScale = d3.scaleLinear().domain([minValue, maxValue]).range([0, 1]);
   } else if (options.colorScale === 'sqrt') {
-    legendOpacityScale = d3
-      .scalePow()
-      .exponent(options.exponent)
-      .domain([minValue, maxValue])
-      .range([0, 1]);
+    legendOpacityScale = d3.scalePow().exponent(options.exponent).domain([minValue, maxValue]).range([0, 1]);
   }
   return legendOpacityScale;
 }

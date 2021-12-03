@@ -1,17 +1,17 @@
 import { find } from 'lodash';
-import { colors } from '@grafana/ui';
+// import { colors } from '@grafana/ui';
 import {
   DataFrame,
   dateTime,
   Field,
   FieldType,
-  getColorForTheme,
+  // getColorForTheme,
   getFieldDisplayName,
   getTimeField,
   TimeRange,
 } from '@grafana/data';
 import TimeSeries from 'grafana/app/core/time_series2';
-import config from 'grafana/app/core/config';
+// import config from 'grafana/app/core/config';
 
 type Options = {
   dataList: DataFrame[];
@@ -49,7 +49,7 @@ export class DataProcessor {
          * 例如 "input_qty 1395T2776201" ==> "1395T2776201"
          */
         const fullname = getFieldDisplayName(field, series, dataList);
-        const name = fullname.replace(/\w+\s+/, "");
+        const name = fullname.replace(/\w+\s+/, '');
         const datapoints = [];
 
         for (let r = 0; r < series.length; r++) {
