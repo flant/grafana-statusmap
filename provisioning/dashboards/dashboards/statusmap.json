@@ -1,0 +1,510 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 1,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "cards": {
+        "cardHSpacing": 2,
+        "cardMinWidth": 5,
+        "cardRound": null,
+        "cardVSpacing": 2
+      },
+      "color": {
+        "cardColor": "#b4ff00",
+        "colorScale": "sqrt",
+        "colorScheme": "interpolateGnYlRd",
+        "defaultColor": "#757575",
+        "exponent": 0.5,
+        "mode": "discrete",
+        "thresholds": [
+          {
+            "$$hashKey": "object:190",
+            "color": "#F2495C",
+            "tooltip": "fail",
+            "value": "0"
+          },
+          {
+            "$$hashKey": "object:198",
+            "color": "#1F60C4",
+            "tooltip": "no water",
+            "value": "2"
+          },
+          {
+            "$$hashKey": "object:210",
+            "color": "#823702",
+            "tooltip": "no beans",
+            "value": "3"
+          },
+          {
+            "$$hashKey": "object:214",
+            "color": "#FADE2A",
+            "tooltip": "off",
+            "value": "4"
+          },
+          {
+            "$$hashKey": "object:218",
+            "color": "#37872D",
+            "tooltip": "OK",
+            "value": "1"
+          }
+        ]
+      },
+      "datasource": "TestData DB",
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "highlightCards": true,
+      "id": 4,
+      "legend": {
+        "show": true
+      },
+      "nullPointMode": "as empty",
+      "pageSize": 15,
+      "seriesFilterIndex": -1,
+      "statusmap": {
+        "ConfigVersion": "v1"
+      },
+      "targets": [
+        {
+          "alias": "Bifrost lobby",
+          "refId": "A",
+          "scenarioId": "csv_metric_values",
+          "stringInput": "1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1"
+        },
+        {
+          "alias": "Moon station",
+          "hide": false,
+          "refId": "B",
+          "scenarioId": "csv_metric_values",
+          "stringInput": "1,1,2,2,2,2,2,2,2,2,2,,,2,1,1,2,2,,2,1,,,2,2"
+        },
+        {
+          "alias": "Valera's bistrot",
+          "hide": false,
+          "refId": "D",
+          "scenarioId": "csv_metric_values",
+          "stringInput": "1,1,1,1,1,,,,,,,,1,1,1,1,1,,,,,,1,1,1"
+        },
+        {
+          "alias": "Valera's bistrot",
+          "hide": false,
+          "refId": "E",
+          "scenarioId": "csv_metric_values",
+          "stringInput": ",,,,,0,0,0,0,0,0,0,,,,,,0,0,0,0,0,,,"
+        },
+        {
+          "alias": "Valera's bistrot",
+          "hide": false,
+          "refId": "F",
+          "scenarioId": "csv_metric_values",
+          "stringInput": ",,,,,2,2,2,2,2,2,2,,,,,,2,2,2,2,2,,,"
+        },
+        {
+          "alias": "Valera's bistrot",
+          "hide": false,
+          "refId": "C",
+          "scenarioId": "csv_metric_values",
+          "stringInput": ",,,,,,,,,,,,,,,,,,,3,3,3,,,"
+        },
+        {
+          "alias": "Nicki's cafe",
+          "hide": false,
+          "refId": "G",
+          "scenarioId": "csv_metric_values",
+          "stringInput": "1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,4,4,4,4,4,4,4,1,1,1"
+        },
+        {
+          "alias": "Gerry's bar",
+          "hide": false,
+          "refId": "J",
+          "scenarioId": "csv_metric_values",
+          "stringInput": "1,1,1,1,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1"
+        }
+      ],
+      "title": "Coffee makers' status (discrete colors)",
+      "tooltip": {
+        "extraInfo": "",
+        "freezeOnClick": true,
+        "items": [],
+        "show": true,
+        "showExtraInfo": false,
+        "showItems": false
+      },
+      "type": "flant-statusmap-panel",
+      "useMax": true,
+      "usingPagination": false,
+      "xAxis": {
+        "show": true
+      },
+      "yAxis": {
+        "maxWidth": -1,
+        "minWidth": -1,
+        "show": true
+      },
+      "yAxisSort": "metrics",
+      "yLabel": {
+        "delimiter": "",
+        "labelTemplate": "",
+        "usingSplitLabel": false
+      }
+    },
+    {
+      "cards": {
+        "cardHSpacing": 2,
+        "cardMinWidth": 5,
+        "cardRound": null,
+        "cardVSpacing": 2
+      },
+      "color": {
+        "cardColor": "#b4ff00",
+        "colorScale": "sqrt",
+        "colorScheme": "interpolateGnYlRd",
+        "defaultColor": "#757575",
+        "exponent": 0.5,
+        "mode": "spectrum",
+        "thresholds": []
+      },
+      "datasource": "TestData DB",
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "highlightCards": true,
+      "id": 1,
+      "legend": {
+        "show": true
+      },
+      "nullPointMode": "as empty",
+      "pageSize": 15,
+      "seriesFilterIndex": -1,
+      "statusmap": {
+        "ConfigVersion": "v1"
+      },
+      "title": "Random Walk (spectrum colors)",
+      "tooltip": {
+        "extraInfo": "",
+        "freezeOnClick": true,
+        "items": [],
+        "show": true,
+        "showExtraInfo": false,
+        "showItems": false
+      },
+      "type": "flant-statusmap-panel",
+      "useMax": true,
+      "usingPagination": false,
+      "xAxis": {
+        "show": true
+      },
+      "yAxis": {
+        "maxWidth": -1,
+        "minWidth": -1,
+        "show": true
+      },
+      "yAxisSort": "metrics",
+      "yLabel": {
+        "delimiter": "",
+        "labelTemplate": "",
+        "usingSplitLabel": false
+      }
+    },
+    {
+      "cards": {
+        "cardHSpacing": 2,
+        "cardMinWidth": 5,
+        "cardRound": null,
+        "cardVSpacing": 2
+      },
+      "color": {
+        "cardColor": "#E02F44",
+        "colorScale": "sqrt",
+        "colorScheme": "interpolateSpectral",
+        "defaultColor": "#757575",
+        "exponent": 0.5,
+        "mode": "spectrum",
+        "thresholds": [
+          {
+            "$$hashKey": "object:244",
+            "color": "#b58900",
+            "tooltip": "yellow",
+            "value": 0
+          },
+          {
+            "$$hashKey": "object:245",
+            "color": "#cb4b16",
+            "tooltip": "orange",
+            "value": 1
+          },
+          {
+            "$$hashKey": "object:246",
+            "color": "#dc322f",
+            "tooltip": "red",
+            "value": 2
+          },
+          {
+            "$$hashKey": "object:247",
+            "color": "#d33682",
+            "tooltip": "magenta",
+            "value": 3
+          },
+          {
+            "$$hashKey": "object:248",
+            "color": "#6c71c4",
+            "tooltip": "violet",
+            "value": 4
+          },
+          {
+            "$$hashKey": "object:249",
+            "color": "#268bd2",
+            "tooltip": "blue",
+            "value": 5
+          },
+          {
+            "$$hashKey": "object:250",
+            "color": "#2aa198",
+            "tooltip": "cyan",
+            "value": 6
+          },
+          {
+            "$$hashKey": "object:251",
+            "color": "#859900",
+            "tooltip": "green",
+            "value": 7
+          }
+        ]
+      },
+      "datasource": "TestData DB",
+      "description": "",
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 17
+      },
+      "highlightCards": true,
+      "id": 2,
+      "legend": {
+        "show": true
+      },
+      "nullPointMode": "as empty",
+      "pageSize": 4,
+      "seriesFilterIndex": -1,
+      "statusmap": {
+        "ConfigVersion": "v1"
+      },
+      "targets": [
+        {
+          "alias": "AA",
+          "noise": 5,
+          "refId": "A",
+          "scenarioId": "random_walk",
+          "spread": 5,
+          "startValue": 5,
+          "stringInput": ""
+        },
+        {
+          "alias": "BB",
+          "noise": 5,
+          "refId": "B",
+          "scenarioId": "random_walk",
+          "spread": 5,
+          "startValue": 5,
+          "stringInput": ""
+        },
+        {
+          "alias": "CC",
+          "labels": "",
+          "noise": 5,
+          "refId": "C",
+          "scenarioId": "random_walk",
+          "spread": 5,
+          "startValue": 5,
+          "stringInput": ""
+        },
+        {
+          "alias": "DD",
+          "labels": "",
+          "noise": 5,
+          "refId": "D",
+          "scenarioId": "random_walk",
+          "spread": 5,
+          "startValue": 5,
+          "stringInput": ""
+        },
+        {
+          "alias": "EE",
+          "labels": "",
+          "noise": 5,
+          "refId": "E",
+          "scenarioId": "random_walk",
+          "spread": 5,
+          "startValue": 5,
+          "stringInput": ""
+        },
+        {
+          "alias": "FF",
+          "labels": "",
+          "noise": 5,
+          "refId": "F",
+          "scenarioId": "random_walk",
+          "spread": 5,
+          "startValue": 5,
+          "stringInput": ""
+        },
+        {
+          "alias": "GG GG G",
+          "labels": "",
+          "noise": 5,
+          "refId": "G",
+          "scenarioId": "random_walk",
+          "spread": 5,
+          "startValue": 5,
+          "stringInput": ""
+        },
+        {
+          "alias": "HHH HH hhHHH",
+          "labels": "",
+          "noise": 5,
+          "refId": "H",
+          "scenarioId": "random_walk",
+          "spread": 5,
+          "startValue": 5,
+          "stringInput": ""
+        },
+        {
+          "alias": "III I III I II I",
+          "labels": "",
+          "noise": 5,
+          "refId": "I",
+          "scenarioId": "random_walk",
+          "spread": 5,
+          "startValue": 5,
+          "stringInput": ""
+        },
+        {
+          "alias": "JJ JJJJJJ JJJ",
+          "labels": "",
+          "noise": 5,
+          "refId": "J",
+          "scenarioId": "random_walk",
+          "spread": 5,
+          "startValue": 5,
+          "stringInput": ""
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Pagination and Tooltip with URLs",
+      "tooltip": {
+        "extraInfo": "",
+        "freezeOnClick": true,
+        "items": [
+          {
+            "$$hashKey": "object:88",
+            "base_url": "",
+            "extraSeries": {
+              "index": -1
+            },
+            "forcelowercase": true,
+            "icon_fa": "external-link",
+            "label": "",
+            "tooltip": "",
+            "urlIcon": "cloud-download",
+            "urlTemplate": "https://file-server/${__url_time_range}",
+            "urlText": "Get build file",
+            "urlToLowerCase": true,
+            "useExtraSeries": false,
+            "useseriesname": true
+          },
+          {
+            "$$hashKey": "object:125",
+            "urlIcon": "plus",
+            "urlTemplate": "https://file-server/${__value_date}",
+            "urlText": "Get another file",
+            "urlToLowerCase": true,
+            "valueDateFormat": ""
+          }
+        ],
+        "show": true,
+        "showExtraInfo": false,
+        "showItems": true,
+        "urls": [
+          {
+            "$$hashKey": "object:41",
+            "base_url": "",
+            "extraSeries": {
+              "index": -1
+            },
+            "forcelowercase": true,
+            "icon_fa": "external-link",
+            "label": "",
+            "tooltip": "",
+            "useExtraSeries": false,
+            "useseriesname": true
+          }
+        ]
+      },
+      "type": "flant-statusmap-panel",
+      "useMax": true,
+      "usingPagination": true,
+      "xAxis": {
+        "show": true
+      },
+      "yAxis": {
+        "maxWidth": -1,
+        "minWidth": -1,
+        "show": true
+      },
+      "yAxisSort": "metrics",
+      "yLabel": {
+        "delimiter": "",
+        "labelTemplate": "",
+        "usingSplitLabel": false
+      }
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 31,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Statusmap demo",
+  "uid": "sK-iTZ27z",
+  "version": 13
+}
