@@ -11,6 +11,8 @@ Panel to show discrete statuses of multiple targets over time.
 
 ![Statusmap sample panel with dark theme](https://raw.githubusercontent.com/flant/grafana-statusmap/master/docs/img/flant-statusmap-panel-dark.png)
 
+> Run `docker compose up` and open http://localhost:3000 in browser to see a simple demo.
+
 
 ## Features
 
