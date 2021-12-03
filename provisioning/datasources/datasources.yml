@@ -1,0 +1,14 @@
+apiVersion: 1
+deleteDatasources:
+  - name: Static
+    orgId: 1
+  - name: TestData DB
+    orgId: 1
+datasources:
+  - name: Static
+    type: marcusolsson-static-datasource
+    isDefault: true
+    version: 1
+  - name: TestData DB
+    type: testdata
+    version: 1
