@@ -2,6 +2,10 @@
 import _ from 'lodash';
 import { auto } from 'angular';
 
+import { PanelEvents, DataFrame, TimeSeries } from '@grafana/data';
+import { config } from '@grafana/runtime';
+import { DataProcessor } from './data_processor';
+
 // Components
 import './color_legend';
 import { optionsEditorCtrl } from './options_editor';
@@ -15,7 +19,7 @@ import { loadPluginCss } from 'grafana/app/plugins/sdk';
 // Types
 import { MetricsPanelCtrl } from 'grafana/app/plugins/sdk';
 import { AnnotationsSrv } from 'grafana/app/features/annotations/annotations_srv';
-import { CoreEvents, PanelEvents } from './util/grafana/events/index';
+import { CoreEvents/*, PanelEvents*/, fallbackToStringEvents } from './util/grafana/events/index';
 import { Bucket, BucketMatrix, BucketMatrixPager } from './statusmap_data';
 import rendering from './rendering';
 import { Polygrafill } from './util/polygrafill/index';
@@ -148,13 +152,16 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     pageSize: 15,
   };
 
+  isV8orHigher: boolean;
+  processor?: DataProcessor;
+
   /** @ngInject */
   constructor($scope: any, $injector: auto.IInjectorService, private annotationsSrv: AnnotationsSrv) {
     super($scope, $injector);
 
     if (!Polygrafill.hasAppEventCompatibleEmitter(this.events)) {
       CoreEvents.fallbackToStringEvents();
-      PanelEvents.fallbackToStringEvents();
+      fallbackToStringEvents();
       renderComplete = 'statusmap-render-complete';
     }
 
@@ -209,6 +216,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
     this.events.on(PanelEvents.render, this.onRender.bind(this));
     this.events.on(PanelEvents.dataReceived, this.onDataReceived.bind(this));
+    this.events.on(PanelEvents.dataFramesReceived, this.onDataReceived.bind(this));
     this.events.on(PanelEvents.dataError, this.onDataError.bind(this));
     this.events.on(PanelEvents.dataSnapshotLoad, this.onDataReceived.bind(this));
     this.events.on(PanelEvents.editModeInitialized, this.onInitEditMode.bind(this));
@@ -217,6 +225,13 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.events.on(renderComplete, this.onRenderComplete.bind(this));
 
     this.onCardColorChange = this.onCardColorChange.bind(this);
+
+    this.isV8orHigher = parseInt(config.buildInfo.version.split('.', 2)[0]) >= 8;
+
+    if (this.isV8orHigher) {
+      (this as any).useDataFrames = true;
+      this.processor = new DataProcessor(this.panel);
+    }
   }
 
   onRenderComplete(data: any): void {
@@ -374,7 +389,17 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     return res;
   }
 
-  onDataReceived(dataList: any) {
+  onDataReceived(data: DataFrame[] | TimeSeries[]) {
+    let dataList;
+    if (this.isV8orHigher) {
+      dataList = this.processor.getSeriesList({
+        dataList: data as DataFrame[],
+        range: this.range,
+      });
+    } else {
+      dataList = data as TimeSeries[];
+    }
+
     this.data = dataList;
     // Quick workaround for 7.0+. There is no call to
     // calculateInterval when enter Edit mode.
