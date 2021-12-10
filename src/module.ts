@@ -2,7 +2,9 @@
 import _ from 'lodash';
 import { auto } from 'angular';
 
-import { PanelEvents, DataFrame, TimeSeries } from '@grafana/data';
+import { PanelEvents, DataFrame } from '@grafana/data';
+import TimeSeries from 'grafana/app/core/time_series2';
+
 import { config } from '@grafana/runtime';
 import { DataProcessor } from './data_processor';
 
@@ -18,10 +20,8 @@ import { loadPluginCss, MetricsPanelCtrl } from 'grafana/app/plugins/sdk';
 
 // Types
 import { AnnotationsSrv } from 'grafana/app/features/annotations/annotations_srv';
-import { CoreEvents /*, PanelEvents*/, fallbackToStringEvents } from './util/grafana/events/index';
 import { Bucket, BucketMatrix, BucketMatrixPager } from './statusmap_data';
 import rendering from './rendering';
-import { Polygrafill } from './util/polygrafill/index';
 
 import { ColorModeDiscrete } from './color_mode_discrete';
 
@@ -64,8 +64,6 @@ loadPluginCss({
   dark: 'plugins/flant-statusmap-panel/styles/dark.css',
   light: 'plugins/flant-statusmap-panel/styles/light.css',
 });
-
-export var renderComplete: any = { name: 'statusmap-render-complete' };
 
 class StatusHeatmapCtrl extends MetricsPanelCtrl {
   static templateUrl = 'module.html';
@@ -151,18 +149,11 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     pageSize: 15,
   };
 
-  isV8orHigher: boolean;
   processor?: DataProcessor;
 
   /** @ngInject */
   constructor($scope: any, $injector: auto.IInjectorService, private annotationsSrv: AnnotationsSrv) {
     super($scope, $injector);
-
-    if (!Polygrafill.hasAppEventCompatibleEmitter(this.events)) {
-      CoreEvents.fallbackToStringEvents();
-      fallbackToStringEvents();
-      renderComplete = 'statusmap-render-complete';
-    }
 
     // Grafana 7.2 workaround
     if (typeof kbn['intervalToMs'] === 'function') {
@@ -215,21 +206,26 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
     this.events.on(PanelEvents.render, this.onRender.bind(this));
     this.events.on(PanelEvents.dataReceived, this.onDataReceived.bind(this));
-    this.events.on(PanelEvents.dataFramesReceived, this.onDataReceived.bind(this));
     this.events.on(PanelEvents.dataError, this.onDataError.bind(this));
     this.events.on(PanelEvents.dataSnapshotLoad, this.onDataReceived.bind(this));
     this.events.on(PanelEvents.editModeInitialized, this.onInitEditMode.bind(this));
     this.events.on(PanelEvents.refresh, this.postRefresh.bind(this));
     // custom event from rendering.js
-    this.events.on(renderComplete, this.onRenderComplete.bind(this));
+    // this.events.on(PanelEvents.render, this.onRenderComplete.bind(this));
 
     this.onCardColorChange = this.onCardColorChange.bind(this);
 
-    this.isV8orHigher = parseInt(config.buildInfo.version.split('.', 2)[0], 10) >= 8;
+    console.log('Grafana buildInfo:', config.buildInfo);
 
-    if (this.isV8orHigher) {
+    const majorVersion = parseInt(config.buildInfo.version.split('.', 2)[0], 10);
+    if (majorVersion <= 6) {
+      // data will fall into onDataReceived() with series data format
+    } else {
+      // table like DataFrame[] data format for both table and series data mode
       (this as any).useDataFrames = true;
-      this.processor = new DataProcessor(this.panel);
+      this.events.on(PanelEvents.dataFramesReceived, this.onDataFramesReceived.bind(this));
+      this.events.on(PanelEvents.dataSnapshotLoad, this.onDataFramesReceived.bind(this));
+      this.processor = new DataProcessor(this.panel, majorVersion);
     }
   }
 
@@ -388,17 +384,15 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     return res;
   }
 
-  onDataReceived(data: DataFrame[] | TimeSeries[]) {
-    let dataList;
-    if (this.isV8orHigher) {
-      dataList = this.processor.getSeriesList({
-        dataList: data as DataFrame[],
-        range: this.range,
-      });
-    } else {
-      dataList = data as TimeSeries[];
-    }
+  onDataFramesReceived(data: DataFrame[]) {
+    const dataList = this.processor.getSeriesList({
+      dataList: data as DataFrame[],
+      range: this.range,
+    });
+    this.onDataReceived(dataList);
+  }
 
+  onDataReceived(dataList: TimeSeries[]) {
     this.data = dataList;
     // Quick workaround for 7.0+. There is no call to
     // calculateInterval when enter Edit mode.

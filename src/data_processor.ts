@@ -19,7 +19,7 @@ type Options = {
 };
 
 export class DataProcessor {
-  constructor(private panel: any) {}
+  constructor(private panel: any, private grafanaVersion: number) {}
 
   getSeriesList(options: Options): TimeSeries[] {
     const list: TimeSeries[] = [];
@@ -44,12 +44,13 @@ export class DataProcessor {
           continue;
         }
         /**
-         * 鉴于v8.x开始将series name格式定义为: measure_column + groupby_value，measure_column前缀多余，所以此处依然遵循v7.x格式
+         * Since v8.x getFieldDisplayName() will return series name as: column_name + tag_value
+         * column_name is redundant and be omitted for concise label display
          *
-         * 例如 "input_qty 1395T2776201" ==> "1395T2776201"
+         * e.g. "input_qty 1395T2776201" ==> "1395T2776201"
          */
         const fullname = getFieldDisplayName(field, series, dataList);
-        const name = fullname.replace(/\w+\s+/, '');
+        const name = this.grafanaVersion >= 8 ? fullname.replace(/\w+\s+/, '') : fullname;
         const datapoints = [];
 
         for (let r = 0; r < series.length; r++) {
