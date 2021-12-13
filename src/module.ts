@@ -24,6 +24,7 @@ import { Bucket, BucketMatrix, BucketMatrixPager } from './statusmap_data';
 import rendering from './rendering';
 
 import { ColorModeDiscrete } from './color_mode_discrete';
+import { CoreEvents } from './util/grafana/events';
 
 const VALUE_INDEX = 0,
   TIME_INDEX = 1;
@@ -211,7 +212,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.events.on(PanelEvents.editModeInitialized, this.onInitEditMode.bind(this));
     this.events.on(PanelEvents.refresh, this.postRefresh.bind(this));
     // custom event from rendering.js
-    // this.events.on(PanelEvents.render, this.onRenderComplete.bind(this));
+    this.events.on(CoreEvents.renderComplete, this.onRenderComplete.bind(this));
 
     this.onCardColorChange = this.onCardColorChange.bind(this);
 

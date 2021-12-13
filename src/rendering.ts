@@ -12,8 +12,9 @@ import { d3ScaleChromatic } from './util/d3/d3-scale-chromatic';
 import { StatusmapTooltip } from './tooltip';
 import { AnnotationTooltip } from './annotations';
 import { Bucket, BucketMatrix, BucketMatrixPager } from './statusmap_data';
-import { StatusHeatmapCtrl, renderComplete } from './module';
-import { CoreEvents, PanelEvents } from './util/grafana/events/index';
+import { StatusHeatmapCtrl } from './module';
+import { CoreEvents } from './util/grafana/events/index';
+import { PanelEvents } from '@grafana/data';
 
 let MIN_CARD_SIZE = 5,
   CARD_H_SPACING = 2,
@@ -413,7 +414,7 @@ export class StatusmapRenderer {
 
     this._renderAnnotations();
 
-    this.ctrl.events.emit(renderComplete, {
+    this.ctrl.events.emit(CoreEvents.renderComplete, {
       chartWidth: this.chartWidth,
     });
   }

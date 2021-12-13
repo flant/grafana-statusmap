@@ -1,4 +1,4 @@
-import { AppEvent } from './appEvents';
+import { eventFactory } from '@grafana/data';
 
 export interface GraphHoverPayload {
   pos: any;
@@ -7,10 +7,6 @@ export interface GraphHoverPayload {
   };
 }
 
-export var graphHover: AppEvent<GraphHoverPayload> | string = { name: 'graph-hover' };
-export var graphHoverClear: AppEvent<any> | string = { name: 'graph-hover-clear' };
-
-export function fallbackToStringEvents() {
-  graphHover = 'graph-hover';
-  graphHoverClear = 'graph-hover-clear';
-}
+export const graphHover = eventFactory<GraphHoverPayload>('statusmap-graph-hover');
+export const graphHoverClear = eventFactory('statusmap-graph-hover-clear');
+export const renderComplete = eventFactory('statusmap-render-complete');

@@ -27,8 +27,8 @@ Panel to show discrete statuses of multiple targets over time.
   - InfluxDB
   - Mysql
 * Supported Grafana versions:
-  - 6.7+ are the most priority (6.7, 7.0-7.4)
-  - also works in 5.4.3 and 6.0+
+  - 6.7+ to 8.2+
+  - prior 6.7 will cause plugin load fail (no support or incompatible @grafana/data and @grafana/runtime package)
 
 ## Motivation
 

@@ -7,7 +7,7 @@ import { tickStep } from 'grafana/app/core/utils/ticks';
 import coreModule from 'grafana/app/core/core_module';
 
 import { StatusHeatmapCtrl } from './module';
-import { PanelEvents } from './util/grafana/events/index';
+import { PanelEvents } from '@grafana/data';
 
 const LEGEND_STEP_WIDTH = 2;
 
