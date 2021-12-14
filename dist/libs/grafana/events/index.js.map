@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../../../src/libs/grafana/events/index.ts"],"names":["CoreEvents","PanelEvents"],"mappings":";;;;;;;;AAAYA,MAAAA,U;;AACAC,MAAAA,W;;;4BACHD,U;;6BAAYC,W","sourcesContent":["import * as CoreEvents from './events';\nimport * as PanelEvents from './panelEvents';\nexport { CoreEvents, PanelEvents }"],"file":"index.js"}

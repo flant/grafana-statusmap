@@ -1,14 +1,17 @@
-<p align="center">
-<a href="https://github.com/flant/grafana-statusmap/releases/latest"><img src="https://img.shields.io/github/tag-date/flant/grafana-statusmap.svg?logo=github&label=latest" alt="Download from Github"/></a>
-<a href="https://community.flant.com/c/grafana-statusmap/8"><img src="https://img.shields.io/discourse/status?server=https%3A%2F%2Fcommunity.flant.com" alt="Discourse forum for discussions"/></a>
-<a href="https://t.me/statusmap_ru"><img src="https://img.shields.io/badge/@statusmap_ru-RU-informational.svg?logo=telegram" alt="Telegram chat RU"/></a>
-</p>
-
 # Statusmap panel for Grafana
 
-![Statusmap sample panel](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/flant-statusmap-panel.png)
+[![Download from GitHub](https://img.shields.io/github/tag-date/flant/grafana-statusmap.svg?logo=github&label=latest)](https://github.com/flant/grafana-statusmap/releases/latest)
+[![GH Discussions](https://img.shields.io/badge/GitHub-discussions-brightgreen)](https://github.com/flant/grafana-statusmap/discussions)
+[![Telegram chat RU](https://img.shields.io/badge/@statusmap_ru-RU-informational.svg?logo=telegram)](https://t.me/statusmap_ru)
+[![Follow Flant on Twitter](https://img.shields.io/twitter/follow/flant_com?label=Follow%20Flant&style=social)](https://twitter.com/flant_com)
 
-![Statusmap sample panel with dark theme](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/flant-statusmap-panel-dark.png)
+Panel to show discrete statuses of multiple targets over time.
+
+![Statusmap sample panel](https://raw.githubusercontent.com/flant/grafana-statusmap/master/docs/img/flant-statusmap-panel.png)
+
+![Statusmap sample panel with dark theme](https://raw.githubusercontent.com/flant/grafana-statusmap/master/docs/img/flant-statusmap-panel-dark.png)
+
+> Run `docker compose up` and open http://localhost:3000 in browser to see a simple demo.
 
 
 ## Features
@@ -19,30 +22,15 @@
 * Increasing rows/buckets' interval for better visual representation
 * Representing null values as empty bucket or zero value
 
-:calendar: New features are planned in [#62](https://github.com/flant/grafana-statusmap/issues/62)
-
 ### Supported environment
 
 * Tested with datasources:
   - Prometheus
   - InfluxDB
   - Mysql
-* Tested with Grafana:
-  - 7.0, 7.1, 7.2
-  - 6.3, 6.6, 6.7
-  - 5.4.3
-
-## Installation
-
-Plugin can be installed with GF_INSTALL_PLUGINS="flant-statusmap-panel" or you can use Git and clone this repo:
-
-```
-git clone git@github.com:flant/grafana-statusmap.git /var/lib/grafana/plugins/flant-statusmap-panel
-```
-
-Alternatively, you can download [ZIP archive](https://github.com/flant/grafana-statusmap/archive/master.zip)
-of this repo and unpack it into /var/lib/grafana/plugins directory.
-
+* Supported Grafana versions:
+  - 6.7+ are the most priority (6.7, 7.0-7.4)
+  - also works in 5.4.3 and 6.0+
 
 ## Motivation
 
@@ -135,17 +123,17 @@ ORDER BY $__timeGroup(date_insert,$__interval)
 First of all, an individual query for each possible status' value should be created.
 Each query should also have similar legend for grouping:
 
-![Query setup](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/queries-example.png)
+![Query setup](https://raw.githubusercontent.com/flant/grafana-statusmap/master/docs/img/queries-example.png)
 
 Then, color mapping for status' values should be defined in __Discrete__ color mode:
 
-![Color mapping](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/color-mapping.png)
+![Color mapping](https://raw.githubusercontent.com/flant/grafana-statusmap/master/docs/img/color-mapping.png)
 
 Use can use presets to define a trafic light colors or 8 colors from [solarized](https://ethanschoonover.com/solarized/) palette:
 
-![Color mapping empty](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/color-preset-01.png)
+![Color mapping empty](https://raw.githubusercontent.com/flant/grafana-statusmap/master/docs/img/color-preset-01.png)
 
-![Color mapping trafic lights](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/color-preset-02.png)
+![Color mapping trafic lights](https://raw.githubusercontent.com/flant/grafana-statusmap/master/docs/img/color-preset-02.png)
 
 
 _Note: __Spectrum__ and __Opacity__ color modes function the same way they do in [Heatmap](https://grafana.com/plugins/heatmap) plugin._
@@ -155,30 +143,30 @@ _Note: __Spectrum__ and __Opacity__ color modes function the same way they do in
 
 #### Bucket
 
-![Bucket options](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/options-bucket.png)
+![Bucket options](https://raw.githubusercontent.com/flant/grafana-statusmap/master/docs/img/options-bucket.png)
 
 __Multiple values__ checkbox specifies how they should be displayed:
 * If it's off, multiple values for one bucket are treated as error;
 * If it's on, color for such bucket would be determined by the value having least index in color mapping.
 
-![Color mapping](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/multiple-values-error.png)
+![Color mapping](https://raw.githubusercontent.com/flant/grafana-statusmap/master/docs/img/multiple-values-error.png)
 
 __Display nulls__ can be treated as empty buckets or displayed with the color of `0` value.
 
-![Color mapping](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/null-as-empty.png)
+![Color mapping](https://raw.githubusercontent.com/flant/grafana-statusmap/master/docs/img/null-as-empty.png)
 
 __Min width__ and __spacing__ are used to specify minimal bucket width and spacing between buckets.
 __Rounding__ may be used to round edges.
 
-![Min width, spacing, rounding 1](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/min-width-spacing-rounding-01.png)
+![Min width, spacing, rounding 1](https://raw.githubusercontent.com/flant/grafana-statusmap/master/docs/img/min-width-spacing-rounding-01.png)
 
-![Min width, spacing, rounding 2](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/min-width-spacing-rounding-02.png)
+![Min width, spacing, rounding 2](https://raw.githubusercontent.com/flant/grafana-statusmap/master/docs/img/min-width-spacing-rounding-02.png)
 
 __Values index__ set to positive number to display only values from specified timeseries.
 
 #### Display
 
-![Display options](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/options-display.png)
+![Display options](https://raw.githubusercontent.com/flant/grafana-statusmap/master/docs/img/options-display.png)
 
 __Show legend__ checkbox toggles legend at the bottom of the panel.
 
@@ -186,7 +174,7 @@ __Rows sort__ can be used to sort labels on Y axis. Metrics — sort y labels a
 
 #### Pagination
 
-![Pagination controls](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/pagination-graph.png)
+![Pagination controls](https://raw.githubusercontent.com/flant/grafana-statusmap/master/docs/img/pagination-graph.png)
 
 __Enable pagination__ toggles pagination controls on graph.
 
@@ -194,7 +182,7 @@ __Rows per page__ a number of rows to display on graph.
 
 #### Tooltip
 
-![Tooltip in frozen state](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/tooltip-frozen.png)
+![Tooltip in frozen state](https://raw.githubusercontent.com/flant/grafana-statusmap/master/docs/img/tooltip-frozen.png)
 
 __Show tooltip__ toggles tooltip display on mouse over buckets.
 
@@ -206,7 +194,7 @@ __Items__ is a list of definitions to display URLs in tooltip.
 
 Each URL has a template, icon, label and formating options: lowercase and date format for variables.
 
-![Tooltip items editor](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/tooltip-editor.png)
+![Tooltip items editor](https://raw.githubusercontent.com/flant/grafana-statusmap/master/docs/img/tooltip-editor.png)
 
 #### Percentual bucket spans
 In some cases scenarios, the status panel is used to go from one dashboard to a more specific one, e.g. when performing root/cause analysis. In such cases, the user may want to reduce the scope of the time span, while keeping the desired event centered (to be able to analyse the previous/posterior buckets of time). Those values are introduced through `__bucket_from` and `__bucket_to`. 
@@ -214,32 +202,15 @@ In some cases scenarios, the status panel is used to go from one dashboard to a 
  `__bucket_from`: It's the value of `bucket.from` minus the percentual bucket.
  `__bucket_to`: It's the value of `bucket.to` plus the percentual bucket.
 
-## Development
+## Learn more
 
-To test and improve the plugin you can run Grafana instance in Docker using following command (in
-the directory containing Statusmap plugin):
-
-```
-docker run --rm -it -v $PWD:/var/lib/grafana/plugins/flant-statusmap-panel \
-           -p 3000:3000 --name grafana.docker \
-           --env=GF_USERS_DEFAULT_THEME=light \
-           grafana/grafana:7.1.3
-```
-
-This will expose local plugin from your machine to Grafana container. Now run `grunt` to compile
-dist directory and start changes watcher:
-
-```
-grunt watch
-```
+* [Changelog](https://github.com/flant/grafana-statusmap/blob/master/CHANGELOG.md)
+* Use [GitHub Discussions](https://github.com/flant/grafana-statusmap/discussions) to ask for help.
+* [Installation](https://grafana.com/grafana/plugins/flant-statusmap-panel/?tab=installation)
+* Setup [development](https://github.com/flant/grafana-statusmap/blob/master/DEVELOPMENT.md) environment to help us improve the plugin.
 
 ## Acknowledgements
 
 The first public release of this plugin has been fully made by [Flant](https://flant.com/) engineers. The whole idea has come from Dmitry Stolyarov ([@distol](https://github.com/distol)), initial version has been written by Sergey Gnuskov ([@gsmetal](https://github.com/gsmetal)) and final changes has been made by Ivan Mikheykin ([@diafour](https://github.com/diafour)).
 
 This plugin is based on "Heatmap" panel by Grafana and partly inspired by ideas from Carpet plot, Discrete panel, Status Panel, Status Dot, Status By Group.
-
-
-### CHANGELOG
-
-The latest changes can be found here: [CHANGELOG.md](https://github.com/flant/grafana-statusmap/blob/master/CHANGELOG.md)

@@ -215,6 +215,60 @@
   </div>
 
   <div class="section gf-form-group">
+    <h5 class="section-heading">Y-axis label</h5>
+    <div class="gf-form">
+      <gf-form-switch class="gf-form" label="Split query alias" label-class="width-12"
+      checked="ctrl.panel.yLabel.usingSplitLabel" on-change="ctrl.refresh()"></gf-form-switch>
+    </div>
+    <div class="gf-form" ng-if="ctrl.panel.yLabel.usingSplitLabel">
+      <label class="gf-form-label width-10">Delimiter
+        <info-popover mode="left-normal">
+          <p>Label splitter</p>
+          <span>
+            Set the string to split the original alias to generate partials to be used on the link and custom y-label
+          <span>
+        </info-popover>
+      </label>
+      <input type="text" class="gf-form-input width-10" placeholder="." data-placement="top"
+        ng-model="ctrl.panel.yLabel.delimiter" ng-change="ctrl.refresh()"
+        ng-model-onblur>
+    </div>
+    <div class="gf-form" ng-if="ctrl.panel.yLabel.usingSplitLabel">
+        <label class="gf-form-label width-10">Label template
+          <info-popover mode="left-normal">
+            <p>
+              <span>Override the series label</span>
+              <br>
+              <span> If blank, it will be used ${__y_label}</span>
+            </p>
+            <span>
+              Use special variables:
+              <br>
+              <em>${__y_label}</em> original name of the time series (alias or legend in the query editor).
+              <br>
+              <em>${__y_label_trim}</em> trimmed name of the time series (alias or legend in the query editor).
+              <br>
+              <em>${__y_label_N}</em> partial name of the time series (alias or legend in the query editor), only valid when custom y-label is enabled.
+            </span>
+            <span>
+              <hr>
+              <span>Examples</span>
+              <br>
+              <span>Series original:<em>"linux01.status.ok"</em></span>
+              <br>
+              <span>Separator: <em>"."</em></span>
+              <br>
+              <span>Label override:</span><em>${__y_label_1}-${__y_label_3} | ${__y_label_0}</em>
+              <br>
+              <span>Result: <em>status-ok | linux01</em></span>
+            </span>
+          </info-popover>
+        </label>
+        <input type="text" class="gf-form-input width-10" placeholder="${__y_label}" data-placement="top"
+          bs-tooltip="'Leave blank to use original ${__y_label}'" ng-model="ctrl.panel.yLabel.labelTemplate" ng-change="ctrl.refresh()"
+          ng-model-onblur>
+    </div>
+    <br>
     <h5 class="section-heading">Pagination</h5>
     <div class="gf-form">
       <gf-form-switch class="gf-form" label="Enable pagination" label-class="width-12"

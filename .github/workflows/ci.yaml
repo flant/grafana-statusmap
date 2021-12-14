@@ -1,0 +1,126 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+      - main
+      - fix_*
+      - feat_*
+
+env:
+  WITH_NODE_VERSION: "14.x"
+  WITH_GO_VERSION: "1.15"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.4.0
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.5.0
+        with:
+          node-version: ${{env.WITH_NODE_VERSION}}
+
+      - name: Setup Go environment
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{env.WITH_GO_VERSION}}
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Restore yarn cache
+        uses: actions/cache@v2.1.7
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-${{ env.WITH_NODE_VERSION }}-yarn-${{ hashFiles('yarn.lock') }}
+
+      - name: Install dependencies with yarn
+        run: yarn install --frozen-lockfile  --prefer-offline
+
+      - name: Build and test plugin
+        run: |
+          yarn build
+          ls -la dist
+
+      - name: Get plugin metadata
+        id: metadata
+        run: |
+          export GRAFANA_PLUGIN_ID=$(cat dist/plugin.json | jq -r .id)
+          export GRAFANA_PLUGIN_VERSION=$(cat dist/plugin.json | jq -r .info.version)
+          export GRAFANA_PLUGIN_TYPE=$(cat dist/plugin.json | jq -r .type)
+          export GRAFANA_PLUGIN_UPDATED=$(cat dist/plugin.json | jq -r .info.updated)
+          export GRAFANA_PLUGIN_ARTIFACT=${GRAFANA_PLUGIN_ID}-${GRAFANA_PLUGIN_VERSION}.zip
+          export GRAFANA_PLUGIN_ARTIFACT_CHECKSUM=${GRAFANA_PLUGIN_ARTIFACT}.md5
+          export GRAFANA_PLUGIN_RELEASE_NAME="${GRAFANA_PLUGIN_VERSION} (${GRAFANA_PLUGIN_UPDATED})"
+
+          echo "::set-output name=plugin-id::${GRAFANA_PLUGIN_ID}"
+          echo "::set-output name=plugin-version::${GRAFANA_PLUGIN_VERSION}"
+          echo "::set-output name=plugin-type::${GRAFANA_PLUGIN_TYPE}"
+          echo "::set-output name=archive::${GRAFANA_PLUGIN_ARTIFACT}"
+          echo "::set-output name=archive-checksum::${GRAFANA_PLUGIN_ARTIFACT_CHECKSUM}"
+          echo "::set-output name=release-name::${GRAFANA_PLUGIN_RELEASE_NAME}"
+
+          # Get the latest section in CHANGELOG without it's header.
+          awk '/^$/{next} /^## / {s++;next} s == 1 {print}' CHANGELOG.md > release_notes.md
+          echo "::set-output name=release_notes_path::release_notes.md"
+
+      - name: Sign plugin
+        env:
+          GRAFANA_API_KEY: ${{ secrets.GRAFANA_API_KEY }} # Requires a Grafana API key from Grafana.com.
+        run: |
+          echo "Patch @grafana/toolkit to prevent TypeError in some cases."
+          # manifest.js
+          #- if ((err_1.response && err_1.response.data) || err_1.response.data.message) {
+          #+ if (err_1.response && err_1.response.data && err_1.response.data.message) {
+          pushd node_modules/@grafana/toolkit/src/plugins
+          echo LS0tIGEvbWFuaWZlc3QuanMJMjAyMS0xMS0xOSAyMTo0Njo1Mi4wMDAwMDAwMDAgKzAzMDAKKysrIGIvbWFuaWZlc3QuanMJMjAyMS0xMS0xOSAyMTo0NzoyNS4wMDAwMDAwMDAgKzAzMDAKQEAgLTE1NSw3ICsxNTUsNyBAQAogICAgICAgICAgICAgICAgICAgICByZXR1cm4gWzIgLypyZXR1cm4qLywgaW5mby5kYXRhXTsKICAgICAgICAgICAgICAgICBjYXNlIDM6CiAgICAgICAgICAgICAgICAgICAgIGVycl8xID0gX2Euc2VudCgpOwotICAgICAgICAgICAgICAgICAgICBpZiAoKGVycl8xLnJlc3BvbnNlICYmIGVycl8xLnJlc3BvbnNlLmRhdGEpIHx8IGVycl8xLnJlc3BvbnNlLmRhdGEubWVzc2FnZSkgeworICAgICAgICAgICAgICAgICAgICBpZiAoZXJyXzEucmVzcG9uc2UgJiYgZXJyXzEucmVzcG9uc2UuZGF0YSAmJiBlcnJfMS5yZXNwb25zZS5kYXRhLm1lc3NhZ2UpIHsKICAgICAgICAgICAgICAgICAgICAgICAgIHRocm93IG5ldyBFcnJvcignRXJyb3Igc2lnbmluZyBtYW5pZmVzdDogJyArIGVycl8xLnJlc3BvbnNlLmRhdGEubWVzc2FnZSk7CiAgICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICAgICAgdGhyb3cgbmV3IEVycm9yKCdFcnJvciBzaWduaW5nIG1hbmlmZXN0OiAnICsgZXJyXzEubWVzc2FnZSk7Cg== | base64 -d | patch -p1
+          popd
+          # yarn sign always exits with code 0.
+          set -o pipefail
+          yarn sign 2>&1 | tee >(grep -q -i error && exit 1 || exit 0)
+          # More checks.
+          if [[ ! -f dist/MANIFEST.txt ]] ; then
+            echo "Error: dist/MANIFEST.txt is not found."
+            ls -la dist
+            exit 1
+          fi
+
+      - name: Package plugin
+        id: package-plugin
+        run: |
+          mv dist ${{ steps.metadata.outputs.plugin-id }}
+          zip ${{ steps.metadata.outputs.archive }} ${{ steps.metadata.outputs.plugin-id }} -r
+          md5sum ${{ steps.metadata.outputs.archive }} > ${{ steps.metadata.outputs.archive-checksum }}
+          echo "::set-output name=checksum::$(cat ./${{ steps.metadata.outputs.archive-checksum }} | cut -d' ' -f1)"
+
+      - name: Get plugin-validator last commit
+        run: |
+          git ls-remote https://github.com/grafana/plugin-validator refs/heads/master | tee plugin-validator-last-commit
+
+      - name: Restore plugin-validator binary
+        uses: actions/cache@v2.1.7
+        id: plugin-validator-cache
+        with:
+          path: ./plugin-validator
+          key: ${{ runner.os }}-${{ env.WITH_GO_VERSION }}-plugin-validator-${{ hashFiles('plugin-validator-last-commit') }}
+
+      - name: Build plugin-validator utility
+        if: steps.plugin-validator-cache.outputs.cache-hit != 'true'
+        run: |
+          git clone https://github.com/grafana/plugin-validator
+          cd ./plugin-validator
+          go build ./pkg/cmd/plugincheck2
+
+      - name: Validate plugin for publishing
+        run: |
+          ./plugin-validator/plugincheck2 -config ./plugin-validator/config/default.yaml ${{ steps.metadata.outputs.archive }}
+
+      - name: Release body preview
+        run: |
+          echo "Title: ${{ steps.metadata.outputs.release-name }}"
+          echo "Body:"
+          cat ${{ steps.metadata.outputs.release_notes_path }}

@@ -1,5 +1,26 @@
 # Changelog
 
+## v0.4.2
+
+- Compatibility with Grafana 8.1+. (#230, #219, #220, #221)
+- Fix 'as zero' for spectrum mode. (#208, #209)
+
+## v0.4.1
+
+- Fix regression in discrete mode. "Data has value with undefined color"
+
+## v0.4.0
+
+- Add __y_label_trim variable for tooltip items.
+- Add y-label splitter for tooltip items.
+- Add custom content for toolip.
+- Fix to work with Grafana 7.4.x.
+- Migrate to grafana-toolkit and yarn to build and sign.
+- Cleanup dist directory content, reduce compiled plugin size, remove dist from repository.
+- Code cleanup: fix huge amount of linter errors and warnings.
+- Add Github Actions configuration to automate release process. 
+- Add unobtrusive branding.
+
 ## v0.3.4
 
 - Fix to work in Grafana 7.2.0,7.2.1

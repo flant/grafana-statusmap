@@ -9,22 +9,21 @@ import { tooltipEditorCtrl } from './tooltip_editor';
 import { migratePanelConfig } from './panel_config_migration';
 
 // Utils
-import kbn from 'app/core/utils/kbn';
-import {loadPluginCss} from 'app/plugins/sdk';
+import kbn from 'grafana/app/core/utils/kbn';
+import { loadPluginCss } from 'grafana/app/plugins/sdk';
 
 // Types
-import { MetricsPanelCtrl } from 'app/plugins/sdk';
-import { AnnotationsSrv } from 'app/features/annotations/annotations_srv';
-import { CoreEvents, PanelEvents } from './libs/grafana/events/index';
-import {Bucket, BucketMatrix, BucketMatrixPager } from './statusmap_data';
+import { MetricsPanelCtrl } from 'grafana/app/plugins/sdk';
+import { AnnotationsSrv } from 'grafana/app/features/annotations/annotations_srv';
+import { CoreEvents, PanelEvents } from './util/grafana/events/index';
+import { Bucket, BucketMatrix, BucketMatrixPager } from './statusmap_data';
 import rendering from './rendering';
-import { Polygrafill } from './libs/polygrafill/index';
+import { Polygrafill } from './util/polygrafill/index';
 
-
-import {ColorModeDiscrete} from "./color_mode_discrete";
+import { ColorModeDiscrete } from './color_mode_discrete';
 
 const VALUE_INDEX = 0,
-      TIME_INDEX = 1;
+  TIME_INDEX = 1;
 
 const colorSchemes = [
   // Diverging
@@ -52,18 +51,18 @@ const colorSchemes = [
   { name: 'YlGnBu', value: 'interpolateYlGnBu', invert: 'dark' },
   { name: 'YlGn', value: 'interpolateYlGn', invert: 'dark' },
   { name: 'YlOrBr', value: 'interpolateYlOrBr', invert: 'dark' },
-  { name: 'YlOrRd', value: 'interpolateYlOrRd', invert: 'dark' }
+  { name: 'YlOrRd', value: 'interpolateYlOrRd', invert: 'dark' },
 ];
 
 let colorModes = ['opacity', 'spectrum', 'discrete'];
 let opacityScales = ['linear', 'sqrt'];
 
 loadPluginCss({
-  dark: 'plugins/flant-statusmap-panel/css/statusmap.dark.css',
-  light: 'plugins/flant-statusmap-panel/css/statusmap.light.css'
+  dark: 'plugins/flant-statusmap-panel/styles/dark.css',
+  light: 'plugins/flant-statusmap-panel/styles/light.css',
 });
 
-export var renderComplete:any = {name:'statusmap-render-complete'};
+export var renderComplete: any = { name: 'statusmap-render-complete' };
 
 class StatusHeatmapCtrl extends MetricsPanelCtrl {
   static templateUrl = 'module.html';
@@ -73,13 +72,12 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   bucketMatrixPager: BucketMatrixPager;
 
   graph: any;
-  discreteHelper: ColorModeDiscrete;
   opacityScales: any = [];
   colorModes: any = [];
   colorSchemes: any = [];
   unitFormats: any;
 
-  dataWarnings: {[warningId: string]: {title: string, tip: string}} = {};
+  dataWarnings: { [warningId: string]: { title: string; tip: string } } = {};
   multipleValues: boolean;
   noColorDefined: boolean;
   noDatapoints: boolean;
@@ -90,7 +88,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   annotationsPromise: any;
 
   // TODO remove this transient variable: use ng-model-options="{ getterSetter: true }"
-  pageSizeViewer: number = 15;
+  pageSizeViewer = 15;
 
   panelDefaults: any = {
     // datasource name, null = default datasource
@@ -104,31 +102,38 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
       colorScheme: 'interpolateGnYlRd',
       // discrete mode settings
       defaultColor: '#757575',
-      thresholds: [] // manual colors
+      thresholds: [], // manual colors
     },
     // buckets settings
     cards: {
       cardMinWidth: 5,
       cardVSpacing: 2,
       cardHSpacing: 2,
-      cardRound: null
+      cardRound: null,
     },
     xAxis: {
-      show: true
+      show: true,
     },
     yAxis: {
       show: true,
       minWidth: -1,
-      maxWidth: -1
+      maxWidth: -1,
     },
     tooltip: {
       show: true,
       freezeOnClick: true,
       showItems: false,
-      items: [] // see tooltip_editor.ts
+      items: [], // see tooltip_editor.ts
+      showExtraInfo: false,
+      extraInfo: '',
     },
     legend: {
-      show: true
+      show: true,
+    },
+    yLabel: {
+      usingSplitLabel: false,
+      delimiter: '',
+      labelTemplate: '',
     },
     // how null points should be handled
     nullPointMode: 'as empty',
@@ -140,21 +145,21 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
     // Pagination options
     usingPagination: false,
-    pageSize: 15
+    pageSize: 15,
   };
 
   /** @ngInject */
   constructor($scope: any, $injector: auto.IInjectorService, private annotationsSrv: AnnotationsSrv) {
     super($scope, $injector);
 
-    if(!Polygrafill.hasAppEventCompatibleEmitter(this.events)){
+    if (!Polygrafill.hasAppEventCompatibleEmitter(this.events)) {
       CoreEvents.fallbackToStringEvents();
       PanelEvents.fallbackToStringEvents();
       renderComplete = 'statusmap-render-complete';
     }
 
     // Grafana 7.2 workaround
-    if (typeof kbn["intervalToMs"] === "function") {
+    if (typeof kbn['intervalToMs'] === 'function') {
       kbn.interval_to_ms = kbn.intervalToMs;
     }
 
@@ -176,7 +181,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
     // default graph width for discrete card width calculation
     this.graph = {
-      "chartWidth" : -1
+      chartWidth: -1,
     };
 
     this.multipleValues = false;
@@ -196,7 +201,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
       noDatapoints: {
         title: 'No data points',
         tip: 'No datapoints returned from data query',
-      }
+      },
     };
 
     this.annotations = [];
@@ -214,7 +219,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.onCardColorChange = this.onCardColorChange.bind(this);
   }
 
-  onRenderComplete(data: any):void {
+  onRenderComplete(data: any): void {
     this.graph.chartWidth = data.chartWidth;
     this.renderingCompleted();
   }
@@ -249,10 +254,9 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.render();
   }
 
-
   // getChartWidth returns an approximation of chart canvas width or
   // a saved value calculated during a render.
-  getChartWidth():number {
+  getChartWidth(): number {
     if (this.graph.chartWidth > 0) {
       return this.graph.chartWidth;
     }
@@ -265,10 +269,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     // - y axis ticks are not rendered yet on first data receive,
     //   so choose 200 as a decent value for y legend width
     // - chartWidth can not be lower than the half of the panel width.
-    const chartWidth = _.max([
-      panelWidth - 200,
-      panelWidth/2
-    ]);
+    const chartWidth = _.max([panelWidth - 200, panelWidth / 2]);
 
     return chartWidth!;
   }
@@ -276,7 +277,9 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   // Quick workaround for 6.7 and 7.0+. There is no call to
   // calculateInterval in updateTimeRange in those versions.
   // TODO ts type has no argument for this method.
+  //
   updateTimeRange(datasource?: any) {
+    // @ts-ignore
     let ret = super.updateTimeRange(datasource);
     this.calculateInterval();
     return ret;
@@ -290,7 +293,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
     let minCardWidth = this.panel.cards.cardMinWidth;
     let minSpacing = this.panel.cards.cardHSpacing;
-    let maxCardsCount = Math.ceil((chartWidth-minCardWidth) / (minCardWidth + minSpacing));
+    let maxCardsCount = Math.ceil((chartWidth - minCardWidth) / (minCardWidth + minSpacing));
 
     let intervalMs;
     let rangeMs = this.range.to.valueOf() - this.range.from.valueOf();
@@ -300,7 +303,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
     // Calculate low limit of interval
     let lowLimitMs = 1; // 1 millisecond default low limit
-    
+
     let intervalOverride = this.panel.interval;
 
     // if no panel interval check datasource
@@ -331,6 +334,11 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   }
 
   issueQueries(datasource: any) {
+    // Grafana 8.1+: there is no updateTimeRange call before initial issueQueries.
+    // https://github.com/grafana/grafana/commit/6f38883583c4c43af149f68db482b39a3240ec95
+    if (!this.range) {
+      this.updateTimeRange(datasource);
+    }
     this.annotationsPromise = this.annotationsSrv.getAnnotations({
       dashboard: this.dashboard,
       panel: this.panel,
@@ -344,7 +352,9 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
      * issue 11806.
      */
     // 5.x before 5.4 doesn't have datasourcePromises.
-    if ("undefined" !== typeof(this.annotationsSrv.datasourcePromises)) {
+    // @ts-ignore
+    if ('undefined' !== typeof this.annotationsSrv.datasourcePromises) {
+      // @ts-ignore
       return this.annotationsSrv.datasourcePromises.then(r => {
         return this.issueQueriesWithInterval(datasource, this.interval);
       });
@@ -365,14 +375,20 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   }
 
   onDataReceived(dataList: any) {
-    this.data    = dataList;
+    this.data = dataList;
     // Quick workaround for 7.0+. There is no call to
     // calculateInterval when enter Edit mode.
     if (!this.intervalMs) {
       this.calculateInterval();
     }
 
-    let newBucketMatrix = this.convertDataToBuckets(dataList, this.range.from.valueOf(), this.range.to.valueOf(), this.intervalMs, true);
+    let newBucketMatrix = this.convertDataToBuckets(
+      dataList,
+      this.range.from.valueOf(),
+      this.range.to.valueOf(),
+      this.intervalMs,
+      true
+    );
 
     this.bucketMatrix = newBucketMatrix;
     this.bucketMatrixPager.bucketMatrix = newBucketMatrix;
@@ -410,6 +426,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   onInitEditMode() {
     this.addEditorTab('Options', optionsEditorCtrl, 2);
     this.addEditorTab('Tooltip', tooltipEditorCtrl, 3);
+    this.addEditorTab('About', 'public/plugins/flant-statusmap-panel/partials/about_editor.html', 4);
     this.unitFormats = kbn.getUnitFormats();
   }
 
@@ -430,7 +447,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
     this.noColorDefined = false;
     if (this.panel.color.mode === 'discrete') {
-      if (this.panel.seriesFilterIndex == -1) {
+      if (this.panel.seriesFilterIndex === -1) {
         this.discreteExtraSeries.updateCardsValuesHasColorInfo();
       } else {
         this.discreteExtraSeries.updateCardsValuesHasColorInfoSingle();
@@ -507,25 +524,30 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
   to and from — a time range of the panel.
   intervalMs — a calculated interval. It is used to split a time range.
   */
-  convertDataToBuckets(data:any, from:number, to:number, intervalMs: number, mostRecentBucket: boolean):BucketMatrix {
+  convertDataToBuckets(
+    data: any,
+    from: number,
+    to: number,
+    intervalMs: number,
+    mostRecentBucket: boolean
+  ): BucketMatrix {
     let bucketMatrix = new BucketMatrix();
     bucketMatrix.rangeMs = to - from;
     bucketMatrix.intervalMs = intervalMs;
 
-    if (!data || data.length == 0) {
+    if (!data || data.length === 0) {
       // Mimic heatmap and graph 'no data' labels.
-      bucketMatrix.targets = [
-        "1.0", "0.0", "-1.0"
-      ];
-      bucketMatrix.buckets["1.0"] = [];
-      bucketMatrix.buckets["0.0"] = [];
-      bucketMatrix.buckets["-1.0"] = [];
+      bucketMatrix.targets = ['1.0', '0.0', '-1.0'];
+      bucketMatrix.buckets['1.0'] = [];
+      bucketMatrix.buckets['0.0'] = [];
+      bucketMatrix.buckets['-1.0'] = [];
       bucketMatrix.xBucketSize = 42;
       bucketMatrix.noDatapoints = true;
       return bucketMatrix;
     }
 
-    let targetIndex: {[target: string]: number[]} = {};
+    let targetIndex: { [target: string]: number[] } = {};
+    let targetPartials: { [target: string]: string[] } = {};
 
     // Group indicies of elements in data by target (y label).
 
@@ -535,7 +557,29 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     //});
 
     data.map((queryResult: any, i: number) => {
+      // Init yLabel as the query target
       let yLabel = queryResult.target;
+
+      // Check if there is some labelTemplate configured
+      if (this.panel.yLabel.usingSplitLabel && this.panel.yLabel.delimiter !== '') {
+        let pLabels = queryResult.target.split(this.panel.yLabel.delimiter);
+
+        // Load all possible values as scoped vars and load them into targetPartials
+        // to be used on different components as Bucket and BucketMatrix props
+        let scopedVars = [];
+        scopedVars[`__y_label`] = { value: yLabel };
+        for (let i in pLabels) {
+          scopedVars[`__y_label_${i}`] = { value: pLabels[i] };
+        }
+
+        if (this.panel.yLabel.labelTemplate !== '') {
+          yLabel = this.templateSrv.replace(this.panel.yLabel.labelTemplate, scopedVars);
+        }
+
+        targetPartials[yLabel] = pLabels;
+      }
+
+      //reset if it already exists
       if (!targetIndex.hasOwnProperty(yLabel)) {
         targetIndex[yLabel] = [];
       }
@@ -546,18 +590,18 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
 
     //console.log ("targetIndex: ", targetIndex, "targetKeys: ", targetKeys);
 
-    let targetTimestampRanges: {[target: string]: {[timestamp: number]: number[]}} = {};
+    let targetTimestampRanges: { [target: string]: { [timestamp: number]: number[] } } = {};
 
     // Collect all timestamps for each target.
     // Make map timestamp => [from, to]. from == previous ts, to == ts from datapoint.
-    targetKeys.map((target) => {
+    targetKeys.map(target => {
       let targetTimestamps: any[] = [];
 
       for (let si = 0; si < targetIndex[target].length; si++) {
         let s = data[targetIndex[target][si]];
         _.map(s.datapoints, (datapoint, idx) => {
-          targetTimestamps.push(datapoint[TIME_INDEX]-from);
-        })
+          targetTimestamps.push(datapoint[TIME_INDEX] - from);
+        });
       }
 
       //console.log("timestamps['"+target+"'] = ", targetTimestamps);
@@ -567,15 +611,15 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
       //console.log("uniq timestamps['"+target+"'] = ", targetTimestamps);
 
       targetTimestampRanges[target] = [];
-      for (let i = targetTimestamps.length-1 ; i>=0; i-- ) {
+      for (let i = targetTimestamps.length - 1; i >= 0; i--) {
         let tsTo = targetTimestamps[i];
         let tsFrom = 0;
         if (tsTo < 0) {
           tsFrom = tsTo - intervalMs;
         } else {
-          if (i-1 >= 0) {
+          if (i - 1 >= 0) {
             // Set from to previous timestamp + 1ms;
-            tsFrom = targetTimestamps[i-1]+1;
+            tsFrom = targetTimestamps[i - 1] + 1;
             // tfTo - tfFrom should not be more than intervalMs
             let minFrom = tsTo - intervalMs;
             if (tsFrom < minFrom) {
@@ -592,10 +636,10 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     // Create empty buckets using intervalMs to calculate ranges.
     // If mostRecentBucket is set, create a bucket with a range "to":"to"
     // to store most recent values.
-    targetKeys.map((target) => {
+    targetKeys.map(target => {
       let targetEmptyBuckets: any[] = [];
 
-      let lastTs = to-from;
+      let lastTs = to - from;
 
       if (mostRecentBucket) {
         let topBucket = new Bucket();
@@ -608,20 +652,21 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
           topBucket.relFrom = targetTimestampRanges[target][lastTs][0];
           lastTs = topBucket.relFrom;
         }
-        topBucket.to = topBucket.relTo+from;
-        topBucket.from = topBucket.relFrom+from;
+        topBucket.to = topBucket.relTo + from;
+        topBucket.from = topBucket.relFrom + from;
         targetEmptyBuckets.push(topBucket);
       }
 
       let idx = 0;
-      let bucketFrom: number = 0;
+      let bucketFrom = 0;
       while (bucketFrom >= 0) {
         let b = new Bucket();
         b.yLabel = target;
-        b.relTo = lastTs - idx*intervalMs;
-        b.relFrom = lastTs - ((idx+1) * intervalMs);
-        b.to = b.relTo+from;
-        b.from = b.relFrom+from;
+        b.pLabels = targetPartials[target];
+        b.relTo = lastTs - idx * intervalMs;
+        b.relFrom = lastTs - (idx + 1) * intervalMs;
+        b.to = b.relTo + from;
+        b.from = b.relFrom + from;
         b.values = [];
         bucketFrom = b.relFrom;
         targetEmptyBuckets.push(b);
@@ -640,8 +685,8 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     // Put values into buckets.
     bucketMatrix.minValue = Number.MAX_VALUE;
     bucketMatrix.maxValue = Number.MIN_SAFE_INTEGER;
-    targetKeys.map((target) => {
-      targetIndex[target].map((dataIndex) => {
+    targetKeys.map(target => {
+      targetIndex[target].map(dataIndex => {
         let s = data[dataIndex];
         s.datapoints.map((dp: any) => {
           for (let i = 0; i < bucketMatrix.buckets[target].length; i++) {
@@ -651,7 +696,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
           }
         });
       });
-      bucketMatrix.buckets[target].map((bucket) => {
+      bucketMatrix.buckets[target].map(bucket => {
         bucket.minValue = _.min(bucket.values);
         bucket.maxValue = _.max(bucket.values);
         if (bucket.minValue < bucketMatrix.minValue) {
@@ -665,13 +710,14 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
           bucketMatrix.multipleValues = true;
           bucket.multipleValues = true;
 
-          bucket.value = this.panel.seriesFilterIndex != -1 ? bucket.values[this.panel.seriesFilterIndex] : bucket.maxValue;
+          bucket.value =
+            this.panel.seriesFilterIndex !== -1 ? bucket.values[this.panel.seriesFilterIndex] : bucket.maxValue;
         }
-      })
+      });
     });
 
     bucketMatrix.xBucketSize = Number.MIN_SAFE_INTEGER;
-    targetKeys.map((target) => {
+    targetKeys.map(target => {
       let bucketsLen: number = bucketMatrix.buckets[target].length;
       if (bucketsLen > bucketMatrix.xBucketSize) {
         bucketMatrix.xBucketSize = bucketsLen;
@@ -681,10 +727,9 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     //console.log ("bucketMatrix with values: ", bucketMatrix);
 
     bucketMatrix.targets = targetKeys;
+    bucketMatrix.pLabels = targetPartials;
     return bucketMatrix;
   }
 }
 
-export {
-  StatusHeatmapCtrl, StatusHeatmapCtrl as PanelCtrl
-};
+export { StatusHeatmapCtrl, StatusHeatmapCtrl as PanelCtrl };
