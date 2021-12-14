@@ -208,6 +208,12 @@ Each URL has a template, icon, label and formating options: lowercase and date f
 
 ![Tooltip items editor](https://raw.githubusercontent.com/flant/grafana-statusmap/master/src/img/tooltip-editor.png)
 
+#### Percentual bucket spans
+In some cases scenarios, the status panel is used to go from one dashboard to a more specific one, e.g. when performing root/cause analysis. In such cases, the user may want to reduce the scope of the time span, while keeping the desired event centered (to be able to analyse the previous/posterior buckets of time). Those values are introduced through `__bucket_from` and `__bucket_to`. 
+
+ `__bucket_from`: It's the value of `bucket.from` minus the percentual bucket.
+ `__bucket_to`: It's the value of `bucket.to` plus the percentual bucket.
+
 ## Development
 
 To test and improve the plugin you can run Grafana instance in Docker using following command (in

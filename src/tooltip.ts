@@ -187,6 +187,10 @@ export class StatusmapTooltip {
       // Grafana 7.0 compatible
       scopedVars[`__url_time_range`] = {value: this.panelCtrl.retrieveTimeVar()};
 
+      let percentualBucket = {parseInt((bucket.to - bucket.from)*0.012));
+      scopedVars[`__bucket_from`] = {value: bucket.from-percentualBucket};
+      scopedVars[`__bucket_to`] = {value: bucket.to+percentualBucket};
+
       for (let item of items) {
         if (_.isEmpty(item.urlTemplate)) {
           item.link = "#";
