@@ -28,7 +28,7 @@ Panel to show discrete statuses of multiple targets over time.
   - Mysql
 * Supported Grafana versions:
   - 6.7+ to 8.2+
-  - prior 6.7 will cause plugin load fail (no support or incompatible @grafana/data and @grafana/runtime package)
+  - use (release 0.4.2)[https://github.com/flant/grafana-statusmap/releases/tag/v0.4.2] for 6.6 and earlier
 
 ## Motivation
 
