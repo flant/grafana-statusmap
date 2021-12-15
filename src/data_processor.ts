@@ -50,7 +50,11 @@ export class DataProcessor {
          * e.g. "input_qty 1395T2776201" ==> "1395T2776201"
          */
         const fullname = getFieldDisplayName(field, series, dataList);
-        const name = this.grafanaVersion >= 8 ? fullname.replace(/\w+\s+/, '') : fullname;
+        let name = fullname;
+        if (this.grafanaVersion >= 8) {
+          const spcpos = fullname.indexOf(' ');
+          name = spcpos >= 0 ? fullname.slice(spcpos) : name;
+        }
         const datapoints = [];
 
         for (let r = 0; r < series.length; r++) {
@@ -59,6 +63,7 @@ export class DataProcessor {
         const timeSeries = {
           ...this.toTimeSeries(field, name, i, j, datapoints, list.length, range),
           target: name,
+          refId: series.refId,
         };
         list.push(timeSeries as any);
       }
