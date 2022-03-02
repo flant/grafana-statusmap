@@ -17,7 +17,7 @@ jobs:
     env:
       FUTURE_TAG: ${{ github.event.inputs.future_tag }}
     steps:
-      - uses: actions/checkout@v2.4.0
+      - uses: actions/checkout@v3
 
       - name: Check plugin version
         run: |
