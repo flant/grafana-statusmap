@@ -148,6 +148,9 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     // Pagination options
     usingPagination: false,
     pageSize: 15,
+
+    // Branding flag.
+    hideBranding: false,
   };
 
   processor?: DataProcessor;

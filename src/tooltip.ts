@@ -209,9 +209,9 @@ export class StatusmapTooltip {
         scopedVars[`__y_label_${i}`] = { value: pLabels[i] };
       }
 
-      let percentualBucket = {parseInt((bucket.to - bucket.from)*0.012));
-      scopedVars[`__bucket_from`] = {value: bucket.from-percentualBucket};
-      scopedVars[`__bucket_to`] = {value: bucket.to+percentualBucket};
+      let bucketRangeExtension = Math.ceil((bucket.to - bucket.from) * 0.012);
+      scopedVars[`__bucket_from`] = { value: bucket.from - bucketRangeExtension };
+      scopedVars[`__bucket_to`] = { value: bucket.to + bucketRangeExtension };
 
       for (let item of items) {
         if (_.isEmpty(item.urlTemplate)) {

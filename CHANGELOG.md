@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.5.0
+
+- Support DataFrames. (#239)
+- Add tooltip variables with percentual bucket range: __bucket_from, __bucket_to (#242)
+- Support Grafana 8.4+
+- Hide markers in tooltip.
+
 ## v0.4.2
 
 - Compatibility with Grafana 8.1+. (#230, #219, #220, #221)
@@ -13,7 +20,7 @@
 
 - Add __y_label_trim variable for tooltip items.
 - Add y-label splitter for tooltip items.
-- Add custom content for toolip.
+- Add custom content for tooltip.
 - Fix to work with Grafana 7.4.x.
 - Migrate to grafana-toolkit and yarn to build and sign.
 - Cleanup dist directory content, reduce compiled plugin size, remove dist from repository.
