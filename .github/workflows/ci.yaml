@@ -72,14 +72,6 @@ jobs:
         env:
           GRAFANA_API_KEY: ${{ secrets.GRAFANA_API_KEY }} # Requires a Grafana API key from Grafana.com.
         run: |
-          #echo "Patch @grafana/toolkit to prevent TypeError in some cases."
-          # manifest.js
-          #- if ((err_1.response && err_1.response.data) || err_1.response.data.message) {
-          #+ if (err_1.response && err_1.response.data && err_1.response.data.message) {
-          #pushd node_modules/@grafana/toolkit/src/plugins
-          #echo LS0tIGEvbWFuaWZlc3QuanMJMjAyMS0xMS0xOSAyMTo0Njo1Mi4wMDAwMDAwMDAgKzAzMDAKKysrIGIvbWFuaWZlc3QuanMJMjAyMS0xMS0xOSAyMTo0NzoyNS4wMDAwMDAwMDAgKzAzMDAKQEAgLTE1NSw3ICsxNTUsNyBAQAogICAgICAgICAgICAgICAgICAgICByZXR1cm4gWzIgLypyZXR1cm4qLywgaW5mby5kYXRhXTsKICAgICAgICAgICAgICAgICBjYXNlIDM6CiAgICAgICAgICAgICAgICAgICAgIGVycl8xID0gX2Euc2VudCgpOwotICAgICAgICAgICAgICAgICAgICBpZiAoKGVycl8xLnJlc3BvbnNlICYmIGVycl8xLnJlc3BvbnNlLmRhdGEpIHx8IGVycl8xLnJlc3BvbnNlLmRhdGEubWVzc2FnZSkgeworICAgICAgICAgICAgICAgICAgICBpZiAoZXJyXzEucmVzcG9uc2UgJiYgZXJyXzEucmVzcG9uc2UuZGF0YSAmJiBlcnJfMS5yZXNwb25zZS5kYXRhLm1lc3NhZ2UpIHsKICAgICAgICAgICAgICAgICAgICAgICAgIHRocm93IG5ldyBFcnJvcignRXJyb3Igc2lnbmluZyBtYW5pZmVzdDogJyArIGVycl8xLnJlc3BvbnNlLmRhdGEubWVzc2FnZSk7CiAgICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICAgICAgdGhyb3cgbmV3IEVycm9yKCdFcnJvciBzaWduaW5nIG1hbmlmZXN0OiAnICsgZXJyXzEubWVzc2FnZSk7Cg== | base64 -d | patch -p1
-          #popd
-
           # yarn sign always exits with code 0.
           set -o pipefail
           yarn sign 2>&1 | tee >(grep -q -i error && exit 1 || exit 0)
@@ -125,3 +117,9 @@ jobs:
           echo "Title: ${{ steps.metadata.outputs.release-name }}"
           echo "Body:"
           cat ${{ steps.metadata.outputs.release_notes_path }}
+
+      - name: Save artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ steps.metadata.outputs.archive }}
+          path: ${{ steps.metadata.outputs.archive }}
