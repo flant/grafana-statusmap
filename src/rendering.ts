@@ -12,8 +12,9 @@ import { d3ScaleChromatic } from './util/d3/d3-scale-chromatic';
 import { StatusmapTooltip } from './tooltip';
 import { AnnotationTooltip } from './annotations';
 import { Bucket, BucketMatrix, BucketMatrixPager } from './statusmap_data';
-import { StatusHeatmapCtrl, renderComplete } from './module';
-import { CoreEvents, PanelEvents } from './util/grafana/events/index';
+import { StatusHeatmapCtrl } from './module';
+import { CoreEvents } from './util/grafana/events/index';
+import { PanelEvents } from '@grafana/data';
 
 let MIN_CARD_SIZE = 5,
   CARD_H_SPACING = 2,
@@ -218,10 +219,7 @@ export class StatusmapRenderer {
       .call(xAxis);
 
     // Remove horizontal line in the top of axis labels (called domain in d3)
-    this.heatmap
-      .select('.axis-x')
-      .select('.domain')
-      .remove();
+    this.heatmap.select('.axis-x').select('.domain').remove();
   }
 
   // divide chart height by ticks for cards drawing
@@ -233,10 +231,7 @@ export class StatusmapRenderer {
     for (let i = 1; i < ticks.length; i++) {
       range.push(step * (i + 1));
     }
-    return d3
-      .scaleOrdinal()
-      .domain(ticks)
-      .range(range);
+    return d3.scaleOrdinal().domain(ticks).range(range);
   }
 
   // divide chart height by ticks with offset for ticks drawing
@@ -248,10 +243,7 @@ export class StatusmapRenderer {
     for (let i = 1; i < ticks.length; i++) {
       range.push(step * i + this.yOffset);
     }
-    return d3
-      .scaleOrdinal()
-      .domain(ticks)
-      .range(range);
+    return d3.scaleOrdinal().domain(ticks).range(range);
   }
 
   addYAxis() {
@@ -274,10 +266,7 @@ export class StatusmapRenderer {
       .tickSizeInner(0 - this.width)
       .tickPadding(Y_AXIS_TICK_PADDING);
 
-    this.heatmap
-      .append('g')
-      .attr('class', 'axis axis-y')
-      .call(yAxis);
+    this.heatmap.append('g').attr('class', 'axis axis-y').call(yAxis);
 
     // Calculate Y axis width first, then move axis into visible area
     let posY = this.margin.top;
@@ -285,14 +274,8 @@ export class StatusmapRenderer {
     this.heatmap.select('.axis-y').attr('transform', 'translate(' + posX + ',' + posY + ')');
 
     // Remove vertical line in the right of axis labels (called domain in d3)
-    this.heatmap
-      .select('.axis-y')
-      .select('.domain')
-      .remove();
-    this.heatmap
-      .select('.axis-y')
-      .selectAll('.tick line')
-      .remove();
+    this.heatmap.select('.axis-y').select('.domain').remove();
+    this.heatmap.select('.axis-y').selectAll('.tick line').remove();
   }
 
   // Wide Y values range and adjust to bucket size
@@ -319,7 +302,7 @@ export class StatusmapRenderer {
 
   tickValueFormatter(decimals, scaledDecimals = null) {
     let format = this.panel.yAxis.format;
-    return function(value) {
+    return function (value) {
       return kbn.valueFormats[format](value, decimals, scaledDecimals);
     };
   }
@@ -374,17 +357,11 @@ export class StatusmapRenderer {
     this.xAxisHeight = this.getXAxisHeight(this.heatmap);
 
     if (!this.panel.yAxis.show) {
-      this.heatmap
-        .select('.axis-y')
-        .selectAll('line')
-        .style('opacity', 0);
+      this.heatmap.select('.axis-y').selectAll('line').style('opacity', 0);
     }
 
     if (!this.panel.xAxis.show) {
-      this.heatmap
-        .select('.axis-x')
-        .selectAll('line')
-        .style('opacity', 0);
+      this.heatmap.select('.axis-x').selectAll('line').style('opacity', 0);
     }
   }
 
@@ -437,7 +414,7 @@ export class StatusmapRenderer {
 
     this._renderAnnotations();
 
-    this.ctrl.events.emit(renderComplete, {
+    this.ctrl.events.emit(CoreEvents.renderComplete, {
       chartWidth: this.chartWidth,
     });
   }
@@ -481,16 +458,9 @@ export class StatusmapRenderer {
 
   setOpacityScale(maxValue) {
     if (this.panel.color.colorScale === 'linear') {
-      this.opacityScale = d3
-        .scaleLinear()
-        .domain([0, maxValue])
-        .range([0, 1]);
+      this.opacityScale = d3.scaleLinear().domain([0, maxValue]).range([0, 1]);
     } else if (this.panel.color.colorScale === 'sqrt') {
-      this.opacityScale = d3
-        .scalePow()
-        .exponent(this.panel.color.exponent)
-        .domain([0, maxValue])
-        .range([0, 1]);
+      this.opacityScale = d3.scalePow().exponent(this.panel.color.exponent).domain([0, maxValue]).range([0, 1]);
     }
   }
 

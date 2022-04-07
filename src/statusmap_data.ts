@@ -125,7 +125,7 @@ class BucketMatrixPager {
     let buckets: { [yLabel: string]: Bucket[] } = {};
     let me = this;
 
-    this.targets().map(function(rowLabel) {
+    this.targets().map(function (rowLabel) {
       buckets[rowLabel] = me.bucketMatrix.buckets[rowLabel];
     });
 

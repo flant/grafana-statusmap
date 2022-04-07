@@ -61,10 +61,7 @@ export class StatusmapTooltip {
   }
 
   add() {
-    this.tooltip = d3
-      .select('body')
-      .append('div')
-      .attr('class', 'graph-tooltip statusmap-tooltip');
+    this.tooltip = d3.select('body').append('div').attr('class', 'graph-tooltip statusmap-tooltip');
   }
 
   destroy() {
@@ -294,15 +291,15 @@ export class StatusmapTooltip {
     if (frozen) {
       // Stop propagation mouse events up to parents to allow interaction with frozen tooltip’s elements.
       tooltip
-        .on('click', function() {
+        .on('click', function () {
           // @ts-ignore
           d3.event.stopPropagation();
         })
-        .on('mousedown', function() {
+        .on('mousedown', function () {
           // @ts-ignore
           d3.event.stopPropagation();
         })
-        .on('mouseup', function() {
+        .on('mouseup', function () {
           // @ts-ignore
           d3.event.stopPropagation();
         });

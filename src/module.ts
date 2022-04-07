@@ -2,6 +2,12 @@
 import _ from 'lodash';
 import { auto } from 'angular';
 
+import { PanelEvents, DataFrame } from '@grafana/data';
+import TimeSeries from 'grafana/app/core/time_series2';
+
+import { config } from '@grafana/runtime';
+import { DataProcessor } from './data_processor';
+
 // Components
 import './color_legend';
 import { optionsEditorCtrl } from './options_editor';
@@ -10,17 +16,15 @@ import { migratePanelConfig } from './panel_config_migration';
 
 // Utils
 import kbn from 'grafana/app/core/utils/kbn';
-import { loadPluginCss } from 'grafana/app/plugins/sdk';
+import { loadPluginCss, MetricsPanelCtrl } from 'grafana/app/plugins/sdk';
 
 // Types
-import { MetricsPanelCtrl } from 'grafana/app/plugins/sdk';
 import { AnnotationsSrv } from 'grafana/app/features/annotations/annotations_srv';
-import { CoreEvents, PanelEvents } from './util/grafana/events/index';
 import { Bucket, BucketMatrix, BucketMatrixPager } from './statusmap_data';
 import rendering from './rendering';
-import { Polygrafill } from './util/polygrafill/index';
 
 import { ColorModeDiscrete } from './color_mode_discrete';
+import { CoreEvents } from './util/grafana/events';
 
 const VALUE_INDEX = 0,
   TIME_INDEX = 1;
@@ -61,8 +65,6 @@ loadPluginCss({
   dark: 'plugins/flant-statusmap-panel/styles/dark.css',
   light: 'plugins/flant-statusmap-panel/styles/light.css',
 });
-
-export var renderComplete: any = { name: 'statusmap-render-complete' };
 
 class StatusHeatmapCtrl extends MetricsPanelCtrl {
   static templateUrl = 'module.html';
@@ -148,15 +150,11 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     pageSize: 15,
   };
 
+  processor?: DataProcessor;
+
   /** @ngInject */
   constructor($scope: any, $injector: auto.IInjectorService, private annotationsSrv: AnnotationsSrv) {
     super($scope, $injector);
-
-    if (!Polygrafill.hasAppEventCompatibleEmitter(this.events)) {
-      CoreEvents.fallbackToStringEvents();
-      PanelEvents.fallbackToStringEvents();
-      renderComplete = 'statusmap-render-complete';
-    }
 
     // Grafana 7.2 workaround
     if (typeof kbn['intervalToMs'] === 'function') {
@@ -214,9 +212,22 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.events.on(PanelEvents.editModeInitialized, this.onInitEditMode.bind(this));
     this.events.on(PanelEvents.refresh, this.postRefresh.bind(this));
     // custom event from rendering.js
-    this.events.on(renderComplete, this.onRenderComplete.bind(this));
+    this.events.on(CoreEvents.renderComplete, this.onRenderComplete.bind(this));
 
     this.onCardColorChange = this.onCardColorChange.bind(this);
+
+    console.log('Grafana buildInfo:', config.buildInfo);
+
+    const majorVersion = parseInt(config.buildInfo.version.split('.', 2)[0], 10);
+    if (majorVersion <= 6) {
+      // data will fall into onDataReceived() with series data format
+    } else {
+      // table like DataFrame[] data format for both table and series data mode
+      (this as any).useDataFrames = true;
+      this.events.on(PanelEvents.dataFramesReceived, this.onDataFramesReceived.bind(this));
+      this.events.on(PanelEvents.dataSnapshotLoad, this.onDataFramesReceived.bind(this));
+      this.processor = new DataProcessor(this.panel, majorVersion);
+    }
   }
 
   onRenderComplete(data: any): void {
@@ -374,7 +385,15 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     return res;
   }
 
-  onDataReceived(dataList: any) {
+  onDataFramesReceived(data: DataFrame[]) {
+    const dataList = this.processor.getSeriesList({
+      dataList: data as DataFrame[],
+      range: this.range,
+    });
+    this.onDataReceived(dataList);
+  }
+
+  onDataReceived(dataList: TimeSeries[]) {
     this.data = dataList;
     // Quick workaround for 7.0+. There is no call to
     // calculateInterval when enter Edit mode.
