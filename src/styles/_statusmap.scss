@@ -78,6 +78,11 @@
   background-color: $graph-tooltip-bg;
   color: $text-color;
 
+  // Hide markers for values in tooltip.
+  ul li {
+    list-style: none;
+  }
+
   .discrete-item {
     color: #ffffff;
     padding: 1px;
