@@ -19,18 +19,21 @@ Panel to show discrete statuses of multiple targets over time.
 * Grouping values into rows and buckets using legend from query
 * User defined color mapping
 * Multiple values in bucket are displayed via tooltip
+* Configurable tooltip items
+* Pagination for rows
 * Increasing rows/buckets' interval for better visual representation
 * Representing null values as empty bucket or zero value
 
 ### Supported environment
 
-* Tested with datasources:
+* Tested with:
   - Prometheus
   - InfluxDB
   - Mysql
-* Supported Grafana versions:
-  - 6.7+ to 8.2+
-  - use (release 0.4.2)[https://github.com/flant/grafana-statusmap/releases/tag/v0.4.2] for 6.6 and earlier
+  - Grafana 7.x, 8.x
+* Support for earlier Grafana versions:
+  - 0.5.x versions should work in Grafana 6.5.x - 6.7.x with timeseries data format
+  - (0.4.2)[https://github.com/flant/grafana-statusmap/releases/tag/v0.4.2] should work in Grafana 5.4.x - 6.4.x
 
 ## Motivation
 

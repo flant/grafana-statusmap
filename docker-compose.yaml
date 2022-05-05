@@ -1,13 +1,13 @@
 version: "3"
 services:
   grafana:
-    image: grafana/grafana:8.4.5
+    image: grafana/grafana:${GRAFANA_VERSION:-8.5.2}
     ports:
       - "3000:3000"
     environment:
       GF_AUTH_ANONYMOUS_ENABLED: 1
       GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
-      GF_INSTALL_PLUGINS: marcusolsson-static-datasource,https://github.com/flant/grafana-statusmap/releases/download/v0.5.0/flant-statusmap-panel-0.5.0.zip;flant-statusmap-panel
+      GF_INSTALL_PLUGINS: marcusolsson-static-datasource,https://github.com/flant/grafana-statusmap/releases/download/v0.5.1/flant-statusmap-panel-0.5.1.zip;flant-statusmap-panel
       GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /etc/grafana/provisioning/dashboards/dashboards/statusmap.json
     volumes:
       - ./provisioning:/etc/grafana/provisioning

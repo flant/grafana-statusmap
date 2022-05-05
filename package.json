@@ -1,6 +1,6 @@
 {
   "name": "flant-statusmap-panel",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Grafana panel plugin to visualize status of multiple objects over time",
   "main": "README.md",
   "scripts": {

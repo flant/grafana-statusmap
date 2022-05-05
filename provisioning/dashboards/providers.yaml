@@ -6,7 +6,7 @@ providers:
     # <int> Org id. Default to 1
     orgId: 1
     # <string> name of the dashboard folder.
-    folder: General
+    folder: ""
     # <string> folder UID. will be automatically generated if not specified
     folderUid: ""
     # <string> provider type. Default to 'file'
