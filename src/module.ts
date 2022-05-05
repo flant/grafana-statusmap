@@ -209,9 +209,7 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     this.annotationsSrv = annotationsSrv;
 
     this.events.on(PanelEvents.render, this.onRender.bind(this));
-    this.events.on(PanelEvents.dataReceived, this.onDataReceived.bind(this));
     this.events.on(PanelEvents.dataError, this.onDataError.bind(this));
-    this.events.on(PanelEvents.dataSnapshotLoad, this.onDataReceived.bind(this));
     this.events.on(PanelEvents.editModeInitialized, this.onInitEditMode.bind(this));
     this.events.on(PanelEvents.refresh, this.postRefresh.bind(this));
     // custom event from rendering.js
@@ -222,14 +220,16 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     console.log('Grafana buildInfo:', config.buildInfo);
 
     const majorVersion = parseInt(config.buildInfo.version.split('.', 2)[0], 10);
-    if (majorVersion <= 6) {
-      // data will fall into onDataReceived() with series data format
-    } else {
-      // table like DataFrame[] data format for both table and series data mode
+    if (majorVersion >= 7) {
+      // Support data frames for 7.0+
       (this as any).useDataFrames = true;
       this.events.on(PanelEvents.dataFramesReceived, this.onDataFramesReceived.bind(this));
       this.events.on(PanelEvents.dataSnapshotLoad, this.onDataFramesReceived.bind(this));
       this.processor = new DataProcessor(this.panel, majorVersion);
+    } else {
+      // Fallback to support only timeseries data format.
+      this.events.on(PanelEvents.dataReceived, this.onDataReceived.bind(this));
+      this.events.on(PanelEvents.dataSnapshotLoad, this.onDataReceived.bind(this));
     }
   }
 

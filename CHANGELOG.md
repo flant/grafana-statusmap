@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.5.1
+
+- Fix fallback to timeseries for Grafana 6.x
+- Change docker-compose.yaml to work with Grafana 6.x
+
 ## v0.5.0
 
 - Support DataFrames. (#239)
