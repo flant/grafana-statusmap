@@ -43,7 +43,7 @@ jobs:
           node-version: ${{env.WITH_NODE_VERSION}}
 
       - name: Setup Go environment
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v3
         with:
           go-version: ${{env.WITH_GO_VERSION}}
 
