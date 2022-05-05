@@ -223,8 +223,8 @@ class StatusHeatmapCtrl extends MetricsPanelCtrl {
     if (majorVersion >= 7) {
       // Support data frames for 7.0+
       (this as any).useDataFrames = true;
-      this.events.on(PanelEvents.dataSnapshotLoad, this.onDataFramesReceived.bind(this));
       this.events.on(PanelEvents.dataFramesReceived, this.onDataFramesReceived.bind(this));
+      this.events.on(PanelEvents.dataSnapshotLoad, this.onDataFramesReceived.bind(this));
       this.processor = new DataProcessor(this.panel, majorVersion);
     } else {
       // Fallback to support only timeseries data format.
