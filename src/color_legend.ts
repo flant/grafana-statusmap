@@ -376,6 +376,7 @@ function clearLegend(elem) {
 function getColorScale(colorScheme, maxValue, minValue = 0) {
   let colorInterpolator = d3ScaleChromatic[colorScheme.value];
   let colorScaleInverted =
+    // @ts-ignore
     colorScheme.invert === 'always' || (colorScheme.invert === 'dark' && !contextSrv.user.lightTheme);
 
   let start = colorScaleInverted ? maxValue : minValue;
