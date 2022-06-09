@@ -258,11 +258,11 @@ export class StatusmapRenderer {
     const panel = this.panel
     const yAxisWidth = this.getYAxisWidth(this.heatmap)
     return function(this: any) {
+      const textElement = d3.select(this)
       if (yAxisWidth === 0) {
+        textElement.text("")
         return
       }
-
-      const textElement = d3.select(this)
 
       let textLength = textElement.node().getComputedTextLength()
       let text = textElement.text();
@@ -309,7 +309,8 @@ export class StatusmapRenderer {
     // Remove vertical line in the right of axis labels (called domain in d3)
     this.heatmap.select('.axis-y').select('.domain').remove();
     this.heatmap.select('.axis-y').selectAll('.tick line').remove();
-    this.heatmap.selectAll(".axis-y text").each(this.shortenYAxisLabels())
+    const shortenLabel = this.shortenYAxisLabels()
+    this.heatmap.selectAll(".axis-y text").each(shortenLabel)
   }
 
   // Wide Y values range and adjust to bucket size
