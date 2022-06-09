@@ -165,8 +165,16 @@ export class StatusmapRenderer {
         return text.getBBox().width;
       })
     );
+    let width = maxTextWidth
+    const {maxWidth, minWidth} = this.panel.yAxis
+    if (maxWidth >= 0) {
+      width = Math.min(maxWidth, width)
+    }
+    if (minWidth >= 0) {
+      width = Math.max(minWidth, width)
+    }
 
-    return Math.ceil(maxTextWidth);
+    return Math.ceil(width);
   }
 
   getXAxisHeight(elem: any): number {
@@ -246,6 +254,30 @@ export class StatusmapRenderer {
     return d3.scaleOrdinal().domain(ticks).range(range);
   }
 
+  shortenYAxisLabels() {
+    const panel = this.panel
+    const yAxisWidth = this.getYAxisWidth(this.heatmap)
+    return function(this: any) {
+      const textElement = d3.select(this)
+      if (yAxisWidth === 0) {
+        textElement.text("")
+        return
+      }
+
+      let textLength = textElement.node().getComputedTextLength()
+      let text = textElement.text();
+    
+      if (textLength > yAxisWidth && !panel.tooltip.show) {
+       d3.select(this.parentNode).append("title").text(text);
+      }
+      while (textLength > yAxisWidth && text.length > 0) {
+        text = text.slice(0, -1);
+        textElement.text(text + '...');
+        textLength = textElement.node().getComputedTextLength();
+      }
+    }
+  };
+
   addYAxis() {
     let ticks = this.bucketMatrixPager.targets();
 
@@ -256,10 +288,10 @@ export class StatusmapRenderer {
       ticks.sort((b, a) => a.localeCompare(b, 'en', { ignorePunctuation: false, numeric: true }));
     }
 
-    let yAxisScale = this.getYAxisScale(ticks);
+    const yAxisScale = this.getYAxisScale(ticks);
     this.scope.yScale = this.yScale = this.getYScale(ticks);
 
-    let yAxis = d3
+    const yAxis = d3
       // @ts-ignore
       .axisLeft(yAxisScale)
       .tickValues(ticks)
@@ -269,13 +301,16 @@ export class StatusmapRenderer {
     this.heatmap.append('g').attr('class', 'axis axis-y').call(yAxis);
 
     // Calculate Y axis width first, then move axis into visible area
-    let posY = this.margin.top;
-    let posX = this.getYAxisWidth(this.heatmap) + Y_AXIS_TICK_PADDING;
+    const posY = this.margin.top;
+    this.yAxisWidth = this.getYAxisWidth(this.heatmap)
+    const posX = this.yAxisWidth + Y_AXIS_TICK_PADDING;
     this.heatmap.select('.axis-y').attr('transform', 'translate(' + posX + ',' + posY + ')');
 
     // Remove vertical line in the right of axis labels (called domain in d3)
     this.heatmap.select('.axis-y').select('.domain').remove();
     this.heatmap.select('.axis-y').selectAll('.tick line').remove();
+    const shortenLabel = this.shortenYAxisLabels()
+    this.heatmap.selectAll(".axis-y text").each(shortenLabel)
   }
 
   // Wide Y values range and adjust to bucket size
@@ -345,7 +380,6 @@ export class StatusmapRenderer {
 
     this.addYAxis();
 
-    this.yAxisWidth = this.getYAxisWidth(this.heatmap) + Y_AXIS_TICK_PADDING;
     this.chartWidth = this.width - this.yAxisWidth - this.margin.right;
 
     // TODO allow per-y cardWidth!
