@@ -33,7 +33,7 @@ jobs:
         run: echo "::set-output name=dir::$(yarn cache dir)"
 
       - name: Restore yarn cache
-        uses: actions/cache@v3.0.2
+        uses: actions/cache@v3.0.11
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
           key: ${{ runner.os }}-${{ env.WITH_NODE_VERSION }}-yarn-${{ hashFiles('yarn.lock') }}
@@ -95,7 +95,7 @@ jobs:
           git ls-remote https://github.com/grafana/plugin-validator refs/heads/master | tee plugin-validator-last-commit
 
       - name: Restore plugin-validator binary
-        uses: actions/cache@v3.0.2
+        uses: actions/cache@v3.0.11
         id: plugin-validator-cache
         with:
           path: ./plugin-validator
