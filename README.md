@@ -1,3 +1,8 @@
+## :warning: **flant-statusmap plugin is not maintained since 2024**
+
+This repository has been archived in favor of built-in plugins available in Grafana 9+ versions: [status-history](https://grafana.com/docs/grafana/latest/panels-visualizations/visualizations/status-history/) and  [state-timeline](https://grafana.com/docs/grafana/latest/panels-visualizations/visualizations/state-timeline/). These plugins are used by the community as replacements for flant-statusmap, see [issue #302](https://github.com/flant/grafana-statusmap/issues/302#issuecomment-2133323098) for more info.
+If you think this plugin suites your needs and would like to continue developing it, feel free to make a fork. We would love to see you take it further!
+
 # Statusmap panel for Grafana
 
 [![Download from GitHub](https://img.shields.io/github/tag-date/flant/grafana-statusmap.svg?logo=github&label=latest)](https://github.com/flant/grafana-statusmap/releases/latest)
