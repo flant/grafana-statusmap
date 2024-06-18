@@ -36,7 +36,8 @@
 .statusmap-panel {
   position: relative;
 
-  .axis .tick {
+  .axis .tick {  
+    pointer-events: all;
     text {
       fill: $text-color;
       color: $text-color;
